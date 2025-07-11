@@ -2,6 +2,7 @@ package com.hp.controller;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,10 @@ public class HomeController {
 
 	@RequestMapping(value="/")
 	public ModelAndView test(HttpServletResponse response) throws IOException{
-		return new ModelAndView("home");
+		return new ModelAndView("CRM/Authentication/login");
+	}
+	@RequestMapping(value="/dashboard")
+	public ModelAndView dashboard(HttpServletRequest request) throws IOException{
+		return new ModelAndView("CRM/Dashboard/dashboard");
 	}
 }
