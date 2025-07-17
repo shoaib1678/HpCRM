@@ -23,7 +23,7 @@
 </head>
 
 <body>
-     <main class="auth-minimal-wrapper">
+     <main class="auth-minimal-wrapper" style="background-image: url('assets/images/bglogin.jpg'); background-repeat: no-repeat; background-size: cover;">
         <div class="auth-minimal-inner">
             <div class="minimal-card-wrapper">
                 <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative fade-in-top">

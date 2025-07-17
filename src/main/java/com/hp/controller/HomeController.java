@@ -20,4 +20,12 @@ public class HomeController {
 	public ModelAndView dashboard(HttpServletRequest request) throws IOException{
 		return new ModelAndView("CRM/Dashboard/dashboard");
 	}
+	@RequestMapping(value="/manage_employee")
+	public ModelAndView manage_employee(HttpServletRequest request) throws IOException{
+		return new ModelAndView("CRM/Employee/employee");
+	}
+	@RequestMapping(value="/manage_contact")
+	public ModelAndView manage_contact(HttpServletRequest request) throws IOException{
+		return new ModelAndView("CRM/Contact/contact");
+	}
 }
