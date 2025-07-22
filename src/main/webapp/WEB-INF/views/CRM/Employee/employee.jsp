@@ -146,8 +146,7 @@
 										"email" : email,
 										"sno" : 0,
 									};
-									$
-											.ajax({
+									$.ajax({
 												url : 'add_employee',
 												type : 'post',
 												data : JSON.stringify(obj),

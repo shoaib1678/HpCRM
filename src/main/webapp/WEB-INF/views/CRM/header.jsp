@@ -43,12 +43,12 @@
                             <span class="nxl-mtext">Publication</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="manage_client_details">Client Details</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="manage_journal">Manage Journal</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="manage_converted_client">Converted Client</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="manage_article_detaisl">Manage Article Details</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="manage_acceptance">Manage Acceptance</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="manage_payment">Manage Payment</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="gallery_proof">Gallery Proof</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="remaining_amount">Remaining Amount</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="publication_payment">Manage Payment</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="publication_gallery_proof">Gallery Proof</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="publication_remaining_payment">Remaining Amount</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="publication_details">Publication Details</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="indexed_proper">Indexed Proper</a></li>
                         </ul>

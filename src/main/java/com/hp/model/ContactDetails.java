@@ -16,7 +16,9 @@ public class ContactDetails {
 	private int employee_id;
 	private String contact_number;
 	private String client_name;
+	private String email;
 	private String status;
+	private String module;
 	private Date createdAt;
 	public int getSno() {
 		return sno;
@@ -42,11 +44,23 @@ public class ContactDetails {
 	public void setClient_name(String client_name) {
 		this.client_name = client_name;
 	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getStatus() {
 		return status;
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getModule() {
+		return module;
+	}
+	public void setModule(String module) {
+		this.module = module;
 	}
 	public Date getCreatedAt() {
 		return createdAt;

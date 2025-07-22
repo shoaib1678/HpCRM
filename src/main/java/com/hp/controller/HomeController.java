@@ -28,4 +28,39 @@ public class HomeController {
 	public ModelAndView manage_contact(HttpServletRequest request) throws IOException{
 		return new ModelAndView("CRM/Contact/contact");
 	}
+	@RequestMapping(value="/manage_converted_client")
+	public ModelAndView manage_converted_client(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("CRM/Publication/converted_client");
+		return mv;
+	}
+	@RequestMapping(value="/manage_article_detaisl")
+	public ModelAndView manage_article_detaisl(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("CRM/Publication/article_details");
+		return mv;
+	}
+	@RequestMapping(value="/manage_acceptance")
+	public ModelAndView manage_acceptance(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("CRM/Publication/acceptance");
+		return mv;
+	}
+	@RequestMapping(value="/publication_payment")
+	public ModelAndView publication_payment(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("CRM/Publication/publication_payment");
+		return mv;
+	}
+	@RequestMapping(value="/publication_gallery_proof")
+	public ModelAndView publication_gallery_proof(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("CRM/Publication/gallery_proof");
+		return mv;
+	}
+	@RequestMapping(value="/publication_remaining_payment")
+	public ModelAndView publication_remaining_payment(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("CRM/Publication/remaining");
+		return mv;
+	}
+	@RequestMapping(value="/publication_details")
+	public ModelAndView publication_details(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("CRM/Publication/publication_details");
+		return mv;
+	}
 }
