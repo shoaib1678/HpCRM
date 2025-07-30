@@ -48,14 +48,25 @@
 					<div class="col-lg-12">
 						<div class="card stretch">
 							<div class="card-body">
+								<!-- <div style="text-align: center;">
+									<a class="sttus active" href="javasvript:void(0)">Pending</a>
+									<a class="sttus" href="javasvript:void(0)">Confirmed</a>
+								</div> -->
 								<div class="table-responsive">
-									<table class="table table-hover table-striped nowrap" id="employee_table" style="width: 100%;">
+									<table id="employee_table" class="table table-hover table-striped nowrap display responsive" style="width:100%">
 										<thead class="bg-primary">
 											<tr>
-												<th class="text-white">Sno</th>
+												<th class="text-white">Article Id</th>
 												<th class="text-white">Contact Number</th>
-												<th class="text-white">Name</th>
-												<th class="text-white">Status</th>
+												<th class="text-white">email</th>
+												<th class="text-white">Total Amount</th>
+												<th class="text-white">Received Amount</th>
+												<th class="text-white">Remaining Amount</th>
+												<th class="text-white">Payment Mode</th>
+												<th class="text-white">Payment Status</th>
+												<th class="text-white">Writing Type</th>
+												<th class="text-white">Title</th>
+												<th class="text-white">Subject Area</th>
 												<th class="text-white">Actions</th>
 											</tr>
 										</thead>
@@ -72,10 +83,10 @@
 	<div class="modal fade" id="employee_modal" data-bs-backdrop="static"
 		data-bs-keyboard="false" tabindex="-1"
 		aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">Article Details</h5>
+					<h5 class="modal-title" id="staticBackdropLabel">Writing Initial Payment</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -86,59 +97,28 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="contact_number" class="col-form-label">Upload file</label>
-											<input type="file" class="form-control" id="file" name="file" accept=".pdf,.doc,.docx">
+											<label for="journal_name" class="col-form-label">Payment Mode<span style="color: red;">*</span></label>
+											<select class="form-control" id="payment_mode" name="payment_mode">
+												<option disabled selected>-- Select Payment Mode</option>
+												<option value="Card">Card</option>
+											    <option value="UPI">UPI</option>
+											    <option value="Net Banking">Net Banking</option>
+											    <option value="Cheque">Cheque</option>
+											</select>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="journal_name" class="col-form-label">Journal Name<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="journal_name" name="journal_name" placeholder="Journal Name">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="contact_number" class="col-form-label">Contact Number<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="Contact Number" disabled>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="client_name" class="col-form-label">Client Name<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="client_name" name="client_name" placeholder="Client Name">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="email" class="col-form-label">Email<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="email" name="email" placeholder="Email">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="affiliation" class="col-form-label">Affiliation<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="affiliation" name="affiliation" placeholder="Affiliation">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="article_id" class="col-form-label">Article Id<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="article_id" name="article_id" placeholder="Article Id">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="dealed_amount" class="col-form-label">Total Amount<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="dealed_amount" name="dealed_amount" placeholder="Total Amount">
+											<label for="received_amount" class="col-form-label">Received Amount<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="received_amount" name="received_amount" placeholder="Received Amount">
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="article_title" class="col-form-label">Article Title<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="article_title" name="article_title" placeholder="Article Title">
+											<label for="receipt" class="col-form-label">Payment Receipt</label>
+											<input type="file" class="form-control" id="receipt" name="receipt" placeholder="Payment Receipt">
 										</div>
 									</div>
-									
 								</div>
 							</div>
 						</div>
@@ -146,7 +126,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+						<button type="submit" class="btn btn-primary btn-sm">Add Payment</button>
 					</div>
 				</form>
 			</div>
@@ -218,6 +198,7 @@
 	<!--! ================================================================ !-->
 	<!--! BEGIN: Vendors JS !-->
 	<input type="hidden" id="sno" name="sno">
+	<input type="hidden" id="contact_id" name="contact_id">
 	<jsp:include page="../js.jsp"></jsp:include>
 	<script type="text/javascript">
 		//let employee_id = $("#employee_id").val();
@@ -227,80 +208,40 @@
 					.validate(
 							{
 								rules : {
-									journal_name : {
+									payment_mode : {
 										required : true,
 									},
-									client_name : {
-										required : true,
-									},
-									email : {
-										required : true,
-									},
-									article_id : {
-										required : true,
-									},
-									article_title : {
-										required : true,
-									},
-									affiliation : {
-										required : true,
-									},
-									dealed_amount : {
+									received_amount : {
 										required : true,
 									},
 								},
 								messages : {
-									journal_name : {
-										required : "Please enter journal name.",
+									payment_mode : {
+										required : "Please select payment mode.",
 									},
-									client_name : {
-										required : "Please enter client name.",
-									},
-									email : {
-										required : "Please enter email.",
-									},
-									article_id : {
-										required : "Please enter article id.",
-									},
-									article_title : {
-										required : "Please enter article title.",
-									},
-									affiliation : {
-										required : "Please enter affiliation.",
-									},
-									dealed_amount : {
-										required : "Please enter dealed amount.",
+									received_amount : {
+										required : "Please enter received amount.",
 									},
 								},
 								submitHandler : function(form) {
-									var journal_name = $("#journal_name").val();
-									var client_name = $("#client_name").val();
+									var payment_mode = $("#payment_mode").val();
+									var received_amount = $("#received_amount").val();
 									var contact_number = $("#contact_number").val();
-									var email = $("#email").val();
-									var article_id = $("#article_id").val();
-									var article_title = $("#article_title").val();
-									var affiliation = $("#affiliation").val();
-									var file = $("#file")[0].files[0];
-									var dealed_amount = $("#dealed_amount").val();
+									var file = $("#receipt")[0].files[0];
 									var sno = $("#sno").val();
 									
 									var obj = {
-										"journal_name" : journal_name,
-										"client_name" : client_name,
-										"email" : email,
-										"article_id" : article_id,
-										"article_title" : article_title,
-										"contact_number" : contact_number,
-										"dealed_amount" : dealed_amount,
-										"affilliation" : affiliation,
+										"payment_mode" : payment_mode,
+										"paid_amount" : received_amount,
 										"employee_id" : employee_id,
-										"contact_id" : sno,
+										"module" : "Writing Paper",
+										"ad_id" : sno,
 									};
 									var fd = new FormData();
 									 fd.append("file",file);
-									 fd.append("articledata",JSON.stringify(obj));
+									 fd.append("paymentdata",JSON.stringify(obj));
 										$.ajax({
-											url : 'add_articledetails',
+											url : 'add_payment',
 											type : 'post',
 											data : fd,
 											processData : false,
@@ -342,21 +283,131 @@
 								}
 							});
 		});
-		function changestatus(sno){
+		
+		
+		function payment(sno){
 			$("#sno").val(sno);
-			getcontactdata(sno);
 			$('#employee_modal').modal('toggle');
 		}
 		function addremarks(sno){
 			$("#sno").val(sno);
 			$('#remarks_modal').modal('toggle');
 		}
+		/* function data(status) {
+		    $("#employee_table").DataTable().clear().destroy(); // Destroy previous instance
+
+		    $("#employee_table").DataTable({
+		        dom: "Blfrtip",
+		        autoWidth: true,
+		        responsive: true,
+		        buttons: [
+		            {
+		                extend: 'pdf',
+		                exportOptions: { columns: [0, 1, 2, 3, 4] }
+		            },
+		            {
+		                extend: 'csv',
+		                exportOptions: { columns: [0, 1, 2, 3, 4] }
+		            },
+		            {
+		                extend: 'print',
+		                exportOptions: { columns: [0, 1, 2, 3, 4] }
+		            },
+		            {
+		                extend: 'excel',
+		                exportOptions: { columns: [0, 1, 2, 3, 4] }
+		            },
+		            {
+		                extend: 'pageLength'
+		            }
+		        ],
+		        lengthChange: true,
+		        ordering: false,
+		        ajax: {
+		            url: "get_articledetails",
+		            type: "POST",
+		            data: {
+		                "employee_id": employee_id,
+		                "status": status
+		            }
+		        },
+		        columnDefs: [{
+		            "defaultContent": "-",
+		            "targets": "_all"
+		        }],
+		        serverSide: true,
+		        columns: [
+		        	{
+						"data" : "article_id"
+					}, 
+		        	{
+						"data" : "client_name"
+					}, 
+					{
+						"data" : "contact_number"
+					}, 
+					{
+						"data" : "email"
+					}, 
+					{
+						"data" : "dealed_amount"
+					}, 
+					{
+						"data" : "journal_name"
+					}, 
+					{
+						"data" : "article_title"
+					}, 
+					
+					{
+						"data" : "affilliation"
+					}, 
+					{
+						"data" : function(data, type,
+								dataToSet) {
+							var sno = data.sno;
+							var status = data.status;
+							var contact_id = data.contact_id;
+							var string = "";
+							if(status == "Acceptance"){
+								string += "<button class='btn btn-success btn-sm' type='button' onclick='Confirm(" + sno + ")' style='margin-bottom: 3px;'>Received Payment</button>";
+							}
+	                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
+		                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
+	                    
+	                    return string;
+						}
+					},
+		        ],
+		        lengthMenu: [[5, 10, 25, 50], [5, 10, 25, 50]],
+		        select: true
+		    });
+		}
+		
+		data("Acceptance"); 
+		$(document).on('click', '.sttus', function () {
+		    var status = $(this).text().trim();
+		    if(status == "Pending"){
+		    	status="Acceptance";
+		    }
+		    if(status == "Confirmed"){
+		    	status="Received";
+		    }
+		    $('.sttus').removeClass('active');
+		    $(this).addClass('active');
+		    data(status);
+		}); */
+		
 		
 		function data() {
 			$("#employee_table").DataTable({
 				dom : "Blfrtip",
 				autoWidth : true,
-				responsive : true,
+				 responsive: {
+				        details: {
+				            type: 'inline'
+				        }
+				    },
 				buttons : [ {
 					extend : 'pdf',
 					exportOptions : {
@@ -385,12 +436,11 @@
 				lengthChange : true,
 				ordering : false,
 				ajax : {
-					url : "get_converted_contact",
+					url : "get_writing_details",
 					type : "POST",
 					"data" : {
 						"employee_id" : employee_id,
-						"status" : "Converted",
-						"module" : "Publication",
+						"status" : "Sent Confirmation",
 					}
 
 				},
@@ -401,41 +451,46 @@
 				serverSide : true,
 				columns : [ 
 					{
-						data : 'SrNo',
-						render : function(data, type, row,
-								meta) {
-							return meta.row
-									+ meta.settings._iDisplayStart
-									+ 1;
-						}
-					},
+						"data" : "article_id"
+					}, 
 				{
 					"data" : "contact_number"
 				}, 
 				{
-					"data" : "client_name"
+					"data" : "email"
 				}, 
-				 {
-	                data: "status",
-	                render: function(data, type, row) {
-	                    var badgeClass = '';
-	                    var label = data;
-
-	                    if (data.toLowerCase() === 'converted') {
-	                        badgeClass = 'badge bg-success';
-	                    } 
-
-	                    return '<span class="' + badgeClass + '">' + label + '</span>';
-	                }
-	            },
+				{
+					"data" : "amount"
+				}, 
+				{
+					"data" : "paid_amount"
+				}, 
+				{
+					"data" : "remaining_amount"
+				}, 
+				{
+					"data" : "payment_mode"
+				}, 
+				{
+					"data" : "payment_status"
+				}, 
+				{
+					"data" : "writing_type"
+				}, 
+				{
+					"data" : "title"
+				}, 
+				{
+					"data" : "subject_area"
+				}, 
 				{
 					"data" : function(data, type,
 							dataToSet) {
 						var sno = data.sno;
-						var string = "<button class='btn btn-primary btn-sm' type='button' onclick='changestatus(" + sno + ")'>Add Article Details</button>";
-	                    
-                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + sno + ')" style="margin-left: 10px;">Add Remarks</button>';
-	                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + sno + ')" style="margin-left: 10px;">View Remarks</button>';
+						var contact_id = data.contact_id;
+						var string = "<button class='btn btn-success btn-sm' type='button' onclick='confirmation(" + sno + ")' style='margin-bottom: 3px;'>Sent For Confirmation</button>";
+                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
+	                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
                     
                     return string;
 					}
@@ -585,7 +640,6 @@
 								$("#contact_number").val(data['data'][0].contact_number);
 								if(data['data'][0].client_name != null && data['data'][0].client_name != ""){
 									$("#client_name").val(data['data'][0].client_name);
-									$("#email").val(data['data'][0].email);
 								}
 								
 							}else {
@@ -598,6 +652,87 @@
 						}
 					});
 		}
+		function edit(sno){
+			$("#sno").val(sno);
+			$('#employee_modal').modal('toggle');
+			var fd = new FormData();
+			fd.append("sno", sno);
+			$.ajax({
+				url : 'edit_articledetails',
+				type : 'post',
+				data : fd,
+				contentType : false,
+				processData : false,
+						success : function(data) {
+							if (data['status'] == 'Success') {
+								$("#contact_number").val(data['data'][0].contact_number);
+								$("#client_name").val(data['data'][0].client_name);
+								$("#journal_name").val(data['data'][0].journal_name);
+								$("#email").val(data['data'][0].email);
+								$("#affiliation").val(data['data'][0].affilliation);
+								$("#article_id").val(data['data'][0].article_id);
+								$("#dealed_amount").val(data['data'][0].dealed_amount);
+								$("#article_title").val(data['data'][0].article_title);
+								$("#contact_id").val(data['data'][0].contact_id);
+								
+							}else {
+								Swal.fire({
+											icon : 'Sorry',
+											title : 'Invalid!',
+											text : data['message']
+										})
+							}
+						}
+					});
+		}
+		function confirmation(sno) {
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "Do you want to continue?",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonText: 'Yes',
+				cancelButtonText: 'No',
+				reverseButtons: true
+			}).then((result) => {
+				if (result.value === true) {
+					var fd = new FormData();
+					fd.append("sno", sno);
+					fd.append("status", "Confirmed");
+					$.ajax({
+						url : 'sent_data_confirm',
+						type : 'post',
+						data : fd,
+						contentType : false,
+						processData : false,
+						success : function(data) {
+							if (data['status'] == 'Success') {
+								$('#employee_table').DataTable().ajax.reload(null, false);
+								Swal.fire({
+									icon: 'success',
+									title: 'Success!',
+									text: "Confirmation successfully"
+								}).then(() => {
+									setTimeout(function () {
+										window.location.href = 'writing_paper_remaining_amount';
+									}, 2000);
+								});
+							}else {
+							Swal.fire({
+								icon : 'Sorry',
+								title : 'Invalid!',
+								text : data['message']
+							})
+						}
+					}
+				});
+				} 
+			});
+
+		}
+
+
+
 	</script>
 </body>
 

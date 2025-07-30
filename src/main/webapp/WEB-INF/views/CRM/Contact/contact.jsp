@@ -60,6 +60,7 @@
 									<a class="sttus" href="javasvript:void(0)">Not Connected</a>
 									<a class="sttus" href="javasvript:void(0)">Connected</a>
 									<a class="sttus" href="javasvript:void(0)">Inactive</a>
+									<a class="sttus" href="javasvript:void(0)">Converted</a>
 								</div>
 									
 								<div class="table-responsive">
@@ -105,7 +106,7 @@
 								</div>
 								<div class="form-group mb-3">
 									<label for="client_name" class="col-form-label">Client Name</label>
-										<input type="text" class="form-control" id="Client_name" name="client_name"
+										<input type="text" class="form-control" id="client_name" name="client_name"
 											placeholder="Client Name">
 								</div>
 								<div class="form-group mb-3">
@@ -432,7 +433,6 @@ function showinput(){
 									    return $(this).val();
 									}).get().join(",");
 									var sno = $("#sno").val();
-									alert(sno);
 									var fd = new FormData();
 									fd.append("sno", sno);
 									fd.append("status", status);
@@ -785,6 +785,7 @@ function showinput(){
 								$('#employee_modal').modal('toggle');
 								$("#contact_number").val(data['data'][0].contact_number);
 								$("#client_name").val(data['data'][0].client_name);
+								$("#email").val(data['data'][0].email);
 							}else {
 								$('#employee_modal').modal(
 										'toggle');

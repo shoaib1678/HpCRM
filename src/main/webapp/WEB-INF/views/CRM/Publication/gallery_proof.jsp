@@ -98,7 +98,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="proof_date" class="col-form-label">Received Amount<span style="color: red;">*</span></label>
+											<label for="proof_date" class="col-form-label">Gallery Proof Date<span style="color: red;">*</span></label>
 											<input type="date" class="form-control" id="proof_date" name="proof_date">
 										</div>
 									</div>

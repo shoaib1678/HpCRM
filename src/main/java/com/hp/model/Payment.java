@@ -18,6 +18,7 @@ public class Payment {
 	private float remaining_amount;
 	private String payment_mode;
 	private String payment_status;
+	private String module;
 	
 	public int getSno() {
 		return sno;
@@ -66,5 +67,11 @@ public class Payment {
 	}
 	public void setPayment_status(String payment_status) {
 		this.payment_status = payment_status;
+	}
+	public String getModule() {
+		return module;
+	}
+	public void setModule(String module) {
+		this.module = module;
 	}
 }

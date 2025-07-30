@@ -55,6 +55,7 @@
 												<th class="text-white">Sno</th>
 												<th class="text-white">Contact Number</th>
 												<th class="text-white">Name</th>
+												<th class="text-white">Email</th>
 												<th class="text-white">Status</th>
 												<th class="text-white">Actions</th>
 											</tr>
@@ -84,18 +85,6 @@
 						<div class="row px-4 justify-content-between">
 							<div class="col-xl-12 mb-3 mb-sm-0">
 								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group mb-3">
-											<label for="contact_number" class="col-form-label">Upload file</label>
-											<input type="file" class="form-control" id="file" name="file" accept=".pdf,.doc,.docx">
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group mb-3">
-											<label for="journal_name" class="col-form-label">Journal Name<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="journal_name" name="journal_name" placeholder="Journal Name">
-										</div>
-									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
 											<label for="contact_number" class="col-form-label">Contact Number<span style="color: red;">*</span></label>
@@ -104,20 +93,31 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="client_name" class="col-form-label">Client Name<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="client_name" name="client_name" placeholder="Client Name">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="email" class="col-form-label">Email<span style="color: red;">*</span></label>
+											<label for="email" class="col-form-label">Email</label>
 											<input type="text" class="form-control" id="email" name="email" placeholder="Email">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="affiliation" class="col-form-label">Affiliation<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="affiliation" name="affiliation" placeholder="Affiliation">
+											<label for="contact_number" class="col-form-label">Writing Type</label>
+											<select class="form-control" id="writing_type" name="writing_type">
+												<option selected disabled>--Select--</option>
+												<option value="Research Article">Research Article</option>
+												<option value="Review Article">Review Article</option>
+												<option value="Other">Other</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6" id="wtype" style="display: none;">
+										<div class="form-group mb-3">
+											<label for="w_type" class="col-form-label">Other<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="w_type" name="w_type" placeholder="Writing Type">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group mb-3">
+											<label for="title" class="col-form-label">Title<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="title" name="title" placeholder="Title">
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -128,17 +128,10 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="dealed_amount" class="col-form-label">Total Amount<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="dealed_amount" name="dealed_amount" placeholder="Total Amount">
+											<label for="total_amount" class="col-form-label">Total Amount<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="total_amount" name="total_amount" placeholder="Total Amount">
 										</div>
 									</div>
-									<div class="col-md-12">
-										<div class="form-group mb-3">
-											<label for="article_title" class="col-form-label">Article Title<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="article_title" name="article_title" placeholder="Article Title">
-										</div>
-									</div>
-									
 								</div>
 							</div>
 						</div>
@@ -222,89 +215,82 @@
 	<script type="text/javascript">
 		//let employee_id = $("#employee_id").val();
 		let employee_id = $("#employee_id").val();
+		$("#writing_type").change(function(){
+			var val = $(this).val();
+			if(val == "Other"){
+				$("#wtype").css("display","block");
+			}else{
+				$("#wtype").css("display","none");
+			}
+		})
 		$(function() {
 			$("form[name='employee_form']")
 					.validate(
 							{
 								rules : {
-									journal_name : {
+									writing_type : {
 										required : true,
 									},
-									client_name : {
-										required : true,
-									},
-									email : {
+									w_type : {
 										required : true,
 									},
 									article_id : {
 										required : true,
 									},
-									article_title : {
+									title : {
 										required : true,
 									},
-									affiliation : {
-										required : true,
-									},
-									dealed_amount : {
+									total_amount : {
 										required : true,
 									},
 								},
 								messages : {
-									journal_name : {
-										required : "Please enter journal name.",
+									writing_type : {
+										required : "Please select writing type.",
 									},
-									client_name : {
-										required : "Please enter client name.",
+									w_type : {
+										required : "Please enter other writing type.",
 									},
-									email : {
-										required : "Please enter email.",
+									title : {
+										required : "Please enter title.",
 									},
 									article_id : {
 										required : "Please enter article id.",
 									},
-									article_title : {
-										required : "Please enter article title.",
-									},
-									affiliation : {
-										required : "Please enter affiliation.",
-									},
-									dealed_amount : {
-										required : "Please enter dealed amount.",
+									total_amount : {
+										required : "Please enter total amount.",
 									},
 								},
 								submitHandler : function(form) {
-									var journal_name = $("#journal_name").val();
-									var client_name = $("#client_name").val();
+									var writing_type = $("#writing_type").val();
+									if(writing_type == "Other"){
+										writing_type = $("#w_type").val();
+									}else{
+										writing_type = $("#writing_type").val();
+									}
+									var title = $("#title").val();
 									var contact_number = $("#contact_number").val();
 									var email = $("#email").val();
 									var article_id = $("#article_id").val();
-									var article_title = $("#article_title").val();
-									var affiliation = $("#affiliation").val();
-									var file = $("#file")[0].files[0];
-									var dealed_amount = $("#dealed_amount").val();
+									var total_amount = $("#total_amount").val();
 									var sno = $("#sno").val();
 									
 									var obj = {
-										"journal_name" : journal_name,
-										"client_name" : client_name,
+										"writing_type" : writing_type,
+										"title" : title,
 										"email" : email,
 										"article_id" : article_id,
-										"article_title" : article_title,
 										"contact_number" : contact_number,
-										"dealed_amount" : dealed_amount,
-										"affilliation" : affiliation,
+										"amount" : total_amount,
 										"employee_id" : employee_id,
 										"contact_id" : sno,
 									};
-									var fd = new FormData();
-									 fd.append("file",file);
-									 fd.append("articledata",JSON.stringify(obj));
-										$.ajax({
-											url : 'add_articledetails',
-											type : 'post',
-											data : fd,
-											processData : false,
-											contentType :  false,
+									$.ajax({
+										url : 'add_writing_details',
+										type : 'post',
+										data : JSON.stringify(obj),
+										dataType : 'json',
+										contentType : 'application/json',
 												success : function(data) {
 													if (data['status'] == 'Success') {
 														Swal.fire({
@@ -390,7 +376,7 @@
 					"data" : {
 						"employee_id" : employee_id,
 						"status" : "Converted",
-						"module" : "Publication",
+						"module" : "Writing Paper",
 					}
 
 				},
@@ -414,6 +400,9 @@
 				}, 
 				{
 					"data" : "client_name"
+				}, 
+				{
+					"data" : "email"
 				}, 
 				 {
 	                data: "status",
@@ -584,7 +573,6 @@
 							if (data['status'] == 'Success') {
 								$("#contact_number").val(data['data'][0].contact_number);
 								if(data['data'][0].client_name != null && data['data'][0].client_name != ""){
-									$("#client_name").val(data['data'][0].client_name);
 									$("#email").val(data['data'][0].email);
 								}
 								

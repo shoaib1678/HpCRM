@@ -37,7 +37,20 @@ public class ContactController {
 		String search = request.getParameter("search[value]");
 		String employee_id =request.getParameter("employee_id");
 		String status =request.getParameter("status");
-		response = contactService.get_contact(start,length,search,employee_id,status);
+		String module =request.getParameter("module");
+		response = contactService.get_contact(start,length,search,employee_id,status,module);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping(value="get_converted_contact", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> get_converted_contact(HttpServletRequest request){
+		Map<String, Object> response = new HashMap<String,Object>();
+		int start = Integer.parseInt(request.getParameter("start"));
+		int length = Integer.parseInt(request.getParameter("length"));
+		String search = request.getParameter("search[value]");
+		String employee_id =request.getParameter("employee_id");
+		String status =request.getParameter("status");
+		String module =request.getParameter("module");
+		response = contactService.get_converted_contact(start,length,search,employee_id,status,module);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 	@RequestMapping(value="edit_contact", method = RequestMethod.POST)

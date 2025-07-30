@@ -1,6 +1,10 @@
 <!--! ================================================================ !-->
     <!--! [Start] Navigation Manu !-->
     <!--! ================================================================ !-->
+  <%@page import="com.hp.model.LoginCredentials"%>
+<%
+  LoginCredentials log = (LoginCredentials)session.getAttribute("loginData");
+ %>
     <nav class="nxl-navigation">
         <div class="navbar-wrapper">
             <div class="m-header">
@@ -18,6 +22,7 @@
                             <span class="nxl-mtext">Dashboard</span><span class="nxl-arrow"></span>
                         </a>
                     </li>
+                    <%if(log.getUser_type().equalsIgnoreCase("Admin")){ %>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
@@ -28,6 +33,7 @@
                             <li class="nxl-item"><a class="nxl-link" href="employee_rights">Employee Rights</a></li>
                         </ul>
                     </li>
+                    <%} %>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-cast"></i></span>
@@ -44,7 +50,7 @@
                         </a>
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="manage_converted_client">Converted Client</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="manage_article_detaisl">Manage Article Details</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="manage_article_details">Manage Article Details</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="manage_acceptance">Manage Acceptance</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="publication_payment">Manage Payment</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="publication_gallery_proof">Gallery Proof</a></li>
@@ -59,16 +65,16 @@
                             <span class="nxl-mtext">Writing Paper</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="manage_client_details">Client Details</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="review_article">Review Article</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="writing_converted_client">Converted Client</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="manage_writing_article">Article Details</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="manage_subject_area">Manage Subject Area</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="initial_payment">Initial Payment</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="initial_work">Initial Work</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="confirmation">Confirmation</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="remaining_amount">Remaining Amount</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="full_work">Full Work</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="manage_writing_initial_payment">Initial Payment</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="manage_initial_work">Initial Work</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="writing_paper_confirmation">Confirmation</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="writing_paper_remaining_amount">Remaining Amount</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="writing_paper_full_work">Full Work</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="full_work_confirmation">Full Work Confirmation</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="final_work_details">Final Work Details</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="writing_paper_final_work_details">Final Work Details</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -77,13 +83,14 @@
                             <span class="nxl-mtext">Authorship</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                         	<li class="nxl-item"><a class="nxl-link" href="converted_clients">Converted Clients</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="client_details">Client Details</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="initial_payment">Initial Payment</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="manage_acceptance">Manage Acceptance</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="remaining_payment">Remaining Payment</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="manage_gallery_proof">Gallery Proof</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="manage_gallery_proof">Publication Details</a></li>
+                        	<li class="nxl-item"><a class="nxl-link" href="authorship_article_details">Article Details</a></li>
+                         	<li class="nxl-item"><a class="nxl-link" href="authorship_converted_client">Converted Clients</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="author_details">Author Details</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="authorship_initial_payment">Initial Payment</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="authorship_acceptance">Manage Acceptance</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="authorship_remaining_payment">Remaining Payment</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="authorship_gallery_proof">Gallery Proof</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="authorship_publication_details">Publication Details</a></li>
                         </ul>
                     </li>
                 </ul>

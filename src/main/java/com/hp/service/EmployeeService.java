@@ -29,19 +29,20 @@ public class EmployeeService {
 	public Map<String, Object> add_employee(Employee employee) {
 		Map<String, Object> response = new HashMap<String,Object>();
 		try {
+			String encEmail = encriptionData.encrypt(employee.getEmail());
 			if(employee.getSno() > 0) {
 				Map<String, Object> map = new HashMap<String,Object>();
 				map.put("sno", employee.getSno());
 				List<Employee> data = (List<Employee>)commonDao.getDataByMap(map, new Employee(), null, null, 0, -1);
 				data.get(0).setEmployee_name(employee.getEmployee_name());
 				data.get(0).setMobile_number(employee.getMobile_number());
-				data.get(0).setEmail(employee.getEmail());
+				data.get(0).setEmail(encEmail);
 				commonDao.updateDataToDb(data.get(0));
 				response.put("status", "Success");
 				response.put("message", "Employee Details Updated Successfully");
 			}else {
 				Map<String, Object> map = new HashMap<String,Object>();
-				map.put("email", employee.getEmail());
+				map.put("email", encEmail);
 				map.put("mobile_number", employee.getMobile_number());
 				List<Employee> data = (List<Employee>)commonDao.getDataByMapOr(map, new Employee(), null, null, 0, -1);
 				if(data.size() > 0) {
@@ -50,12 +51,14 @@ public class EmployeeService {
 				}else {
 					String pass = Utils.generateRandomPassword(8);
 					String encPassword = encriptionData.encrypt(pass);
+					
+					employee.setEmail(encEmail);
 					employee.setStatus("Active");
 					employee.setCtreatedAt(new Date());
 					int i = commonDao.addDataToDb(employee);
 					if(i > 0) {
 						LoginCredentials login = new LoginCredentials();
-						login.setEmail(employee.getEmail());
+						login.setEmail(encEmail);
 						login.setPassword(encPassword);
 						login.setEmployee_id(i);
 						login.setUser_type("Employee");
@@ -134,7 +137,9 @@ public class EmployeeService {
 					map1.put("employee_id", e.getSno());
 					List<LoginCredentials > login = (List<LoginCredentials>)commonDao.getDataByMap(map1, new LoginCredentials(), null, null, 0, -1);
 					String decpass = encriptionData.decrypt(login.get(0).getPassword());
+					String deceml = encriptionData.decrypt(login.get(0).getEmail());
 					e.setPassword(decpass);
+					e.setEmail(deceml);
 				}
 				response.put("status", "Success");
 				response.put("message", "Data Fetched Successfully");

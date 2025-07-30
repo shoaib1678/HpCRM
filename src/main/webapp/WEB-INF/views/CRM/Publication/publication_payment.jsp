@@ -68,6 +68,7 @@
 												<th class="text-white">Journal Name</th>
 												<th class="text-white">Article Title</th>
 												<th class="text-white">Affiliation</th>
+												<th class="text-white">Payment Receipt</th>
 												<th class="text-white">Actions</th>
 											</tr>
 										</thead>
@@ -235,6 +236,7 @@
 										"payment_mode" : payment_mode,
 										"paid_amount" : received_amount,
 										"employee_id" : employee_id,
+										"module" : "Publication",
 										"ad_id" : sno,
 									};
 									var fd = new FormData();
@@ -486,6 +488,14 @@
 				{
 					"data" : "affilliation"
 				}, 
+				{
+					"data" : function(data, type,
+							dataToSet) {
+						var sno = data.sno;
+						var string = "<a href='javascript:void(0)' class='fa fa-file' onclick='payment(" + sno + ")' style='font-size: 27px;color: forestgreen;'></a>";
+                    	return string;
+					}
+				},
 				{
 					"data" : function(data, type,
 							dataToSet) {

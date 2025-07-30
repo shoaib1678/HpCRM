@@ -19,6 +19,15 @@
 .fade-in-top {
   animation: fadeInFromTop 0.8s ease-out forwards;
 }
+.vieweye{
+    background: none;
+    width: min-content;
+    position: absolute;
+    top: 57%;
+    left: 78%;
+    border: none;
+    cursor: pointer;
+}
     </style>
 </head>
 
@@ -35,12 +44,13 @@
                         <h4 class="fs-13 fw-bold mb-2">Welcome to Halicon Publication !!</h4>
 						<p class="fs-12 fw-medium text-muted">Sign in to access your Halicon CRM dashboard and streamline your publishing workflow.</p>
 
-                        <form action="index.html" class="w-100 mt-4 pt-2">
+                        <form action="dashboard" class="w-100 mt-4 pt-2" id="login" name="login" method ="post">
                             <div class="mb-4">
-                                <input type="email" class="form-control" placeholder="Email or Username" value="wrapcode.info@gmail.com" required>
+                                <input type="email" class="form-control" placeholder="Email or Username"  id="email" name="email">
                             </div>
                             <div class="mb-3">
-                                <input type="password" class="form-control" placeholder="Password" value="123456" required>
+                                <input type="password" class="form-control" placeholder="Password" id="password" name="password">
+                                 <span class="input-group-text vieweye cursor-pointer" id="password-addon"><i class="fa-solid fa-eye-slash"></i></span>
                             </div>
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
@@ -63,6 +73,72 @@
         </div>
     </main>
    <jsp:include page="../js.jsp"></jsp:include>
+   <script>
+		$(function() {
+			$("form[name='login']").validate({
+				rules : {
+					email : {
+						required : true,
+					},
+					password : {
+						required : true,
+					}
+				},
+				messages : {
+					email : "Please enter valid username",
+					password : "Please enter password",
+
+				},
+				submitHandler : function(form) {
+					$("#bttnn").html("Please Wait..");
+					var email = $("#email").val();
+					var password = $("#password").val();
+					
+					var fd = new FormData();
+					
+					fd.append("email",email);
+					fd.append("password",password);
+					
+
+					$.ajax({
+						url : 'checklogin',
+						type : 'post',
+						data : fd,
+						contentType : false,
+						processData : false,
+						success : function(data) {
+
+							if (data['status'] == 'Success') {
+								$("#bttnn").html("Success");
+								form.submit();
+							
+							} else{
+								$("#bttnn").html("Invalid Login Credentials");
+								setTimeout(function() {
+									$("#bttnn").html("Login");
+							      }, 3000);
+							}
+							
+						}
+					});
+				}
+			});
+		});
+		
+		/* Show password input value */
+
+		$("#password-addon").click(function() {
+		    if($("#password-addon i").hasClass('fa-eye-slash')){
+		          $("#password-addon i").removeClass('fa-eye-slash');
+		          $("#password-addon i").addClass('fa-eye');
+		          $('#password').attr('type','text');
+		        }else{
+		          $("#password-addon i").removeClass('fa-eye');
+		          $("#password-addon i").addClass('fa-eye-slash');  
+		          $('#password').attr('type','password');
+		        }
+		  });
+	</script>
 </body>
 
 </html>

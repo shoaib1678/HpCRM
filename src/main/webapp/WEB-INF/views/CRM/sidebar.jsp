@@ -1,6 +1,10 @@
  <!--! ================================================================ !-->
     <!--! [Start] Header !-->
     <!--! ================================================================ !-->
+  <%@page import="com.hp.model.LoginCredentials"%>
+<%
+  LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
+ %>
     <header class="nxl-header">
         <div class="header-wrapper">
             <!--! [Start] Header Left !-->
@@ -82,7 +86,7 @@
                                 <span>Account Settings</span>
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="./auth-login-minimal.html" class="dropdown-item">
+                            <a href="logout" class="dropdown-item">
                                 <i class="feather-log-out"></i>
                                 <span>Logout</span>
                             </a>
@@ -97,4 +101,4 @@
     <!--! [End] Header !-->
     <!--! ================================================================ !-->
     
-    <input type="hidden" id="employee_id" name="employee_id" value="0">
+    <input type="hidden" id="employee_id" name="employee_id" value="<%=login.getEmployee_id()%>">

@@ -634,8 +634,9 @@
 								$("#contact_number").val(data['data'][0].contact_number);
 								if(data['data'][0].client_name != null && data['data'][0].client_name != ""){
 									$("#client_name").val(data['data'][0].client_name);
+									
 								}
-								
+								$("#email").val(data['data'][0].email);
 							}else {
 								Swal.fire({
 											icon : 'Sorry',
@@ -707,11 +708,7 @@
 		                        icon: 'success',
 		                        title: 'Success!',
 		                        text: data['message']
-		                    }).then(function () {
-		                        setTimeout(function () {
-		                            window.location.href = 'manage_acceptance';
-		                        }, 2000);
-		                    });
+		                    })
 		                } else {
 		                    Swal.fire({
 		                        icon: 'error',

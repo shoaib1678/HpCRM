@@ -16,7 +16,9 @@ import com.hp.dao.CommonDao;
 import com.hp.model.ArticleDetails;
 import com.hp.model.ContactDetails;
 import com.hp.model.ContactRemarks;
+import com.hp.model.ConvertedModule;
 import com.hp.model.Payment;
+import com.hp.model.PaymentReceipt;
 import com.hp.model.PublicationDetails;
 import com.hp.utils.EncriptionData;
 import com.hp.utils.Utils;
@@ -57,9 +59,11 @@ public class ArticleService {
 				commonDao.updateDataToDb(data.get(0));
 				Map<String, Object> map1 = new HashMap<String,Object>();
 				map.put("ad_id", articleDetails.getSno());
+				map.put("module", "Publication");
 				List<Payment> p = (List<Payment>)commonDao.getDataByMap(map1, new Payment(), null, null, 0, -1);
 				p.get(0).setTotal_amount(articleDetails.getDealed_amount());
 				p.get(0).setRemaining_amount(articleDetails.getDealed_amount());
+				p.get(0).setModule("Publication");
 				commonDao.updateDataToDb(p.get(0));
 				response.put("status", "Success");
 				response.put("message", "Data Updated Successfully");
@@ -90,11 +94,14 @@ public class ArticleService {
 						pay.setTotal_amount(articleDetails.getDealed_amount());
 						pay.setRemaining_amount(articleDetails.getDealed_amount());
 						pay.setPaid_amount(0);
+						pay.setModule("Publication");
 						pay.setPayment_status("Pending");
 						commonDao.addDataToDb(pay);
 						Map<String, Object> mapp = new HashMap<String,Object>();
-						mapp.put("sno", articleDetails.getContact_id());
-						List<ContactDetails> cid = (List<ContactDetails>)commonDao.getDataByMap(mapp, new ContactDetails(), null, null, 0, -1);
+						mapp.put("contact_id", articleDetails.getContact_id());
+						mapp.put("module", "Publication");
+						mapp.put("status", "Converted");
+						List<ConvertedModule> cid = (List<ConvertedModule>)commonDao.getDataByMap(mapp, new ConvertedModule(), null, null, 0, -1);
 						cid.get(0).setStatus("Active");
 						commonDao.updateDataToDb(cid.get(0));
 						response.put("status", "Success");
@@ -142,8 +149,24 @@ public class ArticleService {
 					c.setEmail(eml);
 					if(c.getStatus().equalsIgnoreCase("Received") || c.getStatus().equalsIgnoreCase("Partially Paid") || c.getStatus().equalsIgnoreCase("Proved") || c.getStatus().equalsIgnoreCase("Paid")) {
 						mpp.put("ad_id", c.getSno());
+						mpp.put("module","Publication");
 						List<Payment> pay  = (List<Payment>)commonDao.getDataByMap(mpp, new Payment(), null, null, 0, -1);
 						if(pay.size() > 0) {
+							String rec="";
+							Map<String, Object> map12 = new HashMap<String, Object>();
+							map12.put("payment_id", pay.get(0).getSno());
+							List<PaymentReceipt> pr = (List<PaymentReceipt>)commonDao.getDataByMap(map12, new PaymentReceipt(), null, null, 0, -1);
+							if(pr.size() > 0) {
+								
+								for(int i=0; i< pr.size(); i++) {
+									if(i==0) {
+										rec = pr.get(i).getReceipt();
+									}else {
+										rec += "@@@"+pr.get(i).getReceipt();
+									}
+								}
+							}
+							c.setReceipt(rec);
 							c.setPaid_amount(pay.get(0).getPaid_amount());
 							c.setRemaining_amount(pay.get(0).getRemaining_amount());
 							c.setPayment_mode(pay.get(0).getPayment_mode());

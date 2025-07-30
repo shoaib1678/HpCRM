@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hp.dao.CommonDao;
 import com.hp.model.LoginCredentials;
+import com.hp.utils.EncriptionData;
 
 
 @Service
@@ -18,13 +19,18 @@ public class LoginService {
 
 	@Autowired
 	CommonDao commonDao;
+	@Autowired
+	static
+	EncriptionData encriptionData;
 	
 	public Map<String, Object> login(String email, String password) {
 		Map<String, Object> response = new HashMap<String, Object>();
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("email", email);
-			map.put("password", password);
+			String eml = encriptionData.encrypt(email);
+			String pass = encriptionData.encrypt(password);
+			map.put("email", eml);
+			map.put("password", pass);
 			map.put("status", "Active");
 			List<LoginCredentials> data = (List<LoginCredentials>) commonDao.getDataByMap(map, new LoginCredentials(),null, null, 0, -1);
 			System.out.println("size="+data.size());

@@ -3,6 +3,7 @@ package com.hp.service;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.hp.dao.CommonDao;
 import com.hp.model.ContactDetails;
 import com.hp.model.ContactRemarks;
+import com.hp.model.ConvertedModule;
 import com.hp.model.Employee;
 import com.hp.model.InactiveClient;
 import com.hp.utils.EncriptionData;
@@ -80,7 +82,7 @@ public class ContactService {
 		return response;
 	}
 
-	public Map<String, Object> get_contact(int start, int length, String search, String employee_id, String status) {
+	public Map<String, Object> get_contact(int start, int length, String search, String employee_id, String status, String module) {
 		Map<String, Object> response = new HashMap<String,Object>();
 		try {
 			Map<String, Object> map = new HashMap<String,Object>();
@@ -93,12 +95,13 @@ public class ContactService {
 			mapor.put("client_name", search);
 			List<ContactDetails> data = (List<ContactDetails>) commonDao.getDataByMapSearchAnd(map,mapor, new ContactDetails(), "sno", "desc", start, length);
 			int count = commonDao.getDataByMapSearchAndSize(map,mapor, new ContactDetails(), "sno", "desc");
+			List<ContactDetails> list = new ArrayList<ContactDetails>();
 			if(data.size() >0) {
 				for(ContactDetails c: data) {
 					String decc = encriptionData.decrypt(c.getContact_number());
 					c.setContact_number(decc);
 					if(c.getEmail() != null && !c.getEmail().isEmpty()) {
-						String eml = encriptionData.encrypt(c.getEmail());
+						String eml = encriptionData.decrypt(c.getEmail());
 						c.setEmail(eml);
 					}
 				}
@@ -178,9 +181,18 @@ public class ContactService {
 				rem.setConnected_time(currentTime);
 				rem.setRemarksDate(new Date());
 				commonDao.addDataToDb(rem);
+				ConvertedModule con = new ConvertedModule();
+				String[] mod = module.split(",");
+				for(int i=0; i< mod.length; i++) {
+					con.setContact_id(cd.get(0).getSno());
+					con.setModule(mod[i]);
+					con.setStatus(status);
+					con.setCreatedAt(new Date());
+					commonDao.addDataToDb(con);
+				}
 				response.put("status", "Success");
-		    	 response.put("message", "Status Updated Successfully");
-		    	 return response;
+		    	response.put("message", "Status Updated Successfully");
+		    	return response;
 			}else {
 				InactiveClient cl = new InactiveClient();
 				Map<String,Object> mm = new HashMap<String, Object>();
@@ -280,7 +292,9 @@ public class ContactService {
 			List<ContactDetails> data = (List<ContactDetails>)commonDao.getDataByMap(map, new ContactDetails(), null, null, 0, -1);
 			if(data.size() >0) {
 				String con = encriptionData.decrypt(data.get(0).getContact_number());
+				String eml = encriptionData.decrypt(data.get(0).getEmail());
 				data.get(0).setContact_number(con);
+				data.get(0).setEmail(eml);
 				response.put("status", "Success");
 				response.put("data", data);
 				response.put("message", "Data Fetched Successfully");
@@ -309,6 +323,56 @@ public class ContactService {
 			}else {
 				response.put("status", "Failed");
 				response.put("message", "No Data Found");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "Failed");
+			response.put("message", "Something Went Wrong"+e);
+		}
+		return response;
+	}
+
+	public Map<String, Object> get_converted_contact(int start, int length, String search, String employee_id,
+			String status, String module) {
+		Map<String, Object> response = new HashMap<String,Object>();
+		try {
+			Map<String, Object> map = new HashMap<String,Object>();
+			map.put("employee_id", Integer.parseInt(employee_id));
+			map.put("status", status);
+			map.put("module", module);
+			List<ConvertedModule> conv = (List<ConvertedModule>)commonDao.getDataByMap(map, new ConvertedModule(), null, null, 0, -1);
+			List<ContactDetails> con = new ArrayList<ContactDetails>();
+			int count =0;
+			if(conv.size() > 0) {
+				for(ConvertedModule c: conv) {
+					Map<String, Object> mp = new HashMap<String, Object>();
+					Map<String, Object> mpor = new HashMap<String, Object>();
+					mp.put("sno", c.getContact_id());
+					List<ContactDetails> contactDetails = (List<ContactDetails>)commonDao.getDataByMapSearchAnd(mp,mpor, new ContactDetails(), "sno", "desc", start, length);
+					count = commonDao.getDataByMapSearchAndSize(mp,mpor, new ContactDetails(), "sno", "desc");
+					con.addAll(contactDetails);
+				}
+			}
+			if(con.size() >0) {
+				for(ContactDetails c: con) {
+					String decc = encriptionData.decrypt(c.getContact_number());
+					c.setContact_number(decc);
+					if(c.getEmail() != null && !c.getEmail().isEmpty()) {
+						String eml = encriptionData.decrypt(c.getEmail());
+						c.setEmail(eml);
+					}
+				}
+				response.put("status", "Success");
+				response.put("message", "Data Fetched Successfully");
+				response.put("data", con);
+				response.put("recordsFiltered", count);
+				response.put("recordsTotal", count);
+			}else {
+				response.put("status", "Failed");
+				response.put("message", "No Data Found");
+				response.put("data", new ArrayList<>());
+				response.put("recordsFiltered", 0);
+				response.put("recordsTotal", 0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
