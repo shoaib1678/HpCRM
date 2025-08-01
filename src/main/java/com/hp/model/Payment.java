@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class Payment {
@@ -17,6 +18,10 @@ public class Payment {
 	private float paid_amount;
 	private float remaining_amount;
 	private String payment_mode;
+	@Transient
+	private String transaction_id;
+	@Transient
+	private String payment_type;
 	private String payment_status;
 	private String module;
 	
@@ -37,6 +42,18 @@ public class Payment {
 	}
 	public void setAd_id(int ad_id) {
 		this.ad_id = ad_id;
+	}
+	public String getTransaction_id() {
+		return transaction_id;
+	}
+	public void setTransaction_id(String transaction_id) {
+		this.transaction_id = transaction_id;
+	}
+	public String getPayment_type() {
+		return payment_type;
+	}
+	public void setPayment_type(String payment_type) {
+		this.payment_type = payment_type;
 	}
 	public float getTotal_amount() {
 		return total_amount;

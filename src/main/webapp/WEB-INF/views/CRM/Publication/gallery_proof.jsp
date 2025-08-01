@@ -388,6 +388,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Publication",
 										"contact_id" : sno,
 									};
 									$
@@ -467,7 +468,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Publication",
 		            }
 		        },
 		        columnDefs: [{

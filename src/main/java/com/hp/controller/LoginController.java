@@ -26,9 +26,10 @@ public class LoginController {
 	LoginService loginService;
 	
 	@RequestMapping(value = "/checklogin", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> login(@RequestParam("email") String email, @RequestParam("password") String password){
+	public ResponseEntity<Map<String, Object>> login(HttpServletRequest request,@RequestParam("email") String email, @RequestParam("password") String password){
 		Map<String, Object> resposne = new HashMap<String,Object>();
-		resposne = loginService.login(email,password);
+		String authentication_id = request.getParameter("authentication_id");
+		resposne = loginService.login(email,password,authentication_id);
 		return new ResponseEntity<Map<String,Object>>(resposne,HttpStatus.OK);
 	}
 	@RequestMapping(value = "/logout")
@@ -38,16 +39,15 @@ public class LoginController {
 	}
 	@RequestMapping(value="/change_password",method = RequestMethod.POST)
 	public ResponseEntity<Map<String,Object>> change_password1(HttpServletRequest request){
-		String sno = request.getParameter("sno");
-		String password = request.getParameter("password");
-		Map<String, Object> response = loginService.change_password(sno,password);
+		String email = request.getParameter("email");
+		Map<String, Object> response = loginService.change_password(email);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
-	@RequestMapping(value="/validate_password",method = RequestMethod.POST)
-	public ResponseEntity<Map<String,Object>> validate_password(HttpServletRequest request){
+	@RequestMapping(value="/reset_password",method = RequestMethod.POST)
+	public ResponseEntity<Map<String,Object>> reset_password(HttpServletRequest request){
 		String sno = request.getParameter("sno");
 		String password = request.getParameter("password");
-		Map<String, Object> response = loginService.validate_password(sno,password);
+		Map<String, Object> response = loginService.reset_password(sno,password);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 }

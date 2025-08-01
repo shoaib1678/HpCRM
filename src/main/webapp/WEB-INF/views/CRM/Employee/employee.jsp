@@ -86,6 +86,11 @@
 										<input type="text" class="form-control" id="mobile_number" name="mobile_number"
 											placeholder="Mobile Number">
 								</div>
+								<div class="form-group mb-3">
+									<label for="authentication_id" class="col-form-label">Authentication Code<span style="color: red;">*</span></label>
+										<input type="text" class="form-control" id="authentication_id" name="authentication_id"
+											placeholder="Mobile Number">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -121,6 +126,9 @@
 									email : {
 										required : true,
 									},
+									authentication_id : {
+										required : true,
+									},
 									mobile_number : {
 										required : true,
 									}
@@ -135,12 +143,17 @@
 									mobile_number : {
 										required : "Please enter mobile number.",
 									},
+									authentication_id : {
+										required : "Please enter authentication code.",
+									},
 								},
 								submitHandler : function(form) {
+									var authentication_id = $("#authentication_id").val();
 									var employee_name = $("#employee_name").val();
 									var email = $("#email").val();
 									var mobile_number = $("#mobile_number").val();
 									var obj = {
+										"authentication_id" : authentication_id,
 										"employee_name" : employee_name,
 										"mobile_number" : mobile_number,
 										"email" : email,

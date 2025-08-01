@@ -10,14 +10,14 @@ public class TestE {
 	public static void main(String[] args) {
         try {
             String originalText = "Halicon@2025";
-            String ecriptedText = "tSIPmuEb84xBgQSM6p4tSA==";
+            String ecriptedText = "01F+siHHYXFvIW3qo4THXg==";
 
             // Encrypt
-            String encrypted = encriptionData.encrypt("encript="+originalText);
+            String encrypted = encriptionData.encrypt(originalText);
             System.out.println("Encrypted Text: " + encrypted);
 
             // Decrypt
-            String decrypted = encriptionData.decrypt("decript="+ecriptedText);
+            String decrypted = encriptionData.decrypt(ecriptedText);
             System.out.println("Decrypted Text: " + decrypted);
 
         } catch (Exception e) {

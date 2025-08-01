@@ -29,6 +29,7 @@ public class WritingDetails {
 	@Transient
 	private String payment_status;
 	private String writing_type;
+	private String writing_file;
 	private String title;
 	private String article_id;
 	private String subject_area;
@@ -118,6 +119,12 @@ public class WritingDetails {
 	}
 	public void setAmount(float amount) {
 		this.amount = amount;
+	}
+	public String getWriting_file() {
+		return writing_file;
+	}
+	public void setWriting_file(String writing_file) {
+		this.writing_file = writing_file;
 	}
 	public String getStatus() {
 		return status;

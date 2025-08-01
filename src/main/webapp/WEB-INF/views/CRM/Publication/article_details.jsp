@@ -52,12 +52,11 @@
 									<table id="employee_table" class="table table-hover table-striped nowrap display responsive" style="width:100%">
 										<thead class="bg-primary">
 											<tr>
-												<th class="text-white">Sno</th>
+												<th class="text-white">Article Id</th>
 												<th class="text-white">Name</th>
 												<th class="text-white">Contact Number</th>
 												<th class="text-white">email</th>
 												<th class="text-white">Journal Name</th>
-												<th class="text-white">Article Id</th>
 												<th class="text-white">Article Title</th>
 												<th class="text-white">Total Amount</th>
 												<th class="text-white">Affiliation</th>
@@ -197,7 +196,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
-				<form id="accep_form" name="remarks_form">
+				<form id="accep_form" name="accep_form">
 					<div class="modal-body">
 						<div class="row px-4 justify-content-between">
 							<div class="col-xl-12 mb-3 mb-sm-0">
@@ -444,13 +443,7 @@
 				serverSide : true,
 				columns : [ 
 					{
-						data : 'SrNo',
-						render : function(data, type, row,
-								meta) {
-							return meta.row
-									+ meta.settings._iDisplayStart
-									+ 1;
-						}
+						"data" : "article_id"
 					},
 				{
 					"data" : "client_name"
@@ -463,9 +456,6 @@
 				}, 
 				{
 					"data" : "journal_name"
-				}, 
-				{
-					"data" : "article_id"
 				}, 
 				{
 					"data" : "article_title"
@@ -516,6 +506,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Publication",
 										"contact_id" : sno,
 									};
 									$
@@ -595,7 +586,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Publication",
 		            }
 		        },
 		        columnDefs: [{

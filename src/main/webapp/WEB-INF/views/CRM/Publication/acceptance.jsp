@@ -466,108 +466,7 @@
 		});
 		
 		
-		/* function data() {
-			$("#employee_table").DataTable({
-				dom : "Blfrtip",
-				autoWidth : true,
-				 responsive: {
-				        details: {
-				            type: 'inline'
-				        }
-				    },
-				buttons : [ {
-					extend : 'pdf',
-					exportOptions : {
-						columns : [ 0, 1, 2, 3, 4 ]
-					}
-				}, {
-					extend : 'csv',
-					exportOptions : {
-						columns : [ 0, 1, 2, 3, 4 ]
-					}
-
-				}, {
-					extend : 'print',
-					exportOptions : {
-						columns : [ 0, 1, 2, 3, 4 ]
-					}
-
-				}, {
-					extend : 'excel',
-					exportOptions : {
-						columns : [ 0, 1, 2, 3, 4 ]
-					}
-				}, {
-					extend : 'pageLength'
-				} ],
-				lengthChange : true,
-				ordering : false,
-				ajax : {
-					url : "get_articledetails",
-					type : "POST",
-					"data" : {
-						"employee_id" : employee_id,
-						"status" : "Acceptance",
-					}
-
-				},
-				columnDefs : [ {
-					"defaultContent" : "-",
-					"targets" : "_all"
-				} ],
-				serverSide : true,
-				columns : [ 
-					{
-						data : 'SrNo',
-						render : function(data, type, row,
-								meta) {
-							return meta.row
-									+ meta.settings._iDisplayStart
-									+ 1;
-						}
-					},
-				{
-					"data" : "client_name"
-				}, 
-				{
-					"data" : "contact_number"
-				}, 
-				{
-					"data" : "email"
-				}, 
-				{
-					"data" : "journal_name"
-				}, 
-				{
-					"data" : "article_id"
-				}, 
-				{
-					"data" : "article_title"
-				}, 
-				{
-					"data" : "dealed_amount"
-				}, 
-				{
-					"data" : "affilliation"
-				}, 
-				{
-					"data" : function(data, type,
-							dataToSet) {
-						var sno = data.sno;
-						var contact_id = data.contact_id;
-						var string = "<button class='btn btn-success btn-sm' type='button' onclick='Confirm(" + sno + ")' style='margin-bottom: 3px;'>Received Payment</button>";
-                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
-	                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
-                    
-                    return string;
-					}
-				},
-				],
-				"lengthMenu" : [ [ 5, 10, 25, 50 ], [ 5, 10, 25, 50 ] ],
-				select : true
-			});
-		}
-		data(); */
+		
 		
 		$(function() {
 			$("form[name='remarks_form']")
@@ -589,6 +488,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Publication",
 										"contact_id" : sno,
 									};
 									$
@@ -668,7 +568,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Publication",
 		            }
 		        },
 		        columnDefs: [{

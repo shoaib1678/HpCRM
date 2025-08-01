@@ -126,7 +126,7 @@ public class ArticleService {
 		try {
 			Map<String, Object> map = new HashMap<String,Object>();
 			if(Integer.parseInt(employee_id) > 0) {
-				map.put("sno", Integer.parseInt(employee_id));
+				map.put("employee_id", Integer.parseInt(employee_id));
 			}
 			map.put("status", status);
 			Map<String, Object> mapor = new HashMap<String,Object>();
@@ -147,7 +147,10 @@ public class ArticleService {
 					String eml = encriptionData.decrypt(cd.get(0).getEmail());
 					c.setContact_number(decc);
 					c.setEmail(eml);
-					if(c.getStatus().equalsIgnoreCase("Received") || c.getStatus().equalsIgnoreCase("Partially Paid") || c.getStatus().equalsIgnoreCase("Proved") || c.getStatus().equalsIgnoreCase("Paid")) {
+					if(c.getStatus().equalsIgnoreCase("Received") 
+							|| c.getStatus().equalsIgnoreCase("Partially Paid") 
+							|| c.getStatus().equalsIgnoreCase("Proved") 
+							|| c.getStatus().equalsIgnoreCase("Paid")) {
 						mpp.put("ad_id", c.getSno());
 						mpp.put("module","Publication");
 						List<Payment> pay  = (List<Payment>)commonDao.getDataByMap(mpp, new Payment(), null, null, 0, -1);

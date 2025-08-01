@@ -292,110 +292,7 @@
 			$("#sno").val(sno);
 			$('#remarks_modal').modal('toggle');
 		}
-		/* function data(status) {
-		    $("#employee_table").DataTable().clear().destroy(); // Destroy previous instance
-
-		    $("#employee_table").DataTable({
-		        dom: "Blfrtip",
-		        autoWidth: true,
-		        responsive: true,
-		        buttons: [
-		            {
-		                extend: 'pdf',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'csv',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'print',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'excel',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'pageLength'
-		            }
-		        ],
-		        lengthChange: true,
-		        ordering: false,
-		        ajax: {
-		            url: "get_articledetails",
-		            type: "POST",
-		            data: {
-		                "employee_id": employee_id,
-		                "status": status
-		            }
-		        },
-		        columnDefs: [{
-		            "defaultContent": "-",
-		            "targets": "_all"
-		        }],
-		        serverSide: true,
-		        columns: [
-		        	{
-						"data" : "article_id"
-					}, 
-		        	{
-						"data" : "client_name"
-					}, 
-					{
-						"data" : "contact_number"
-					}, 
-					{
-						"data" : "email"
-					}, 
-					{
-						"data" : "dealed_amount"
-					}, 
-					{
-						"data" : "journal_name"
-					}, 
-					{
-						"data" : "article_title"
-					}, 
-					
-					{
-						"data" : "affilliation"
-					}, 
-					{
-						"data" : function(data, type,
-								dataToSet) {
-							var sno = data.sno;
-							var status = data.status;
-							var contact_id = data.contact_id;
-							var string = "";
-							if(status == "Acceptance"){
-								string += "<button class='btn btn-success btn-sm' type='button' onclick='Confirm(" + sno + ")' style='margin-bottom: 3px;'>Received Payment</button>";
-							}
-	                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
-		                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
-	                    
-	                    return string;
-						}
-					},
-		        ],
-		        lengthMenu: [[5, 10, 25, 50], [5, 10, 25, 50]],
-		        select: true
-		    });
-		}
 		
-		data("Acceptance"); 
-		$(document).on('click', '.sttus', function () {
-		    var status = $(this).text().trim();
-		    if(status == "Pending"){
-		    	status="Acceptance";
-		    }
-		    if(status == "Confirmed"){
-		    	status="Received";
-		    }
-		    $('.sttus').removeClass('active');
-		    $(this).addClass('active');
-		    data(status);
-		}); */
 		
 		
 		function data() {
@@ -524,6 +421,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Publication",
 										"contact_id" : sno,
 									};
 									$
@@ -603,7 +501,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Publication",
 		            }
 		        },
 		        columnDefs: [{

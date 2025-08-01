@@ -21,6 +21,7 @@ public class ContactRemarks {
 	@Transient
 	private String employee_name;
 	private String remarks;
+	private String module;
 	private String connected_time;
 	@Temporal(TemporalType.DATE)
 	private Date remarksDate;
@@ -65,5 +66,11 @@ public class ContactRemarks {
 	}
 	public void setRemarksDate(Date remarksDate) {
 		this.remarksDate = remarksDate;
+	}
+	public String getModule() {
+		return module;
+	}
+	public void setModule(String module) {
+		this.module = module;
 	}
 }

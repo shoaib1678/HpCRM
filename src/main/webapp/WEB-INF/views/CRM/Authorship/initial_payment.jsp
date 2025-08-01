@@ -111,13 +111,19 @@
 									</div>
 									<div class="col-md-12">
 										<div class="form-group mb-3">
+											<label for="transaction_id" class="col-form-label">Transaction ID<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="transaction_id" name="transaction_id" placeholder="Transaction ID">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group mb-3">
 											<label for="received_amount" class="col-form-label">Received Amount<span style="color: red;">*</span></label>
 											<input type="text" class="form-control" id="received_amount" name="received_amount" placeholder="Received Amount">
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="receipt" class="col-form-label">Payment Receipt</label>
+											<label for="receipt" class="col-form-label">Payment Receipt<span style="color: red;">*</span></label>
 											<input type="file" class="form-control" id="receipt" name="receipt" placeholder="Payment Receipt">
 										</div>
 									</div>
@@ -216,6 +222,12 @@
 									received_amount : {
 										required : true,
 									},
+									transaction_id : {
+										required : true,
+									},
+									receipt : {
+										required : true,
+									},
 								},
 								messages : {
 									payment_mode : {
@@ -224,15 +236,24 @@
 									received_amount : {
 										required : "Please enter received amount.",
 									},
+									transaction_id : {
+										required : "Please enter transaction id.",
+									},
+									receipt : {
+										required : "Please upload payment receipt.",
+									},
 								},
 								submitHandler : function(form) {
 									var payment_mode = $("#payment_mode").val();
+									var transaction_id = $("#transaction_id").val();
 									var received_amount = $("#received_amount").val();
 									var contact_number = $("#contact_number").val();
 									var file = $("#receipt")[0].files[0];
 									var sno = $("#sno").val();
 									
 									var obj = {
+										"payment_type" : "ini",
+										"transaction_id" : transaction_id,
 										"payment_mode" : payment_mode,
 										"paid_amount" : received_amount,
 										"employee_id" : employee_id,
@@ -426,6 +447,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Authorship",
 										"contact_id" : sno,
 									};
 									$
@@ -505,7 +527,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Authorship",
 		            }
 		        },
 		        columnDefs: [{

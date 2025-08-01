@@ -19,6 +19,8 @@ public class Employee {
 	private String mobile_number;
 	@Transient
 	private String password;
+	@Transient
+	private String authentication_id;
 	private String status;
 	private Date ctreatedAt;
 	public int getSno() {
@@ -44,6 +46,12 @@ public class Employee {
 	}
 	public void setMobile_number(String mobile_number) {
 		this.mobile_number = mobile_number;
+	}
+	public String getAuthentication_id() {
+		return authentication_id;
+	}
+	public void setAuthentication_id(String authentication_id) {
+		this.authentication_id = authentication_id;
 	}
 	public String getPassword() {
 		return password;

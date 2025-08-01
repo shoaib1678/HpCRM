@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.hp.dao.CommonDao;
 import com.hp.model.Authorship_Article;
+import com.hp.model.Employee;
 import com.hp.model.LoginCredentials;
 import com.hp.utils.EncriptionData;
 import com.hp.utils.Utils;
@@ -46,6 +47,18 @@ public class HomeController {
 	public ModelAndView test(HttpServletResponse response) throws IOException{
 		return new ModelAndView("CRM/Authentication/login");
 	}
+	@RequestMapping(value="/change_password")
+	public ModelAndView change_password(HttpServletResponse response) throws IOException{
+		return new ModelAndView("CRM/Authentication/reset_password");
+	}
+	@RequestMapping(value="/reset")
+	public ModelAndView reset(HttpServletRequest request) throws IOException{
+		String sno = request.getParameter("id");
+		System.out.println("sno="+sno);
+		ModelAndView mv =  new ModelAndView("CRM/Authentication/reset_url");
+		mv.addObject("sno", sno);
+		return mv;
+	}
 	@RequestMapping(value="/dashboard")
 	public ModelAndView dashboard(HttpServletRequest request, HttpSession session) throws IOException{
 		LoginCredentials log = (LoginCredentials)session.getAttribute("loginData");
@@ -53,7 +66,9 @@ public class HomeController {
 			ModelAndView mv = new ModelAndView("CRM/Dashboard/dashboard");
 			return mv;
 		}else {
+			
 			String email = request.getParameter("email");
+			String demail = email;
 			String eml="";
 			try {
 				eml = encriptionData.encrypt(email);
@@ -64,6 +79,13 @@ public class HomeController {
 			map.put("email", eml);
 			List<LoginCredentials> login = (List<LoginCredentials>)commonDao.getDataByMap(map, new LoginCredentials(), null, null, 0, -1);
 			if(login.size() > 0) {
+				login.get(0).setEmail(demail);
+				if(!login.get(0).getUser_type().equalsIgnoreCase("Admin")) {
+					Map<String, Object> map1 = new HashMap<String, Object>();
+					map1.put("email", eml);
+					List<Employee> emp = (List<Employee>)commonDao.getDataByMap(map1, new Employee(), null, null, 0, -1);
+					login.get(0).setEmp_name(emp.get(0).getEmployee_name());
+				}
 				ModelAndView mv = new ModelAndView("CRM/Dashboard/dashboard");
 				session.setAttribute("loginData", login.get(0));
 				return mv;
@@ -186,7 +208,7 @@ public class HomeController {
 		}
 		
 	}
-	@RequestMapping(value="/publication_gallery_proof")
+	@RequestMapping(value="/publication_galley_proof")
 	public ModelAndView publication_gallery_proof(HttpServletRequest request, HttpSession session) throws IOException{
 		LoginCredentials log = (LoginCredentials)session.getAttribute("loginData");
 		if(log != null) {
@@ -213,6 +235,17 @@ public class HomeController {
 		LoginCredentials log = (LoginCredentials)session.getAttribute("loginData");
 		if(log != null) {
 			ModelAndView mv = new ModelAndView("CRM/Publication/publication_details");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
+	}
+	@RequestMapping(value="/published_article_details")
+	public ModelAndView published_paper_details(HttpServletRequest request, HttpSession session) throws IOException{
+		LoginCredentials log = (LoginCredentials)session.getAttribute("loginData");
+		if(log != null) {
+			ModelAndView mv = new ModelAndView("CRM/Publication/published_paper");
 			return mv;
 		}else {
 			return new ModelAndView("redirect:./");
@@ -402,7 +435,18 @@ public class HomeController {
 		}
 		
 	}
-	@RequestMapping(value="/authorship_gallery_proof")
+	@RequestMapping(value="/authorship_final_payment")
+	public ModelAndView authorship_final_payment(HttpServletRequest request, HttpSession session) throws IOException{
+		LoginCredentials log = (LoginCredentials)session.getAttribute("loginData");
+		if(log != null) {
+			ModelAndView mv = new ModelAndView("CRM/Authorship/final_payment");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
+	}
+	@RequestMapping(value="/authorship_galley_proof")
 	public ModelAndView authorship_gallery_proof(HttpServletRequest request, HttpSession session) throws IOException{
 		LoginCredentials log = (LoginCredentials)session.getAttribute("loginData");
 		if(log != null) {

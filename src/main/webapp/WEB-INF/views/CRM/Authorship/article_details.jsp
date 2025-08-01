@@ -1,3 +1,4 @@
+<%@page import="com.hp.model.LoginCredentials"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="zxx">
@@ -27,7 +28,9 @@
     }
 </style>
 </head>
-
+<%
+LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
+%>
 <body>
 	<!--! ================================================================ !-->
 	<!--! [Start] Navigation Manu !-->
@@ -51,8 +54,9 @@
 			<div class="main-content">
 				<div class="row">
 					<div class="col-lg-12">
+					<%if(login.getUser_type().equalsIgnoreCase("Admin")){ %>
 					<button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-							data-bs-target="#employee_modal">Add New Article</button>
+							data-bs-target="#employee_modal">Add New Article</button><%} %>
 						<div class="card stretch">
 							<div class="card-body">
 								<div class="table-responsive">
@@ -425,8 +429,12 @@
 						var ap = data['data'][0].ap;
 						var html = '';
 						$('#tbody1').html("");
-
+						var sum = 0; 
+						var col = 0; 
+						let boldStart = '';
+						let boldEnd = '';
 						for (var i = 0; i < ap.length; i++) {
+							sum += parseFloat(ap[i].position_amount);
 							let badgeClass = '';
 							if (ap[i].status === 'Booked') {
 								badgeClass = 'danger';
@@ -440,6 +448,7 @@
 							let bb = "-";
 							if (ap[i].booked_amount != null && ap[i].booked_amount !== "") {
 								ba = "₹ " + ap[i].booked_amount;
+								col += parseFloat(ap[i].booked_amount);
 							}
 							if (ap[i].employee_name != null && ap[i].employee_name !== "") {
 								bb = ap[i].employee_name;
@@ -456,8 +465,7 @@
 							}
 
 							// Apply bold row if "Corresponding Author"
-							let boldStart = '';
-							let boldEnd = '';
+							
 							if (ap[i].position === 'Corresponding Author') {
 								boldStart = '<strong>';
 								boldEnd = '</strong>';
@@ -471,7 +479,13 @@
 							html += '<td>' + boldStart + bb + boldEnd + '</td>';
 							html += '</tr>';
 						}
-
+						html += '<tr id="rowss" class="table-primary">';
+						html += '<td>'+boldStart+'Total: '+boldEnd+'</td>';
+						html += '<td class="price-tag">₹' + sum + '</td>';
+						html += '<td>'+boldStart+'Collected'+boldEnd+'</td>';
+						html += '<td>'+boldStart+'₹' + col + ''+boldEnd+'</td>';
+						html += '<td>-</td>';
+						html += '</tr>';
 						$('#tbody1').append(html);
 
 					} else {

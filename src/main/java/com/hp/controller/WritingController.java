@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hp.model.ContactDetails;
 import com.hp.model.WritingDetails;
@@ -61,6 +63,14 @@ public class WritingController {
 		String sno =request.getParameter("sno");
 		String status =request.getParameter("status");
 		response = writingService.sent_data_confirm(sno,status);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping(value="add_writing_file", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> add_writing_file(HttpServletRequest request,@RequestParam(value = "file",required = false) MultipartFile file){
+		Map<String, Object> response = new HashMap<String,Object>();
+		String sno =request.getParameter("sno");
+		String status =request.getParameter("status");
+		response = writingService.add_writing_file(sno,status,file);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 }

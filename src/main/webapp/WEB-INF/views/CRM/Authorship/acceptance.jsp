@@ -202,7 +202,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
-				<form id="accep_form" name="remarks_form">
+				<form id="accep_form" name="accep_form">
 					<div class="modal-body">
 						<div class="row px-4 justify-content-between">
 							<div class="col-xl-12 mb-3 mb-sm-0">
@@ -456,6 +456,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Authorship",
 										"contact_id" : sno,
 									};
 									$
@@ -535,7 +536,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Authorship",
 		            }
 		        },
 		        columnDefs: [{

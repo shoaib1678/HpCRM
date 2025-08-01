@@ -174,7 +174,7 @@ List<String> journal_name= (List<String>)request.getAttribute("journal_name");
 										<div class="col-md-6 bkd" style="display: none;">
 											<div class="form-group mb-3">
 												<label for="booking_date" class="col-form-label">Booking Date<span style="color: red;">*</span></label>
-												<input type="text" class="form-control" id="booking_date" name="booking_date" placeholder="Booking Date">
+												<input type="date" class="form-control" id="booking_date" name="booking_date" placeholder="Booking Date">
 											</div>
 										</div>
 									
@@ -507,102 +507,7 @@ List<String> journal_name= (List<String>)request.getAttribute("journal_name");
 		    // Call data with selected status
 		    data(status);
 		});
-		/* function data() {
-			$("#employee_table").DataTable({
-				dom : "Blfrtip",
-				autoWidth : true,
-				responsive : true,
-				buttons : [ {
-					extend : 'pdf',
-					exportOptions : {
-						columns : [ 0, 1, 2, 3, 4 ]
-					}
-				}, {
-					extend : 'csv',
-					exportOptions : {
-						columns : [ 0, 1, 2, 3, 4 ]
-					}
-
-				}, {
-					extend : 'print',
-					exportOptions : {
-						columns : [ 0, 1, 2, 3, 4 ]
-					}
-
-				}, {
-					extend : 'excel',
-					exportOptions : {
-						columns : [ 0, 1, 2, 3, 4 ]
-					}
-				}, {
-					extend : 'pageLength'
-				} ],
-				lengthChange : true,
-				ordering : false,
-				ajax : {
-					url : "get_converted_contact",
-					type : "POST",
-					"data" : {
-						"employee_id" : employee_id,
-						"status" : "Converted",
-						"module" : "Authorship",
-					}
-
-				},
-				columnDefs : [ {
-					"defaultContent" : "-",
-					"targets" : "_all"
-				} ],
-				serverSide : true,
-				columns : [ 
-					{
-						data : 'SrNo',
-						render : function(data, type, row,
-								meta) {
-							return meta.row
-									+ meta.settings._iDisplayStart
-									+ 1;
-						}
-					},
-				{
-					"data" : "contact_number"
-				}, 
-				{
-					"data" : "client_name"
-				}, 
-				{
-					"data" : "email"
-				}, 
-				 {
-	                data: "status",
-	                render: function(data, type, row) {
-	                    var badgeClass = '';
-	                    var label = data;
-
-	                    if (data.toLowerCase() === 'converted') {
-	                        badgeClass = 'badge bg-success';
-	                    } 
-
-	                    return '<span class="' + badgeClass + '">' + label + '</span>';
-	                }
-	            },
-				{
-					"data" : function(data, type,
-							dataToSet) {
-						var sno = data.sno;
-						var string = "<button class='btn btn-primary btn-sm' type='button' onclick='changestatus(" + sno + ")'>Update Authorship Position</button>";
-                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + sno + ')" style="margin-left: 10px;">Add Remarks</button>';
-	                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + sno + ')" style="margin-left: 10px;">View Remarks</button>';
-                    
-                    return string;
-					}
-				},
-				],
-				"lengthMenu" : [ [ 5, 10, 25, 50 ], [ 5, 10, 25, 50 ] ],
-				select : true
-			});
-		}
-		data(); */
+		
 		
 		$(function() {
 			$("form[name='remarks_form']")
@@ -624,6 +529,7 @@ List<String> journal_name= (List<String>)request.getAttribute("journal_name");
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Authorship",
 										"contact_id" : sno,
 									};
 									$
@@ -670,6 +576,7 @@ List<String> journal_name= (List<String>)request.getAttribute("journal_name");
 		function viewremarks(contact_id) {
 			$('#remarksview_modal').modal('toggle');
 		    $("#remarks_table").DataTable().clear().destroy(); // Destroy previous instance
+
 		    $("#remarks_table").DataTable({
 		        dom: "Blfrtip",
 		        autoWidth: true,
@@ -702,7 +609,8 @@ List<String> journal_name= (List<String>)request.getAttribute("journal_name");
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Authorship",
 		            }
 		        },
 		        columnDefs: [{
@@ -766,7 +674,12 @@ List<String> journal_name= (List<String>)request.getAttribute("journal_name");
 					 	$("#position").append("<option disabled selected>--Select Position--</option>");
 					 	
 					 	for(var i = 0; i < data['dd'].length; i++){
-					 		$("#position").append("<option value='" + data['dd'][i].sno +"'>"+ data['dd'][i].position +"</option>");
+					 		if(data['dd'][i].status == "Booked"){
+					 			$("#position").append("<option value='" + data['dd'][i].sno +"' disabled>"+ data['dd'][i].position +"</option>");
+					 		}else{
+					 			$("#position").append("<option value='" + data['dd'][i].sno +"'>"+ data['dd'][i].position +"</option>");
+					 		}
+					 		
 					 	}
 					} else {
 						swal("Invalid!", data['message'] , "error")
@@ -788,9 +701,7 @@ List<String> journal_name= (List<String>)request.getAttribute("journal_name");
 							if (data['status'] == 'Success') {
 								$("#contact_number").val(data['data'][0].contact_number);
 								$("#name").val(data['data'][0].client_name);
-								if(data['data'][0].client_name != null && data['data'][0].client_name != ""){
-									$("#email").val(data['data'][0].email);
-								}
+								$("#email").val(data['data'][0].email);
 								
 							}else {
 								Swal.fire({

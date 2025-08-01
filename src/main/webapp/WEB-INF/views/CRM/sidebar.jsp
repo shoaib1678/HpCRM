@@ -67,7 +67,7 @@
                         </a>
                     </div>
                     
-                    <div class="dropdown nxl-h-item">
+                    <div class="dropdown nxl-h-item" style="margin-top: -20px;">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
                             <img src="assets/images/logo.avif" alt="user-image" class="img-fluid user-avtar me-0" />
                         </a>
@@ -76,14 +76,18 @@
                                 <div class="d-flex align-items-center">
                                     <img src="assets/images/logo.avif" alt="user-image" class="img-fluid user-avtar" />
                                     <div>
+                                    <%if(login.getUser_type().equalsIgnoreCase("Admin")){ %>
                                         <h6 class="text-dark mb-0">Halicon Publication <span class="badge bg-soft-success text-success ms-1">PRO</span></h6>
-                                        <span class="fs-12 fw-medium text-muted">alex.della@outlook.com</span>
+                                        <%}else{ %>
+                                        <h6 class="text-dark mb-0"><%=login.getEmp_name()%></h6>
+                                        <%} %>
+                                        <span class="fs-12 fw-medium text-muted"><%=login.getEmail()%></span>
                                     </div>
                                 </div>
                             </div>
-                            <a href="javascript:void(0);" class="dropdown-item">
+                            <a href="change_password" class="dropdown-item">
                                 <i class="feather-settings"></i>
-                                <span>Account Settings</span>
+                                <span>Change Password</span>
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="logout" class="dropdown-item">

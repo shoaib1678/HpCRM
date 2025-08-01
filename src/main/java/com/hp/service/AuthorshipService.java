@@ -53,7 +53,7 @@ public class AuthorshipService {
 					art.get(0).setAvailable_position(p);
 					commonDao.updateDataToDb(art.get(0));
 					Payment pay = new Payment();
-					pay.setAd_id(ad.getAa_id());
+					pay.setAd_id(aad.get(0).getSno());
 					pay.setEmployee_id(ad.getEmployee_id());
 					pay.setModule("Authorship");
 					pay.setPaid_amount(0);
@@ -66,6 +66,8 @@ public class AuthorshipService {
 				map1.put("sno", ad.getPosition_id());
 				List<Authorship_Position> ap = (List<Authorship_Position>)commonDao.getDataByMap(map1, new Authorship_Position(), null, null, 0, -1);
 				if(ad.getStatus().equalsIgnoreCase("Booked")) {
+					ap.get(0).setContact_id(ad.getContact_id());
+					ap.get(0).setEmployee_id(ad.getEmployee_id());
 					ap.get(0).setBooked_amount(ad.getBooking_amount());
 					ap.get(0).setBooked_date(ad.getBooking_date());
 				}
@@ -96,62 +98,73 @@ public class AuthorshipService {
 				response.put("status", "Success");
 				response.put("message", "Article Details updated Successfully");
 			}else {
-				ad.setCreatedAt(new Date());
-				int i = commonDao.addDataToDb(ad);
-				if(i > 0) {
-					Map<String, Object> map = new HashMap<String,Object>();
-					map.put("sno", ad.getAa_id());
-					List<Authorship_Article> art = (List<Authorship_Article>)commonDao.getDataByMap(map, new Authorship_Article(), null, null, 0, -1);
-					if(ad.getStatus().equalsIgnoreCase("Booked")) {
-						int p = art.get(0).getAvailable_position() -1;
-						art.get(0).setAvailable_position(p);
-						commonDao.updateDataToDb(art.get(0));
-						Payment pay = new Payment();
-						pay.setAd_id(ad.getAa_id());
-						pay.setEmployee_id(ad.getEmployee_id());
-						pay.setModule("Authorship");
-						pay.setPaid_amount(0);
-						pay.setPayment_status("Pending");
-						pay.setTotal_amount(ad.getBooking_amount());
-						pay.setRemaining_amount(ad.getBooking_amount());
-						commonDao.addDataToDb(pay);
+				Map<String, Object> mpp =new HashMap<String, Object>();
+				mpp.put("author_id", ad.getAuthor_id());
+				List<AuthorshipDetails> data = (List<AuthorshipDetails>)commonDao.getDataByMap(mpp, new AuthorshipDetails(), null, null, 0, -1);
+				if(data.size() > 0) {
+					response.put("status", "Already_Exist");
+					response.put("message", "Author Id Already Exist");
+				}else {
+					ad.setCreatedAt(new Date());
+					int i = commonDao.addDataToDb(ad);
+					if(i > 0) {
+						Map<String, Object> map = new HashMap<String,Object>();
+						map.put("sno", ad.getAa_id());
+						List<Authorship_Article> art = (List<Authorship_Article>)commonDao.getDataByMap(map, new Authorship_Article(), null, null, 0, -1);
+						if(ad.getStatus().equalsIgnoreCase("Booked")) {
+							int p = art.get(0).getAvailable_position() -1;
+							art.get(0).setAvailable_position(p);
+							art.get(0).setAvailable_position(p);
+							commonDao.updateDataToDb(art.get(0));
+							Payment pay = new Payment();
+							pay.setAd_id(i);
+							pay.setEmployee_id(ad.getEmployee_id());
+							pay.setModule("Authorship");
+							pay.setPaid_amount(0);
+							pay.setPayment_status("Pending");
+							pay.setTotal_amount(ad.getBooking_amount());
+							pay.setRemaining_amount(ad.getBooking_amount());
+							commonDao.addDataToDb(pay);
+						}
+						Map<String, Object> map1 = new HashMap<String,Object>();
+						map1.put("sno", ad.getPosition_id());
+						List<Authorship_Position> ap = (List<Authorship_Position>)commonDao.getDataByMap(map1, new Authorship_Position(), null, null, 0, -1);
+						if(ad.getStatus().equalsIgnoreCase("Booked")) {
+							ap.get(0).setContact_id(ad.getContact_id());
+							ap.get(0).setEmployee_id(ad.getEmployee_id());
+							ap.get(0).setBooked_amount(ad.getBooking_amount());
+							ap.get(0).setBooked_date(ad.getBooking_date());
+						}
+						ap.get(0).setStatus(ad.getStatus());
+						commonDao.updateDataToDb(ap.get(0));
+						Map<String, Object> map2 = new HashMap<String,Object>();
+						map2.put("contact_id", ad.getContact_id());
+						map2.put("module", "Authorship");
+						List<ConvertedModule> cd = (List<ConvertedModule>)commonDao.getDataByMap(map2, new ConvertedModule(), null, null, 0, -1);
+						cd.get(0).setStatus(ad.getStatus());
+						commonDao.updateDataToDb(cd.get(0));
+						Map<String, Object> map4 = new HashMap<String,Object>();
+						map4.put("sno", ad.getContact_id());
+						List<ContactDetails> cdd = (List<ContactDetails>)commonDao.getDataByMap(map4, new ContactDetails(), null, null, 0, -1);
+						cdd.get(0).setClient_name(ad.getName());
+						String eml = encriptionData.encrypt(ad.getEmail());
+						cdd.get(0).setEmail(eml);
+						commonDao.updateDataToDb(cdd.get(0));
+						ContactRemarks cr = new ContactRemarks();
+						cr.setContact_id(ad.getContact_id());
+						cr.setEmployee_id(ad.getEmployee_id());
+						cr.setRemarks(ad.getRemarks());
+						 LocalTime now = LocalTime.now();
+					     String currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+					     cr.setConnected_time(currentTime);
+					     cr.setRemarksDate(new Date());
+					     commonDao.addDataToDb(cr);
+						response.put("status", "Success");
+						response.put("message", "Article Details Added Successfully");
+					}else{
+						response.put("status", "Failed");
+						response.put("message", "Internal Server Error");
 					}
-					Map<String, Object> map1 = new HashMap<String,Object>();
-					map1.put("sno", ad.getPosition_id());
-					List<Authorship_Position> ap = (List<Authorship_Position>)commonDao.getDataByMap(map1, new Authorship_Position(), null, null, 0, -1);
-					if(ad.getStatus().equalsIgnoreCase("Booked")) {
-						ap.get(0).setBooked_amount(ad.getBooking_amount());
-						ap.get(0).setBooked_date(ad.getBooking_date());
-					}
-					ap.get(0).setStatus(ad.getStatus());
-					commonDao.updateDataToDb(ap.get(0));
-					Map<String, Object> map2 = new HashMap<String,Object>();
-					map2.put("contact_id", ad.getContact_id());
-					map2.put("module", "Authorship");
-					List<ConvertedModule> cd = (List<ConvertedModule>)commonDao.getDataByMap(map2, new ConvertedModule(), null, null, 0, -1);
-					cd.get(0).setStatus(ad.getStatus());
-					commonDao.updateDataToDb(cd.get(0));
-					Map<String, Object> map4 = new HashMap<String,Object>();
-					map4.put("sno", ad.getContact_id());
-					List<ContactDetails> cdd = (List<ContactDetails>)commonDao.getDataByMap(map4, new ContactDetails(), null, null, 0, -1);
-					cdd.get(0).setClient_name(ad.getName());
-					String eml = encriptionData.encrypt(ad.getEmail());
-					cdd.get(0).setEmail(eml);
-					commonDao.updateDataToDb(cdd.get(0));
-					ContactRemarks cr = new ContactRemarks();
-					cr.setContact_id(ad.getContact_id());
-					cr.setEmployee_id(ad.getEmployee_id());
-					cr.setRemarks(ad.getRemarks());
-					 LocalTime now = LocalTime.now();
-				     String currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-				     cr.setConnected_time(currentTime);
-				     cr.setRemarksDate(new Date());
-				     commonDao.addDataToDb(cr);
-					response.put("status", "Success");
-					response.put("message", "Article Details Added Successfully");
-				}else{
-					response.put("status", "Failed");
-					response.put("message", "Internal Server Error");
 				}
 			}
 		} catch (Exception e) {
@@ -199,12 +212,15 @@ public class AuthorshipService {
 					if(a.getStatus().equalsIgnoreCase("Received") 
 							|| a.getStatus().equalsIgnoreCase("Initiated") 
 							|| a.getStatus().equalsIgnoreCase("Paid") 
+							|| a.getStatus().equalsIgnoreCase("Partially") 
 							|| a.getStatus().equalsIgnoreCase("Proved") 
+							|| a.getStatus().equalsIgnoreCase("Completed") 
 							|| a.getStatus().equalsIgnoreCase("Acceptance")) {
 						Map<String, Object> mp = new HashMap<String,Object>();
 						mp.put("ad_id", a.getSno());
 						mp.put("module", "Authorship");
 						List<Payment> pay = (List<Payment>)commonDao.getDataByMap(mp, new Payment(), null, null, 0, -1);
+						
 						a.setPaid_amount(pay.get(0).getPaid_amount());
 						a.setRemaining_amount(pay.get(0).getRemaining_amount());
 						a.setPayment_mode(pay.get(0).getPayment_mode());

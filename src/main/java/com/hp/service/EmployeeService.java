@@ -38,6 +38,12 @@ public class EmployeeService {
 				data.get(0).setMobile_number(employee.getMobile_number());
 				data.get(0).setEmail(encEmail);
 				commonDao.updateDataToDb(data.get(0));
+				Map<String, Object> map1 = new HashMap<String,Object>();
+				map1.put("sno", employee.getSno());
+				List<LoginCredentials> log = (List<LoginCredentials>)commonDao.getDataByMap(map1, new LoginCredentials(), null, null, 0, -1);
+				log.get(0).setAuthentication_id(employee.getAuthentication_id());
+				log.get(0).setEmail(encEmail);
+				commonDao.updateDataToDb(log.get(0));
 				response.put("status", "Success");
 				response.put("message", "Employee Details Updated Successfully");
 			}else {
@@ -57,15 +63,18 @@ public class EmployeeService {
 					employee.setCtreatedAt(new Date());
 					int i = commonDao.addDataToDb(employee);
 					if(i > 0) {
+						String decemail = encriptionData.decrypt(encEmail);
+						String decpas = encriptionData.decrypt(encPassword);
 						LoginCredentials login = new LoginCredentials();
 						login.setEmail(encEmail);
 						login.setPassword(encPassword);
+						login.setAuthentication_id(employee.getAuthentication_id());
 						login.setEmployee_id(i);
 						login.setUser_type("Employee");
 						login.setStatus("Active");
 						login.setCreatedAt(new Date());
 						commonDao.addDataToDb(login);
-						String loginURL ="https://hrms.haliconpub.com/";
+						String loginURL ="https://crm.haliconpub.com/";
 			            String subject = "Access Credentials for Your Employee Account";
 						String message =
 							    "<!DOCTYPE html>" +
@@ -85,8 +94,8 @@ public class EmployeeService {
 							    "<p>Dear <span class='highlight'>" +employee.getEmployee_name()+ "</span>,</p>" +
 							    "<p>Your login credentials have been successfully created. Below are your details:</p>" +
 							    "<table>" +
-							    "  <tr><td class='highlight'>Username:</td><td>" + employee.getEmail() + "</td></tr>" +
-							    "  <tr><td class='highlight'>Password:</td><td>" + pass + "</td></tr>" +
+							    "  <tr><td class='highlight'>Username:</td><td>" + decemail + "</td></tr>" +
+							    "  <tr><td class='highlight'>Password:</td><td>" + decpas + "</td></tr>" +
 							    "</table>" +
 							    "<p>You can log in to the portal using the following link:</p>" +
 							    "<p><a href='" + loginURL + "'>" + loginURL + "</a></p>" +
@@ -99,8 +108,9 @@ public class EmployeeService {
 							    "This is an automated email. Please do not reply directly." +
 							    "</div>" +
 							    "</div></body></html>";
+						
 
-						emailService.sendEmailMessage(employee.getEmail(), subject, message);
+						emailService.sendEmailMessage(decemail, subject, message);
 						
 						response.put("status", "Success");
 						response.put("message", "Employee Details Added Successfully");

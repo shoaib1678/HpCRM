@@ -30,7 +30,7 @@
 }
     </style>
 </head>
-
+<%String sno = (String)request.getAttribute("sno"); %>
 <body>
      <main class="auth-minimal-wrapper" style="background-image: url('assets/images/bglogin.jpg'); background-repeat: no-repeat; background-size: cover;">
         <div class="auth-minimal-inner">
@@ -40,32 +40,18 @@
                         <img src="assets/images/logo.avif" alt="" class="img-fluid" style="border-radius: 40px;">
                     </div>
                     <div class="card-body p-sm-5">
-                        <h2 class="fs-20 fw-bolder mb-4">Login</h2>
-                        <h4 class="fs-13 fw-bold mb-2">Welcome to Halicon Publication !!</h4>
-						<p class="fs-12 fw-medium text-muted">Sign in to access your Halicon Publication CRM dashboard and streamline your publishing workflow.</p>
-
-                        <form action="dashboard" class="w-100 mt-4 pt-2" id="login" name="login" method ="post">
+                        <h2 class="fs-20 fw-bolder mb-4">Resetting</h2>
+                        <h4 class="fs-13 fw-bold mb-2">Reset to your password</h4>
+                        <form id="reset_form" name="reset_form" class="w-100 mt-4 pt-2">
                             <div class="mb-4">
-                                <input type="email" class="form-control" placeholder="Email or Username"  id="email" name="email">
+                                <input type="password" id="password" name="password" class="form-control" placeholder="New Password">
                             </div>
-                            <div class="mb-3">
-                                <input type="password" class="form-control" placeholder="Password" id="password" name="password">
-                                 <span class="input-group-text vieweye cursor-pointer" id="password-addon"><i class="fa-solid fa-eye-slash"></i></span>
+                            <div class="mb-4">
+                                <input type="password" id="cpassword" name="cpassword" class="form-control" placeholder="Confirm Password" required>
                             </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
-                                        <label class="custom-control-label c-pointer" for="rememberMe">Remember Me</label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <a href="change_password" class="fs-11 text-primary">Forget password?</a>
-                                </div>
-                            </div>
-                            <input type="hidden" id="visitorId" name="visitorId">
+                            <input type="hidden" id="sno" name="sno" value="<%=sno%>">
                             <div class="mt-5">
-                                <button type="submit" class="btn btn-lg btn-primary w-100" id="bttnn">Login</button>
+                                <button type="submit" class="btn btn-lg btn-primary w-100" id="bttnn">Save Change</button>
                             </div>
                         </form>
                     </div>
@@ -74,50 +60,42 @@
         </div>
     </main>
    <jsp:include page="../js.jsp"></jsp:include>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.5.1/fingerprint2.min.js"></script>
-<script>
-  window.onload = function () {
-    setTimeout(function () {
-      new Fingerprint2().get(function (result, components) {
-        var fpElem = document.getElementById('fingerprintId');
-        var hiddenInput = document.getElementById('visitorId');
-
-        if (fpElem) fpElem.textContent = result;
-        if (hiddenInput) hiddenInput.value = result;
-        console.log("Fingerprint ID:", result);
-      });
-    }, 500);
-  };
+   <script>
 		$(function() {
-			$("form[name='login']").validate({
+			$("form[name='reset_form']").validate({
 				rules : {
-					email : {
-						required : true,
-					},
 					password : {
 						required : true,
+						minlength: 6
+					},
+					cpassword : {
+						required : true,
+						 equalTo: "#password"
 					}
 				},
 				messages : {
-					email : "Please enter valid username",
-					password : "Please enter password",
-
+					 password: {
+					    required: "Please enter new password",
+					    minlength: "Password must be at least 6 characters long"
+					  },
+					  confirm_password: {
+					    required: "Please enter confirm password",
+					    equalTo: "Passwords do not match"
+					  }
 				},
 				submitHandler : function(form) {
 					$("#bttnn").html("Please Wait..");
-					var email = $("#email").val();
+					var sno = $("#sno").val();
 					var password = $("#password").val();
-					var visitorId = $("#visitorId").val();
 					
 					var fd = new FormData();
 					
-					fd.append("email",email);
+					fd.append("sno",sno);
 					fd.append("password",password);
-					fd.append("authentication_id",visitorId);
 					
 
 					$.ajax({
-						url : 'checklogin',
+						url : 'reset_password',
 						type : 'post',
 						data : fd,
 						contentType : false,
@@ -126,13 +104,14 @@
 
 							if (data['status'] == 'Success') {
 								$("#bttnn").html("Success");
-								form.submit();
-							
+								setTimeout(function() {
+									window.location.href = './';
+							      }, 2000);					
 							} else{
 								$("#bttnn").html("Invalid Login Credentials");
 								setTimeout(function() {
-									$("#bttnn").html("Login");
-							      }, 3000);
+									$("#bttnn").html("Reset Now");
+							      }, 2000);
 							}
 							
 						}

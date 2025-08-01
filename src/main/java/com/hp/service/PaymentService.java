@@ -59,16 +59,18 @@ public class PaymentService {
 						}
 					}else {
 						List<AuthorshipDetails> ad = (List<AuthorshipDetails>)commonDao.getDataByMap(map1, new AuthorshipDetails(), null, null, 0, -1);
-						if(ad.get(0).getStatus().equalsIgnoreCase("Received")) {
-							ad.get(0).setStatus("Initiated");
+						if(payment.getPayment_type().equalsIgnoreCase("Remaining")) {
+							ad.get(0).setStatus("Partially");
 							commonDao.updateDataToDb(ad.get(0));
-						}else {
+						}else if(payment.getPayment_type().equalsIgnoreCase("Full")) {
+							ad.get(0).setStatus("Proved");
+							commonDao.updateDataToDb(ad.get(0));
+						}else{
 							pa.get(0).setPayment_status("Partially Paid");
-							ad.get(0).setStatus("Confirmed");
+							ad.get(0).setStatus("Initiated");
 							commonDao.updateDataToDb(ad.get(0));
 						}
 					}
-					
 				}else{
 					if(payment.getModule().equalsIgnoreCase("Publication")) {
 						pa.get(0).setPayment_status("Paid");
@@ -85,12 +87,22 @@ public class PaymentService {
 						art.get(0).setStatus("Paid");
 						commonDao.updateDataToDb(art.get(0));
 					}else {
-						pa.get(0).setPayment_status("Paid");
-						Map<String, Object> map1 = new HashMap<String, Object>();
-						map1.put("sno", payment.getAd_id());
-						List<AuthorshipDetails> art = (List<AuthorshipDetails>)commonDao.getDataByMap(map1, new AuthorshipDetails(), null, null, 0, -1);
-						art.get(0).setStatus("Paid");
-						commonDao.updateDataToDb(art.get(0));
+						if(payment.getPayment_type().equalsIgnoreCase("Remaining")) {
+							pa.get(0).setPayment_status("Paid");
+							Map<String, Object> map1 = new HashMap<String, Object>();
+							map1.put("sno", payment.getAd_id());
+							List<AuthorshipDetails> art = (List<AuthorshipDetails>)commonDao.getDataByMap(map1, new AuthorshipDetails(), null, null, 0, -1);
+							art.get(0).setStatus("Proved");
+							commonDao.updateDataToDb(art.get(0));
+						}else if(payment.getPayment_type().equalsIgnoreCase("Full")) {
+							pa.get(0).setPayment_status("Paid");
+							Map<String, Object> map1 = new HashMap<String, Object>();
+							map1.put("sno", payment.getAd_id());
+							List<AuthorshipDetails> art = (List<AuthorshipDetails>)commonDao.getDataByMap(map1, new AuthorshipDetails(), null, null, 0, -1);
+							art.get(0).setStatus("Completed");
+							commonDao.updateDataToDb(art.get(0));
+						}
+						
 					}
 					
 				}
@@ -99,7 +111,7 @@ public class PaymentService {
 				pa.get(0).setRemaining_amount(remamt);
 				commonDao.updateDataToDb(pa.get(0));
 				PaymentReceipt pr = new PaymentReceipt();
-				
+				pr.setTransaction_id(payment.getTransaction_id());
 				if(file!= null && !file.isEmpty()) {
 					String fi = utils.uploadImage(file);
 					pr.setPayment_id(pa.get(0).getSno());

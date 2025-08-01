@@ -305,7 +305,7 @@
 					type : "POST",
 					"data" : {
 						"employee_id" : employee_id,
-						"status" : "Paid",
+						"status" : "Partially",
 					}
 
 				},
@@ -407,6 +407,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Authorship",
 										"contact_id" : sno,
 									};
 									$
@@ -486,7 +487,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Authorship",
 		            }
 		        },
 		        columnDefs: [{

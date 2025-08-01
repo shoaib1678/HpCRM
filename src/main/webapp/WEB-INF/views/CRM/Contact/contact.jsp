@@ -21,6 +21,9 @@
   background-color: #007bff;  /* Bootstrap primary blue */
   color: white;
 }
+#inactive_table_info,#inactive_table_paginate{
+	display: none;
+}
 </style>
 </head>
 
@@ -276,7 +279,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">All Remarks</h5>
+					<h5 class="modal-title" id="staticBackdropLabel">Not Connected</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -438,7 +441,7 @@ function showinput(){
 									fd.append("status", status);
 									fd.append("remarks", remarks);
 									fd.append("module", checkedValues);
-									fd.append("employee_id", 0);
+									fd.append("employee_id", employee_id);
 									$.ajax({
 										url : 'update_status',
 										type : 'post',
@@ -566,7 +569,7 @@ function showinput(){
 		                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + sno + ')" style="margin-left: 10px;">Add Remarks</button>';
 			                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + sno + ')" style="margin-left: 10px;">View Remarks</button>';
 		                    }
-		                    if(status === "Inactive"){
+		                    if(status === "Inactive" || status === "Not Connected"){
 			                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewconnected(' + sno + ')" style="margin-left: 10px;">View</button>';
 		                    }
 		                    

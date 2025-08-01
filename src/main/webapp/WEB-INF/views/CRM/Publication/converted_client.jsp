@@ -104,19 +104,19 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="client_name" class="col-form-label">Client Name<span style="color: red;">*</span></label>
+											<label for="client_name" class="col-form-label">Client Name</label>
 											<input type="text" class="form-control" id="client_name" name="client_name" placeholder="Client Name">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="email" class="col-form-label">Email<span style="color: red;">*</span></label>
+											<label for="email" class="col-form-label">Email</label>
 											<input type="text" class="form-control" id="email" name="email" placeholder="Email">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="affiliation" class="col-form-label">Affiliation<span style="color: red;">*</span></label>
+											<label for="affiliation" class="col-form-label">Affiliation</label>
 											<input type="text" class="form-control" id="affiliation" name="affiliation" placeholder="Affiliation">
 										</div>
 									</div>
@@ -230,21 +230,21 @@
 									journal_name : {
 										required : true,
 									},
-									client_name : {
+									/* client_name : {
 										required : true,
 									},
 									email : {
 										required : true,
-									},
+									}, */
 									article_id : {
 										required : true,
 									},
 									article_title : {
 										required : true,
 									},
-									affiliation : {
+									/* affiliation : {
 										required : true,
-									},
+									}, */
 									dealed_amount : {
 										required : true,
 									},
@@ -253,21 +253,21 @@
 									journal_name : {
 										required : "Please enter journal name.",
 									},
-									client_name : {
+									/* client_name : {
 										required : "Please enter client name.",
 									},
 									email : {
 										required : "Please enter email.",
-									},
+									}, */
 									article_id : {
 										required : "Please enter article id.",
 									},
 									article_title : {
 										required : "Please enter article title.",
 									},
-									affiliation : {
+									/* affiliation : {
 										required : "Please enter affiliation.",
-									},
+									}, */
 									dealed_amount : {
 										required : "Please enter dealed amount.",
 									},
@@ -467,6 +467,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Publication",
 										"contact_id" : sno,
 									};
 									$
@@ -546,7 +547,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Publication",
 		            }
 		        },
 		        columnDefs: [{

@@ -18,6 +18,7 @@ public class PaymentReceipt {
 	private int sno;
 	private int payment_id;
 	private String receipt;
+	private String transaction_id;
 	@Temporal(TemporalType.DATE)
 	private Date createdAt;
 	public int getSno() {
@@ -31,6 +32,12 @@ public class PaymentReceipt {
 	}
 	public void setPayment_id(int payment_id) {
 		this.payment_id = payment_id;
+	}
+	public String getTransaction_id() {
+		return transaction_id;
+	}
+	public void setTransaction_id(String transaction_id) {
+		this.transaction_id = transaction_id;
 	}
 	public String getReceipt() {
 		return receipt;

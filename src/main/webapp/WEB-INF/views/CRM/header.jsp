@@ -53,10 +53,11 @@
                             <li class="nxl-item"><a class="nxl-link" href="manage_article_details">Manage Article Details</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="manage_acceptance">Manage Acceptance</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="publication_payment">Manage Payment</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="publication_gallery_proof">Gallery Proof</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="publication_galley_proof">Galley Proof</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="publication_remaining_payment">Remaining Amount</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="publication_details">Publication Details</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="indexed_proper">Indexed Proper</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="published_article_details">Published Articles</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="indexed_proper">Indexed Paper</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -67,13 +68,13 @@
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="writing_converted_client">Converted Client</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="manage_writing_article">Article Details</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="manage_subject_area">Manage Subject Area</a></li>
+                            <!-- <li class="nxl-item"><a class="nxl-link" href="manage_subject_area">Manage Subject Area</a></li> -->
                             <li class="nxl-item"><a class="nxl-link" href="manage_writing_initial_payment">Initial Payment</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="manage_initial_work">Initial Work</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="writing_paper_confirmation">Confirmation</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="writing_paper_remaining_amount">Remaining Amount</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="writing_paper_full_work">Full Work</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="full_work_confirmation">Full Work Confirmation</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="writing_paper_full_work_confirmation">Full Work Confirmation</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="writing_paper_final_work_details">Final Work Details</a></li>
                         </ul>
                     </li>
@@ -89,7 +90,8 @@
                             <li class="nxl-item"><a class="nxl-link" href="authorship_initial_payment">Initial Payment</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="authorship_acceptance">Manage Acceptance</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="authorship_remaining_payment">Remaining Payment</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="authorship_gallery_proof">Gallery Proof</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="authorship_galley_proof">Galley Proof</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="authorship_final_payment">Full Payment</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="authorship_publication_details">Publication Details</a></li>
                         </ul>
                     </li>

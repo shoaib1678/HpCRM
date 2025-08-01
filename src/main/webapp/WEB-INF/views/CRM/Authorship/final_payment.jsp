@@ -48,16 +48,28 @@
 					<div class="col-lg-12">
 						<div class="card stretch">
 							<div class="card-body">
+								<!-- <div style="text-align: center;">
+									<a class="sttus active" href="javasvript:void(0)">Pending</a>
+									<a class="sttus" href="javasvript:void(0)">Confirmed</a>
+								</div> -->
 								<div class="table-responsive">
-									<table class="table table-hover table-striped nowrap" id="employee_table" style="width: 100%;">
+									<table id="employee_table" class="table table-hover table-striped nowrap display responsive" style="width:100%">
 										<thead class="bg-primary">
 											<tr>
-												<th class="text-white">Article ID</th>
+												<th class="text-white">Author Id</th>
 												<th class="text-white">Contact Number</th>
-												<th class="text-white">Email</th>
-												<th class="text-white">Writing Type</th>
-												<th class="text-white">Title</th>
+												<th class="text-white">email</th>
 												<th class="text-white">Total Amount</th>
+												<th class="text-white">Received Amount</th>
+												<th class="text-white">Remaining Amount</th>
+												<th class="text-white">Payment Mode</th>
+												<th class="text-white">Payment Status</th>
+												<th class="text-white">Affiliation</th>
+												<th class="text-white">Journal Name</th>
+												<th class="text-white">Title</th>
+												<th class="text-white">Booked Position</th>
+												<th class="text-white">Booking Date</th>
+												<th class="text-white">Acceptance File</th>
 												<th class="text-white">Actions</th>
 											</tr>
 										</thead>
@@ -74,10 +86,10 @@
 	<div class="modal fade" id="employee_modal" data-bs-backdrop="static"
 		data-bs-keyboard="false" tabindex="-1"
 		aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
+		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">Article Details</h5>
+					<h5 class="modal-title" id="staticBackdropLabel">Writing Initial Payment</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -86,51 +98,34 @@
 						<div class="row px-4 justify-content-between">
 							<div class="col-xl-12 mb-3 mb-sm-0">
 								<div class="row">
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="contact_number" class="col-form-label">Contact Number<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="Contact Number" disabled>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="email" class="col-form-label">Email</label>
-											<input type="text" class="form-control" id="email" name="email" placeholder="Email">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="contact_number" class="col-form-label">Writing Type</label>
-											<select class="form-control" id="writing_type" name="writing_type">
-												<option selected disabled>--Select--</option>
-												<option value="Research Article">Research Article</option>
-												<option value="Review Article">Review Article</option>
-												<option value="Other">Other</option>
+											<label for="journal_name" class="col-form-label">Payment Mode<span style="color: red;">*</span></label>
+											<select class="form-control" id="payment_mode" name="payment_mode">
+												<option disabled selected>-- Select Payment Mode</option>
+												<option value="Card">Card</option>
+											    <option value="UPI">UPI</option>
+											    <option value="Net Banking">Net Banking</option>
+											    <option value="Cheque">Cheque</option>
 											</select>
 										</div>
 									</div>
-									<div class="col-md-6" id="wtype" style="display: none;">
+									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="w_type" class="col-form-label">Other<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="w_type" name="w_type" placeholder="Writing Type">
+											<label for="transaction_id" class="col-form-label">Transaction ID<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="transaction_id" name="transaction_id" placeholder="Transaction ID">
 										</div>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="title" class="col-form-label">Title<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="title" name="title" placeholder="Title">
+											<label for="received_amount" class="col-form-label">Received Amount<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="received_amount" name="received_amount" placeholder="Received Amount">
 										</div>
 									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="article_id" class="col-form-label">Article Id<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="article_id" name="article_id" placeholder="Article Id">
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="form-group mb-3">
-											<label for="total_amount" class="col-form-label">Total Amount<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="total_amount" name="total_amount" placeholder="Total Amount">
+											<label for="receipt" class="col-form-label">Payment Receipt<span style="color: red;">*</span></label>
+											<input type="file" class="form-control" id="receipt" name="receipt" placeholder="Payment Receipt">
 										</div>
 									</div>
 								</div>
@@ -140,7 +135,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+						<button type="submit" class="btn btn-primary btn-sm">Add Payment</button>
 					</div>
 				</form>
 			</div>
@@ -163,36 +158,6 @@
 								<div class="form-group mb-3">
 									<label for="rremarks" class="col-form-label">Remarks<span style="color: red;">*</span></label>
 										<textarea  class="form-control" id="rremarks" name="rremarks"></textarea>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary btn-sm"
-							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="subjectarea_modal" data-bs-backdrop="static"
-		data-bs-keyboard="false" tabindex="-1"
-		aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">Subject Area</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<form id="sub_form" name="sub_form">
-					<div class="modal-body">
-						<div class="row px-4 justify-content-between">
-							<div class="col-xl-12 mb-3 mb-sm-0">
-								<div class="form-group mb-3">
-									<label for="subject_area" class="col-form-label">Subject Area<span style="color: red;">*</span></label>
-										<input type="text"  class="form-control" id="subject_area" name="subject_area" placeholder="Subject area">
 								</div>
 							</div>
 						</div>
@@ -242,85 +207,69 @@
 	<!--! ================================================================ !-->
 	<!--! BEGIN: Vendors JS !-->
 	<input type="hidden" id="sno" name="sno">
+	<input type="hidden" id="contact_id" name="contact_id">
 	<jsp:include page="../js.jsp"></jsp:include>
 	<script type="text/javascript">
+		//let employee_id = $("#employee_id").val();
 		let employee_id = $("#employee_id").val();
-		$("#writing_type").change(function(){
-			var val = $(this).val();
-			if(val == "Other"){
-				$("#wtype").css("display","block");
-			}else{
-				$("#wtype").css("display","none");
-			}
-		})
 		$(function() {
 			$("form[name='employee_form']")
 					.validate(
 							{
 								rules : {
-									writing_type : {
+									payment_mode : {
 										required : true,
 									},
-									w_type : {
+									received_amount : {
 										required : true,
 									},
-									article_id : {
+									transaction_id : {
 										required : true,
 									},
-									title : {
-										required : true,
-									},
-									total_amount : {
+									receipt : {
 										required : true,
 									},
 								},
 								messages : {
-									writing_type : {
-										required : "Please select writing type.",
+									payment_mode : {
+										required : "Please select payment mode.",
 									},
-									w_type : {
-										required : "Please enter other writing type.",
+									received_amount : {
+										required : "Please enter received amount.",
 									},
-									title : {
-										required : "Please enter title.",
+									transaction_id : {
+										required : "Please enter transaction id.",
 									},
-									article_id : {
-										required : "Please enter article id.",
-									},
-									total_amount : {
-										required : "Please enter total amount.",
+									receipt : {
+										required : "Please upload payment receipt.",
 									},
 								},
 								submitHandler : function(form) {
-									var writing_type = $("#writing_type").val();
-									if(writing_type == "Other"){
-										writing_type = $("#w_type").val();
-									}else{
-										writing_type = $("#writing_type").val();
-									}
-									var title = $("#title").val();
+									var payment_mode = $("#payment_mode").val();
+									var transaction_id = $("#transaction_id").val();
+									var received_amount = $("#received_amount").val();
 									var contact_number = $("#contact_number").val();
-									var email = $("#email").val();
-									var article_id = $("#article_id").val();
-									var total_amount = $("#total_amount").val();
+									var file = $("#receipt")[0].files[0];
 									var sno = $("#sno").val();
 									
 									var obj = {
-										"writing_type" : writing_type,
-										"title" : title,
-										"email" : email,
-										"article_id" : article_id,
-										"contact_number" : contact_number,
-										"amount" : total_amount,
+										"payment_type" : "Full",
+										"payment_mode" : payment_mode,
+										"transaction_id" : transaction_id,
+										"paid_amount" : received_amount,
 										"employee_id" : employee_id,
-										"contact_id" : sno,
+										"module" : "Authorship",
+										"ad_id" : sno,
 									};
-									$.ajax({
-										url : 'add_writing_details',
-										type : 'post',
-										data : JSON.stringify(obj),
-										dataType : 'json',
-										contentType : 'application/json',
+									var fd = new FormData();
+									 fd.append("file",file);
+									 fd.append("paymentdata",JSON.stringify(obj));
+										$.ajax({
+											url : 'add_payment',
+											type : 'post',
+											data : fd,
+											processData : false,
+											contentType :  false,
 												success : function(data) {
 													if (data['status'] == 'Success') {
 														Swal.fire({
@@ -330,7 +279,10 @@
 																})
 														$('#employee_modal').modal(
 																'toggle');
-														$('#employee_table').DataTable().ajax.reload(null,false);
+														$('#employee_table')
+																.DataTable().ajax
+																.reload(null,
+																		false);
 													} else if (data['status'] == 'Already_Exist') {
 														$('#employee_modal').modal(
 																'toggle');
@@ -355,25 +307,26 @@
 								}
 							});
 		});
-		function changestatus(sno){
+		
+		
+		function payment(sno){
 			$("#sno").val(sno);
-			getcontactdata(sno);
 			$('#employee_modal').modal('toggle');
 		}
 		function addremarks(sno){
 			$("#sno").val(sno);
 			$('#remarks_modal').modal('toggle');
 		}
-		function addsubjectarea(sno){
-			$("#sno").val(sno);
-			$('#subjectarea_modal').modal('toggle');
-		}
 		
 		function data() {
 			$("#employee_table").DataTable({
 				dom : "Blfrtip",
 				autoWidth : true,
-				responsive : true,
+				 responsive: {
+				        details: {
+				            type: 'inline'
+				        }
+				    },
 				buttons : [ {
 					extend : 'pdf',
 					exportOptions : {
@@ -402,11 +355,11 @@
 				lengthChange : true,
 				ordering : false,
 				ajax : {
-					url : "get_writing_details",
+					url : "get_author",
 					type : "POST",
 					"data" : {
 						"employee_id" : employee_id,
-						"status" : "Pending",
+						"status" : "Proved",
 					}
 
 				},
@@ -416,9 +369,9 @@
 				} ],
 				serverSide : true,
 				columns : [ 
-				{
-					"data" : "article_id"
-				}, 
+					{
+						"data" : "author_id"
+					}, 
 				{
 					"data" : "contact_number"
 				}, 
@@ -426,24 +379,57 @@
 					"data" : "email"
 				}, 
 				{
-					"data" : "writing_type"
+					"data" : "booking_amount"
+				}, 
+				{
+					"data" : "paid_amount"
+				}, 
+				{
+					"data" : "remaining_amount"
+				}, 
+				{
+					"data" : "payment_mode"
+				}, 
+				{
+					"data" : "payment_status"
+				}, 
+				{
+					"data" : "affiliation"
+				}, 
+				{
+					"data" : "journal_name"
 				}, 
 				{
 					"data" : "title"
 				}, 
 				{
-					"data" : "amount"
+					"data" : "position"
 				}, 
+				{
+					"data" : "booking_date"
+				}, 
+				{
+					"data":function(data,type,dataToSet){
+			      		var fileName = data.acceptance_file;
+			      		if(fileName != null  && fileName != ""){
+			      			return '<a href="displaydocument?url=' + fileName + '" target="_blank" title="Open PDF" style="color:#d9534f; text-decoration:none;">' +
+			      	       '<i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:18px;"></i> View Acceptance</a>';
+
+			      		}else{
+			      			return "NA"
+			      		}
+			        	
+			        }
+				},
 				{
 					"data" : function(data, type,
 							dataToSet) {
 						var sno = data.sno;
 						var contact_id = data.contact_id;
-						var string = "<button class='btn btn-primary btn-sm' type='button' onclick='changestatus(" + sno + ")' style='margin-bottom: 5px;'>Edit</button>";
-	                    
-						string += "<button class='btn btn-primary btn-sm' type='button' onclick='Confirm(" + sno + ")'>Received Payment</button>";
-                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 5px;">Add Remarks</button>';
-	                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')">View Remarks</button>';
+						var string = "<button class='btn btn-success btn-sm' type='button' onclick='payment(" + sno + ")' style='margin-bottom: 3px;'>Add Payment Details</button>";
+                    	//string += '<button type="button" class="btn btn-sm btn-primary" onclick="sendacceptance(' + sno + ')" style="margin-bottom: 3px;">Send For Acceptance</button>';
+                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
+	                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
                     
                     return string;
 					}
@@ -475,7 +461,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
-										"module" : "Writing Paper",
+										"module" : "Authorship",
 										"contact_id" : sno,
 									};
 									$
@@ -556,7 +542,7 @@
 		            data: {
 		                "employee_id": employee_id,
 		                "contact_id": contact_id,
-		                "module" : "Writing Paper",
+		                "module" : "Authorship",
 		            }
 		        },
 		        columnDefs: [{
@@ -580,61 +566,6 @@
 		        select: true
 		    });
 		}
-		$(function() {
-			$("form[name='sub_form']")
-					.validate(
-							{
-								rules : {
-									subject_area : {
-										required : true,
-									},
-								},
-								messages : {
-									subject_area : {
-										required : "Please enter subject area.",
-									},
-								},
-								submitHandler : function(form) {
-									var subject_area = $("#subject_area").val();
-									var sno = $("#sno").val();
-									var fd = new FormData();
-									fd.append("subject_area", subject_area);
-									fd.append("sno", sno);
-									$.ajax({
-										url : 'add_subject_area',
-										type : 'post',
-										data : fd,
-										contentType : false,
-										processData : false,
-										success : function(data) {
-											if (data['status'] == 'Success') {
-												Swal.fire({
-															icon : 'success',
-															title : 'successfully!',
-															text : data['message']
-														})
-												$('#subjectarea_modal').modal('toggle');
-												$('#employee_table').DataTable().ajax.reload(null,false);			
-											} else if (data['status'] == 'Already_Exist') {
-												$('#subjectarea_modal').modal('toggle');
-												Swal.fire({
-															icon : 'warning',
-															title : 'Already!',
-															text : data['message']
-														})
-											} else {
-												$('#subjectarea_modal').modal('toggle');
-												Swal.fire({
-															icon : 'Sorry',
-															title : 'Invalid!',
-															text : data['message']
-														})
-											}
-										}
-									});		
-								}
-							});
-		});
 		
 		function getcontactdata(sno){
 			var fd = new FormData();
@@ -649,8 +580,41 @@
 							if (data['status'] == 'Success') {
 								$("#contact_number").val(data['data'][0].contact_number);
 								if(data['data'][0].client_name != null && data['data'][0].client_name != ""){
-									$("#email").val(data['data'][0].email);
+									$("#client_name").val(data['data'][0].client_name);
 								}
+								
+							}else {
+								Swal.fire({
+											icon : 'Sorry',
+											title : 'Invalid!',
+											text : data['message']
+										})
+							}
+						}
+					});
+		}
+		function edit(sno){
+			$("#sno").val(sno);
+			$('#employee_modal').modal('toggle');
+			var fd = new FormData();
+			fd.append("sno", sno);
+			$.ajax({
+				url : 'edit_articledetails',
+				type : 'post',
+				data : fd,
+				contentType : false,
+				processData : false,
+						success : function(data) {
+							if (data['status'] == 'Success') {
+								$("#contact_number").val(data['data'][0].contact_number);
+								$("#client_name").val(data['data'][0].client_name);
+								$("#journal_name").val(data['data'][0].journal_name);
+								$("#email").val(data['data'][0].email);
+								$("#affiliation").val(data['data'][0].affilliation);
+								$("#article_id").val(data['data'][0].article_id);
+								$("#dealed_amount").val(data['data'][0].dealed_amount);
+								$("#article_title").val(data['data'][0].article_title);
+								$("#contact_id").val(data['data'][0].contact_id);
 								
 							}else {
 								Swal.fire({
@@ -675,8 +639,9 @@
 				if (result.value === true) {
 					var fd = new FormData();
 					fd.append("sno", sno);
+					fd.append("status", "Received");
 					$.ajax({
-						url : 'writing_recieved_payment',
+						url : 'send_foracceptance',
 						type : 'post',
 						data : fd,
 						contentType : false,
@@ -706,6 +671,9 @@
 			});
 
 		}
+
+
+
 	</script>
 </body>
 

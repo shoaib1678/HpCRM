@@ -463,7 +463,131 @@
 			});
 		}
 		data();
-		
+		$(function() {
+			$("form[name='remarks_form']")
+					.validate(
+							{
+								rules : {
+									rremarks : {
+										required : true,
+									},
+								},
+								messages : {
+									rremarks : {
+										required : "Please write remarks.",
+									},
+								},
+								submitHandler : function(form) {
+									var rremarks = $("#rremarks").val();
+									var sno = $("#sno").val();
+									var obj = {
+										"remarks" : rremarks,
+										"employee_id" : employee_id,
+										"module" : "Authorship",
+										"contact_id" : sno,
+									};
+									$
+											.ajax({
+												url : 'add_remarks',
+												type : 'post',
+												data : JSON.stringify(obj),
+												dataType : 'json',
+												contentType : 'application/json',
+												success : function(data) {
+													if (data['status'] == 'Success') {
+														Swal.fire({
+																	icon : 'success',
+																	title : 'successfully!',
+																	text : data['message']
+																})
+														$('#remarks_modal').modal(
+																'toggle');
+																	
+													} else if (data['status'] == 'Already_Exist') {
+														$('#remarks_modal').modal(
+																'toggle');
+														Swal
+																.fire({
+																	icon : 'warning',
+																	title : 'Already!',
+																	text : data['message']
+																})
+													} else {
+														$('#remarks_modal').modal(
+																'toggle');
+														Swal
+																.fire({
+																	icon : 'Sorry',
+																	title : 'Invalid!',
+																	text : data['message']
+																})
+													}
+												}
+											});
+								}
+							});
+		});
+		function viewremarks(contact_id) {
+			$('#remarksview_modal').modal('toggle');
+		    $("#remarks_table").DataTable().clear().destroy(); // Destroy previous instance
+
+		    $("#remarks_table").DataTable({
+		        dom: "Blfrtip",
+		        autoWidth: true,
+		        responsive: true,
+		        buttons: [
+		            {
+		                extend: 'pdf',
+		                exportOptions: { columns: [0, 1, 2, 3, 4] }
+		            },
+		            {
+		                extend: 'csv',
+		                exportOptions: { columns: [0, 1, 2, 3, 4] }
+		            },
+		            {
+		                extend: 'print',
+		                exportOptions: { columns: [0, 1, 2, 3, 4] }
+		            },
+		            {
+		                extend: 'excel',
+		                exportOptions: { columns: [0, 1, 2, 3, 4] }
+		            },
+		            {
+		                extend: 'pageLength'
+		            }
+		        ],
+		        lengthChange: true,
+		        ordering: false,
+		        ajax: {
+		            url: "get_remarks",
+		            type: "POST",
+		            data: {
+		                "employee_id": employee_id,
+		                "contact_id": contact_id,
+		                "module" : "Authorship",
+		            }
+		        },
+		        columnDefs: [{
+		            "defaultContent": "-",
+		            "targets": "_all"
+		        }],
+		        serverSide: true,
+		        columns: [
+		            {
+		                data: 'SrNo',
+		                render: function(data, type, row, meta) {
+		                    return meta.row + meta.settings._iDisplayStart + 1;
+		                }
+		            },
+		            { data: "employee_name" },
+		            { data: "remarks" },
+		            { data: "remarksDate" },
+		            { data: "connected_time" },
+		        ],
+		        lengthMenu: [[5, 10, 25, 50], [5, 10, 25, 50]],
+		        select: true
+		    });
+		}
 		function view(sno) {
 			$('#positionview_modal').modal('toggle');
 

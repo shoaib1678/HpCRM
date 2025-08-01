@@ -46,6 +46,7 @@ public class EmailService {
 	public Map<String, Object> sendEmailMessage(String to, String subject, String htmlContent) {
 	    Map<String, Object> response = new HashMap<>();
 	    try {
+	    	System.out.println("EMail to: "+to);
 	        final String username = "haliconpublication@gmail.com";
 	        final String password = "kmvogxpgizaxpwyp";
 

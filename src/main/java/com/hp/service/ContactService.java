@@ -1,6 +1,7 @@
 package com.hp.service;
 
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,7 +88,7 @@ public class ContactService {
 		try {
 			Map<String, Object> map = new HashMap<String,Object>();
 			if(Integer.parseInt(employee_id) > 0) {
-				map.put("sno", Integer.parseInt(employee_id));
+				map.put("employee_id", Integer.parseInt(employee_id));
 			}
 			map.put("status", status);
 			Map<String, Object> mapor = new HashMap<String,Object>();
@@ -128,8 +129,8 @@ public class ContactService {
 	public Map<String, Object> add_remarks(ContactRemarks crRemarks) {
 		Map<String, Object> response = new HashMap<String,Object>();
 		try {
-			 LocalTime now = LocalTime.now();
-		     String currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+			LocalTime indiaTime = LocalTime.now(ZoneId.of("Asia/Kolkata"));
+	        String currentTime = indiaTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 		     crRemarks.setConnected_time(currentTime);
 		     crRemarks.setRemarksDate(new Date());
 		     int i = commonDao.addDataToDb(crRemarks);
@@ -151,8 +152,8 @@ public class ContactService {
 	public Map<String, Object> update_status(String sno, String status, String remarks, String module, String employee_id) {
 		Map<String, Object> response = new HashMap<String,Object>();
 		try {
-			 LocalTime now = LocalTime.now();
-		     String currentTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+			LocalTime indiaTime = LocalTime.now(ZoneId.of("Asia/Kolkata"));
+	        String currentTime = indiaTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 			ContactRemarks rem = new ContactRemarks();
 			Map<String, Object> map = new HashMap<String,Object>();
 			if(status.equalsIgnoreCase("Connected")) {
@@ -185,6 +186,7 @@ public class ContactService {
 				String[] mod = module.split(",");
 				for(int i=0; i< mod.length; i++) {
 					con.setContact_id(cd.get(0).getSno());
+					con.setEmployee_id(Integer.parseInt(employee_id));
 					con.setModule(mod[i]);
 					con.setStatus(status);
 					con.setCreatedAt(new Date());
@@ -240,12 +242,15 @@ public class ContactService {
 	}
 
 	public Map<String, Object> get_remarks(int start, int length, String search, String employee_id,
-			String contact_id) {
+			String contact_id, String module) {
 		Map<String, Object> response = new HashMap<String,Object>();
 		try {
 			Map<String, Object> map = new HashMap<String,Object>();
 			if(Integer.parseInt(employee_id) > 0) {
-				map.put("sno", Integer.parseInt(employee_id));
+				map.put("employee_id", Integer.parseInt(employee_id));
+			}
+			if(module != null && module.isEmpty()) {
+				map.put("module", module);
 			}
 			map.put("contact_id", Integer.parseInt(contact_id));
 			Map<String, Object> mapor = new HashMap<String,Object>();
@@ -337,7 +342,9 @@ public class ContactService {
 		Map<String, Object> response = new HashMap<String,Object>();
 		try {
 			Map<String, Object> map = new HashMap<String,Object>();
-			map.put("employee_id", Integer.parseInt(employee_id));
+			if(Integer.parseInt(employee_id) > 0) {
+				map.put("employee_id", Integer.parseInt(employee_id));
+			}
 			map.put("status", status);
 			map.put("module", module);
 			List<ConvertedModule> conv = (List<ConvertedModule>)commonDao.getDataByMap(map, new ConvertedModule(), null, null, 0, -1);

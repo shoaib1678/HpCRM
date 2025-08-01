@@ -456,6 +456,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Writing Paper",
 										"contact_id" : sno,
 									};
 									$
@@ -535,7 +536,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Writing Paper",
 		            }
 		        },
 		        columnDefs: [{
@@ -572,10 +574,7 @@
 						success : function(data) {
 							if (data['status'] == 'Success') {
 								$("#contact_number").val(data['data'][0].contact_number);
-								if(data['data'][0].client_name != null && data['data'][0].client_name != ""){
-									$("#email").val(data['data'][0].email);
-								}
-								
+								$("#email").val(data['data'][0].email);
 							}else {
 								Swal.fire({
 											icon : 'Sorry',

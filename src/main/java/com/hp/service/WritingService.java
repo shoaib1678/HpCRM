@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hp.dao.CommonDao;
 import com.hp.model.ContactDetails;
@@ -16,6 +17,7 @@ import com.hp.model.ConvertedModule;
 import com.hp.model.Payment;
 import com.hp.model.WritingDetails;
 import com.hp.utils.EncriptionData;
+import com.hp.utils.Utils;
 
 @Service
 public class WritingService {
@@ -97,7 +99,7 @@ public class WritingService {
 			Map<String, Object> map = new HashMap<String,Object>();
 			Map<String, Object> mpp = new HashMap<String,Object>();
 			if(Integer.parseInt(employee_id) > 0) {
-				map.put("sno", Integer.parseInt(employee_id));
+				map.put("employee_id", Integer.parseInt(employee_id));
 			}
 			map.put("status", status);
 			Map<String, Object> mapor = new HashMap<String,Object>();
@@ -212,6 +214,33 @@ public class WritingService {
 				commonDao.updateDataToDb(data.get(0));
 				response.put("status", "Success");
 				response.put("message", "Confirmation Sent Successfully");
+			}else {
+				response.put("status", "Failed");
+				response.put("message", "Internal server error");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "Failed");
+			response.put("message", "Something Went Wrong"+e);
+		}
+		return response;
+	}
+
+	public Map<String, Object> add_writing_file(String sno, String status, MultipartFile file) {
+		Map<String, Object> response = new HashMap<String,Object>();
+		try {
+			Map<String, Object> map = new HashMap<String,Object>();
+			map.put("sno", Integer.parseInt(sno));
+			List<WritingDetails> data = (List<WritingDetails>)commonDao.getDataByMap(map, new WritingDetails(), null, null, 0, -1);
+			if(data.size() > 0) {
+				Utils utils = new Utils();
+				String f = utils.uploadImage(file);
+				data.get(0).setWriting_file(f);
+				data.get(0).setStatus(status);
+				commonDao.updateDataToDb(data.get(0));
+				response.put("status", "Success");
+				response.put("message", "Successfully");
 			}else {
 				response.put("status", "Failed");
 				response.put("message", "Internal server error");

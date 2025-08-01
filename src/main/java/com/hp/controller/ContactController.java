@@ -85,7 +85,8 @@ public class ContactController {
 		String search = request.getParameter("search[value]");
 		String employee_id =request.getParameter("employee_id");
 		String contact_id =request.getParameter("contact_id");
-		response = contactService.get_remarks(start,length,search,employee_id,contact_id);
+		String module =request.getParameter("module");
+		response = contactService.get_remarks(start,length,search,employee_id,contact_id,module);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 	@RequestMapping(value="get_inactive", method = RequestMethod.POST)

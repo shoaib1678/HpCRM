@@ -66,7 +66,6 @@
 												<th class="text-white">Payment Status</th>
 												<th class="text-white">Writing Type</th>
 												<th class="text-white">Title</th>
-												<th class="text-white">Subject Area</th>
 												<th class="text-white">Actions</th>
 											</tr>
 										</thead>
@@ -86,7 +85,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">Writing Initial Payment</h5>
+					<h5 class="modal-title" id="staticBackdropLabel">Upload Writing File</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
@@ -97,26 +96,8 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="journal_name" class="col-form-label">Payment Mode<span style="color: red;">*</span></label>
-											<select class="form-control" id="payment_mode" name="payment_mode">
-												<option disabled selected>-- Select Payment Mode</option>
-												<option value="Card">Card</option>
-											    <option value="UPI">UPI</option>
-											    <option value="Net Banking">Net Banking</option>
-											    <option value="Cheque">Cheque</option>
-											</select>
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group mb-3">
-											<label for="received_amount" class="col-form-label">Received Amount<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="received_amount" name="received_amount" placeholder="Received Amount">
-										</div>
-									</div>
-									<div class="col-md-12">
-										<div class="form-group mb-3">
-											<label for="receipt" class="col-form-label">Payment Receipt</label>
-											<input type="file" class="form-control" id="receipt" name="receipt" placeholder="Payment Receipt">
+											<label for="file" class="col-form-label">Writing File</label>
+											<input type="file" class="form-control" id="file" name="file" >
 										</div>
 									</div>
 								</div>
@@ -126,7 +107,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Add Payment</button>
+						<button type="submit" class="btn btn-primary btn-sm">Save</button>
 					</div>
 				</form>
 			</div>
@@ -208,57 +189,41 @@
 					.validate(
 							{
 								rules : {
-									payment_mode : {
-										required : true,
-									},
-									received_amount : {
+									file : {
 										required : true,
 									},
 								},
 								messages : {
-									payment_mode : {
-										required : "Please select payment mode.",
-									},
-									received_amount : {
-										required : "Please enter received amount.",
+									file : {
+										required : "Please upload writing file.",
 									},
 								},
 								submitHandler : function(form) {
-									var payment_mode = $("#payment_mode").val();
-									var received_amount = $("#received_amount").val();
-									var contact_number = $("#contact_number").val();
-									var file = $("#receipt")[0].files[0];
+									var file = $("#file")[0].files[0];
 									var sno = $("#sno").val();
 									
-									var obj = {
-										"payment_mode" : payment_mode,
-										"paid_amount" : received_amount,
-										"employee_id" : employee_id,
-										"module" : "Writing Paper",
-										"ad_id" : sno,
-									};
 									var fd = new FormData();
 									 fd.append("file",file);
-									 fd.append("paymentdata",JSON.stringify(obj));
+									 fd.append("sno",sno);
+									 fd.append("status","Completed");
 										$.ajax({
-											url : 'add_payment',
+											url : 'add_writing_file',
 											type : 'post',
 											data : fd,
 											processData : false,
 											contentType :  false,
 												success : function(data) {
 													if (data['status'] == 'Success') {
+														$('#employee_table').DataTable().ajax.reload(null, false);
 														Swal.fire({
-																	icon : 'success',
-																	title : 'successfully!',
-																	text : data['message']
-																})
-														$('#employee_modal').modal(
-																'toggle');
-														$('#employee_table')
-																.DataTable().ajax
-																.reload(null,
-																		false);
+															icon: 'success',
+															title: 'Success!',
+															text: "Final Work Confirmation Successfully"
+														}).then(() => {
+															setTimeout(function () {
+																window.location.href = 'writing_paper_final_work_details';
+															}, 2000);
+														});
 													} else if (data['status'] == 'Already_Exist') {
 														$('#employee_modal').modal(
 																'toggle');
@@ -283,8 +248,6 @@
 								}
 							});
 		});
-		
-		
 		function payment(sno){
 			$("#sno").val(sno);
 			$('#employee_modal').modal('toggle');
@@ -293,111 +256,6 @@
 			$("#sno").val(sno);
 			$('#remarks_modal').modal('toggle');
 		}
-		/* function data(status) {
-		    $("#employee_table").DataTable().clear().destroy(); // Destroy previous instance
-
-		    $("#employee_table").DataTable({
-		        dom: "Blfrtip",
-		        autoWidth: true,
-		        responsive: true,
-		        buttons: [
-		            {
-		                extend: 'pdf',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'csv',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'print',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'excel',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'pageLength'
-		            }
-		        ],
-		        lengthChange: true,
-		        ordering: false,
-		        ajax: {
-		            url: "get_articledetails",
-		            type: "POST",
-		            data: {
-		                "employee_id": employee_id,
-		                "status": status
-		            }
-		        },
-		        columnDefs: [{
-		            "defaultContent": "-",
-		            "targets": "_all"
-		        }],
-		        serverSide: true,
-		        columns: [
-		        	{
-						"data" : "article_id"
-					}, 
-		        	{
-						"data" : "client_name"
-					}, 
-					{
-						"data" : "contact_number"
-					}, 
-					{
-						"data" : "email"
-					}, 
-					{
-						"data" : "dealed_amount"
-					}, 
-					{
-						"data" : "journal_name"
-					}, 
-					{
-						"data" : "article_title"
-					}, 
-					
-					{
-						"data" : "affilliation"
-					}, 
-					{
-						"data" : function(data, type,
-								dataToSet) {
-							var sno = data.sno;
-							var status = data.status;
-							var contact_id = data.contact_id;
-							var string = "";
-							if(status == "Acceptance"){
-								string += "<button class='btn btn-success btn-sm' type='button' onclick='Confirm(" + sno + ")' style='margin-bottom: 3px;'>Received Payment</button>";
-							}
-	                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
-		                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
-	                    
-	                    return string;
-						}
-					},
-		        ],
-		        lengthMenu: [[5, 10, 25, 50], [5, 10, 25, 50]],
-		        select: true
-		    });
-		}
-		
-		data("Acceptance"); 
-		$(document).on('click', '.sttus', function () {
-		    var status = $(this).text().trim();
-		    if(status == "Pending"){
-		    	status="Acceptance";
-		    }
-		    if(status == "Confirmed"){
-		    	status="Received";
-		    }
-		    $('.sttus').removeClass('active');
-		    $(this).addClass('active');
-		    data(status);
-		}); */
-		
 		
 		function data() {
 			$("#employee_table").DataTable({
@@ -480,9 +338,7 @@
 				{
 					"data" : "title"
 				}, 
-				{
-					"data" : "subject_area"
-				}, 
+				
 				{
 					"data" : function(data, type,
 							dataToSet) {
@@ -522,6 +378,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Writing Paper",
 										"contact_id" : sno,
 									};
 									$
@@ -601,7 +458,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Writing Paper",
 		            }
 		        },
 		        columnDefs: [{
@@ -626,109 +484,9 @@
 		    });
 		}
 		
-		function getcontactdata(sno){
-			var fd = new FormData();
-			fd.append("sno", sno);
-			$.ajax({
-				url : 'edit_contact',
-				type : 'post',
-				data : fd,
-				contentType : false,
-				processData : false,
-						success : function(data) {
-							if (data['status'] == 'Success') {
-								$("#contact_number").val(data['data'][0].contact_number);
-								if(data['data'][0].client_name != null && data['data'][0].client_name != ""){
-									$("#client_name").val(data['data'][0].client_name);
-								}
-								
-							}else {
-								Swal.fire({
-											icon : 'Sorry',
-											title : 'Invalid!',
-											text : data['message']
-										})
-							}
-						}
-					});
-		}
-		function edit(sno){
-			$("#sno").val(sno);
-			$('#employee_modal').modal('toggle');
-			var fd = new FormData();
-			fd.append("sno", sno);
-			$.ajax({
-				url : 'edit_articledetails',
-				type : 'post',
-				data : fd,
-				contentType : false,
-				processData : false,
-						success : function(data) {
-							if (data['status'] == 'Success') {
-								$("#contact_number").val(data['data'][0].contact_number);
-								$("#client_name").val(data['data'][0].client_name);
-								$("#journal_name").val(data['data'][0].journal_name);
-								$("#email").val(data['data'][0].email);
-								$("#affiliation").val(data['data'][0].affilliation);
-								$("#article_id").val(data['data'][0].article_id);
-								$("#dealed_amount").val(data['data'][0].dealed_amount);
-								$("#article_title").val(data['data'][0].article_title);
-								$("#contact_id").val(data['data'][0].contact_id);
-								
-							}else {
-								Swal.fire({
-											icon : 'Sorry',
-											title : 'Invalid!',
-											text : data['message']
-										})
-							}
-						}
-					});
-		}
 		function confirmation(sno) {
-			Swal.fire({
-				title: 'Are you sure?',
-				text: "Do you want to continue?",
-				icon: 'question',
-				showCancelButton: true,
-				confirmButtonText: 'Yes',
-				cancelButtonText: 'No',
-				reverseButtons: true
-			}).then((result) => {
-				if (result.value === true) {
-					var fd = new FormData();
-					fd.append("sno", sno);
-					fd.append("status", "Completed");
-					$.ajax({
-						url : 'sent_data_confirm',
-						type : 'post',
-						data : fd,
-						contentType : false,
-						processData : false,
-						success : function(data) {
-							if (data['status'] == 'Success') {
-								$('#employee_table').DataTable().ajax.reload(null, false);
-								Swal.fire({
-									icon: 'success',
-									title: 'Success!',
-									text: "Final Work Confirmation Successfully"
-								}).then(() => {
-									setTimeout(function () {
-										window.location.href = 'writing_paper_final_work_details';
-									}, 2000);
-								});
-							}else {
-							Swal.fire({
-								icon : 'Sorry',
-								title : 'Invalid!',
-								text : data['message']
-							})
-						}
-					}
-				});
-				} 
-			});
-
+			$('#employee_modal').modal('toggle');
+			$("#sno").val(sno);
 		}
 
 

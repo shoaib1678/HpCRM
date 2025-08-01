@@ -111,13 +111,19 @@
 									</div>
 									<div class="col-md-12">
 										<div class="form-group mb-3">
+											<label for="transaction_id" class="col-form-label">Transaction ID<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="transaction_id" name="transaction_id" placeholder="Transaction ID">
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group mb-3">
 											<label for="received_amount" class="col-form-label">Received Amount<span style="color: red;">*</span></label>
 											<input type="text" class="form-control" id="received_amount" name="received_amount" placeholder="Received Amount">
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group mb-3">
-											<label for="receipt" class="col-form-label">Payment Receipt</label>
+											<label for="receipt" class="col-form-label">Payment Receipt<span style="color: red;">*</span></label>
 											<input type="file" class="form-control" id="receipt" name="receipt" placeholder="Payment Receipt">
 										</div>
 									</div>
@@ -216,6 +222,12 @@
 									received_amount : {
 										required : true,
 									},
+									transaction_id : {
+										required : true,
+									},
+									receipt : {
+										required : true,
+									},
 								},
 								messages : {
 									payment_mode : {
@@ -224,9 +236,16 @@
 									received_amount : {
 										required : "Please enter received amount.",
 									},
+									transaction_id : {
+										required : "Please enter transaction id.",
+									},
+									receipt : {
+										required : "Please upload payment receipt.",
+									},
 								},
 								submitHandler : function(form) {
 									var payment_mode = $("#payment_mode").val();
+									var transaction_id = $("#transaction_id").val();
 									var received_amount = $("#received_amount").val();
 									var contact_number = $("#contact_number").val();
 									var file = $("#receipt")[0].files[0];
@@ -234,6 +253,7 @@
 									
 									var obj = {
 										"payment_mode" : payment_mode,
+										"transaction_id" : transaction_id,
 										"paid_amount" : received_amount,
 										"employee_id" : employee_id,
 										"module" : "Publication",
@@ -295,111 +315,6 @@
 			$("#sno").val(sno);
 			$('#remarks_modal').modal('toggle');
 		}
-		/* function data(status) {
-		    $("#employee_table").DataTable().clear().destroy(); // Destroy previous instance
-
-		    $("#employee_table").DataTable({
-		        dom: "Blfrtip",
-		        autoWidth: true,
-		        responsive: true,
-		        buttons: [
-		            {
-		                extend: 'pdf',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'csv',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'print',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'excel',
-		                exportOptions: { columns: [0, 1, 2, 3, 4] }
-		            },
-		            {
-		                extend: 'pageLength'
-		            }
-		        ],
-		        lengthChange: true,
-		        ordering: false,
-		        ajax: {
-		            url: "get_articledetails",
-		            type: "POST",
-		            data: {
-		                "employee_id": employee_id,
-		                "status": status
-		            }
-		        },
-		        columnDefs: [{
-		            "defaultContent": "-",
-		            "targets": "_all"
-		        }],
-		        serverSide: true,
-		        columns: [
-		        	{
-						"data" : "article_id"
-					}, 
-		        	{
-						"data" : "client_name"
-					}, 
-					{
-						"data" : "contact_number"
-					}, 
-					{
-						"data" : "email"
-					}, 
-					{
-						"data" : "dealed_amount"
-					}, 
-					{
-						"data" : "journal_name"
-					}, 
-					{
-						"data" : "article_title"
-					}, 
-					
-					{
-						"data" : "affilliation"
-					}, 
-					{
-						"data" : function(data, type,
-								dataToSet) {
-							var sno = data.sno;
-							var status = data.status;
-							var contact_id = data.contact_id;
-							var string = "";
-							if(status == "Acceptance"){
-								string += "<button class='btn btn-success btn-sm' type='button' onclick='Confirm(" + sno + ")' style='margin-bottom: 3px;'>Received Payment</button>";
-							}
-	                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
-		                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
-	                    
-	                    return string;
-						}
-					},
-		        ],
-		        lengthMenu: [[5, 10, 25, 50], [5, 10, 25, 50]],
-		        select: true
-		    });
-		}
-		
-		data("Acceptance"); 
-		$(document).on('click', '.sttus', function () {
-		    var status = $(this).text().trim();
-		    if(status == "Pending"){
-		    	status="Acceptance";
-		    }
-		    if(status == "Confirmed"){
-		    	status="Received";
-		    }
-		    $('.sttus').removeClass('active');
-		    $(this).addClass('active');
-		    data(status);
-		}); */
-		
 		
 		function data() {
 			$("#employee_table").DataTable({
@@ -535,6 +450,7 @@
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"module" : "Publication",
 										"contact_id" : sno,
 									};
 									$
@@ -614,7 +530,8 @@
 		            type: "POST",
 		            data: {
 		                "employee_id": employee_id,
-		                "contact_id": contact_id
+		                "contact_id": contact_id,
+		                "module" : "Publication",
 		            }
 		        },
 		        columnDefs: [{
