@@ -97,13 +97,21 @@
 									<div class="col-md-12">
 										<div class="form-group mb-3">
 											<label for="journal_name" class="col-form-label">Payment Mode<span style="color: red;">*</span></label>
-											<select class="form-control" id="payment_mode" name="payment_mode">
+											<select class="form-control" id="payment_mode" name="payment_mode" onchange="chanoption()">
 												<option disabled selected>-- Select Payment Mode</option>
 												<option value="Card">Card</option>
 											    <option value="UPI">UPI</option>
 											    <option value="Net Banking">Net Banking</option>
+											    <option value="Bank Transfer">Bank Transfer</option>
 											    <option value="Cheque">Cheque</option>
+											    <option value="Other">Other</option>
 											</select>
+										</div>
+									</div>
+									<div class="col-md-12" id="pmd" style="display: none;">
+										<div class="form-group mb-3">
+											<label for="p_mode" class="col-form-label">Other<span style="color: red;">*</span></label>
+											<input type="text" class="form-control" id="p_mode" name="p_mode" placeholder="Payment Mode">
 										</div>
 									</div>
 									<div class="col-md-12">
@@ -208,6 +216,21 @@
 	<script type="text/javascript">
 		//let employee_id = $("#employee_id").val();
 		let employee_id = $("#employee_id").val();
+		
+		function chanoption(){
+			var pm = $("#payment_mode").val();
+			if(pm == "Bank Transfer"){
+				$("#transaction_id").prop("disabled",true);
+				$("#pmd").css("display","none");
+			}else if(pm == "Other"){
+				$("#transsaction_id").prop("disabled",false);
+				$("#pmd").css("display","block");
+				
+			}else{
+				$("#transsaction_id").prop("disabled",false);
+				$("#pmd").css("display","none");
+			}
+		}
 		$(function() {
 			$("form[name='employee_form']")
 					.validate(
@@ -225,6 +248,9 @@
 									receipt : {
 										required : true,
 									},
+									p_mode : {
+										required : true,
+									},
 								},
 								messages : {
 									payment_mode : {
@@ -239,9 +265,15 @@
 									receipt : {
 										required : "Please upload payment receipt.",
 									},
+									p_mode : {
+										required : "Please enter payment mode.",
+									},
 								},
 								submitHandler : function(form) {
 									var payment_mode = $("#payment_mode").val();
+									if(payment_mode == "Other"){
+										payment_mode = $("#p_mode").val();
+									}
 									var received_amount = $("#received_amount").val();
 									var contact_number = $("#contact_number").val();
 									var file = $("#receipt")[0].files[0];

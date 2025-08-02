@@ -210,7 +210,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm" id="accept_submit">Upload</button>
+						<button type="button" class="btn btn-primary btn-sm" id="accept_submit">Upload</button>
 					</div>
 				</form>
 			</div>

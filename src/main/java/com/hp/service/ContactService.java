@@ -92,7 +92,9 @@ public class ContactService {
 			}
 			map.put("status", status);
 			Map<String, Object> mapor = new HashMap<String,Object>();
-			mapor.put("contact_number", search);
+			String encryptedSearch = encriptionData.encrypt(search);
+			mapor.put("contact_number", encryptedSearch);
+			mapor.put("email", encryptedSearch);
 			mapor.put("client_name", search);
 			List<ContactDetails> data = (List<ContactDetails>) commonDao.getDataByMapSearchAnd(map,mapor, new ContactDetails(), "sno", "desc", start, length);
 			int count = commonDao.getDataByMapSearchAndSize(map,mapor, new ContactDetails(), "sno", "desc");
@@ -354,6 +356,9 @@ public class ContactService {
 				for(ConvertedModule c: conv) {
 					Map<String, Object> mp = new HashMap<String, Object>();
 					Map<String, Object> mpor = new HashMap<String, Object>();
+					String encryptedSearch = encriptionData.encrypt(search);
+					mpor.put("contact_number", encryptedSearch);
+					mpor.put("email", encryptedSearch);
 					mp.put("sno", c.getContact_id());
 					List<ContactDetails> contactDetails = (List<ContactDetails>)commonDao.getDataByMapSearchAnd(mp,mpor, new ContactDetails(), "sno", "desc", start, length);
 					count = commonDao.getDataByMapSearchAndSize(mp,mpor, new ContactDetails(), "sno", "desc");

@@ -313,7 +313,7 @@
 		let employee_id = $("#employee_id").val();
 function showinput(){
 	var status=$("#status").val();
-	if(status == "Connected"){
+	if(status == "Not Connected" || status == "Connected"){
 		$("#rem").css("display","block");
 		$("#mod").css("display","none");
 	}else if(status == "Converted"){
@@ -565,7 +565,7 @@ function showinput(){
 		                    var status = data.status;
 		                    var string = "<button class='btn btn-primary btn-sm' type='button' onclick='edit(" + sno + ")'>Edit</button>";
 		                     string += "<button class='btn btn-primary btn-sm' type='button' onclick='changestatus(" + sno + ")' style='margin-left: 10px;'>Update Status</button>";
-		                    if(status === "Connected"){
+		                    if(status === "Connected" || status === "Not Connected"){
 		                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + sno + ')" style="margin-left: 10px;">Add Remarks</button>';
 			                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + sno + ')" style="margin-left: 10px;">View Remarks</button>';
 		                    }
