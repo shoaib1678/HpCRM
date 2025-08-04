@@ -68,6 +68,7 @@
 												<th class="text-white">Journal Name</th>
 												<th class="text-white">Article Title</th>
 												<th class="text-white">Affiliation</th>
+												<th class="text-white">Acceptance File</th>
 												<th class="text-white">Payment Receipt</th>
 												<th class="text-white">Actions</th>
 											</tr>
@@ -434,6 +435,19 @@
 				{
 					"data" : "affilliation"
 				}, 
+				{
+					"data":function(data,type,dataToSet){
+			      		var fileName = data.acceptance_file;
+			      		if(fileName != null  && fileName != ""){
+			      			return '<a href="displaydocument?url=' + fileName + '" target="_blank" title="Open PDF" style="color:#d9534f; text-decoration:none;">' +
+			      	       '<i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:18px;"></i>Acceptance File</a>';
+
+			      		}else{
+			      			return "NA"
+			      		}
+			        	
+			        }
+				},
 				{
 					"data" : function(data, type,
 							dataToSet) {

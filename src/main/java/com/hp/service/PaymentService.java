@@ -1,5 +1,6 @@
 package com.hp.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hp.dao.CommonDao;
 import com.hp.model.ArticleDetails;
 import com.hp.model.AuthorshipDetails;
+import com.hp.model.ContactDetails;
 import com.hp.model.Payment;
 import com.hp.model.PaymentReceipt;
+import com.hp.model.ProjectDetails;
 import com.hp.model.WritingDetails;
+import com.hp.utils.EncriptionData;
 import com.hp.utils.Utils;
 
 @Service
@@ -22,6 +26,9 @@ public class PaymentService {
 
 	@Autowired
 	CommonDao commonDao;
+	@Autowired
+	static
+	EncriptionData encriptionData;
 
 	public Map<String, Object> add_payment(Payment payment, MultipartFile file) {
 		Map<String, Object> response = new HashMap<String,Object>();
@@ -121,6 +128,73 @@ public class PaymentService {
 				}
 				response.put("status", "Success");
 				response.put("message", "Payment Added Successfully");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "Failed");
+			response.put("message", "Something Went Wrong"+e);
+		}
+		return response;
+	}
+
+	public Map<String, Object> get_payment(int start, int length, String search, String employee_id, String status, String month, String year) {
+		Map<String, Object> response = new HashMap<String,Object>();
+		try {
+			Map<String, Object> map = new HashMap<String,Object>();
+			Map<String, Object> mpp = new HashMap<String,Object>();
+			if(Integer.parseInt(employee_id) > 0) {
+				map.put("employee_id", Integer.parseInt(employee_id));
+			}
+			if(status != null && !status.isEmpty()) {
+				map.put("payment_status", status);
+			}
+			map.put("month", Integer.parseInt(month));
+			map.put("year", Integer.parseInt(year));
+			Map<String, Object> mapor = new HashMap<String,Object>();
+			mapor.put("payment_status", search);
+			//mapor.put("title", search);
+			List<Payment> data = (List<Payment>) commonDao.getDataByMapSearchAnd(map,mapor, new Payment(), "sno", "desc", start, length);
+			int count = commonDao.getDataByMapSearchAndSize(map,mapor, new Payment(), "sno", "desc");
+			if(data.size() >0) {
+				for(Payment p: data) {
+					Map<String, Object> mapr = new HashMap<String,Object>();
+					mapr.put("sno", p.getContact_id());
+					List<ContactDetails> con = (List<ContactDetails>)commonDao.getDataByMap(mapr, new ContactDetails(), null, null, 0, -1);
+					String decemail = encriptionData.decrypt(con.get(0).getEmail());
+					String deccont = encriptionData.decrypt(con.get(0).getContact_number());
+					p.setContact_number(deccont);	
+					p.setEmail(decemail);	
+					Map<String, Object> mp = new HashMap<String,Object>();
+					mp.put("sno", p.getAd_id());
+					if(p.getModule().equalsIgnoreCase("Publication")) {
+						List<ArticleDetails> ad = (List<ArticleDetails>)commonDao.getDataByMap(mp, new ArticleDetails(), null, null, 0, -1);
+						p.setArticle_id(ad.get(0).getArticle_id());
+						p.setTitle(ad.get(0).getArticle_title());
+						p.setJournal_name(ad.get(0).getJournal_name());
+					}else if(p.getModule().equalsIgnoreCase("Writing Paper")) {
+						List<WritingDetails> ad = (List<WritingDetails>)commonDao.getDataByMap(mp, new WritingDetails(), null, null, 0, -1);
+						p.setArticle_id(ad.get(0).getArticle_id());
+						p.setTitle(ad.get(0).getTitle());
+						p.setJournal_name("NA");
+					}else {
+						List<AuthorshipDetails> ad = (List<AuthorshipDetails>)commonDao.getDataByMap(mp, new AuthorshipDetails(), null, null, 0, -1);
+						p.setArticle_id(ad.get(0).getAuthor_id());
+						p.setTitle(ad.get(0).getTitle());
+						p.setJournal_name(ad.get(0).getJournal_name());
+					}
+					
+				}
+				response.put("status", "Success");
+				response.put("message", "Data Fetched Successfully");
+				response.put("data", data);
+				response.put("recordsFiltered", count);
+				response.put("recordsTotal", count);
+			}else {
+				response.put("status", "Failed");
+				response.put("message", "No Data Found");
+				response.put("data", new ArrayList<>());
+				response.put("recordsFiltered", 0);
+				response.put("recordsTotal", 0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

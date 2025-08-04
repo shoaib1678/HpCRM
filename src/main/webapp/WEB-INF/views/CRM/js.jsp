@@ -1,3 +1,5 @@
+<!-- ✅ jQuery (must come first!) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="assets/vendors/js/vendors.min.js"></script>
 <script src="assets/vendors/js/daterangepicker.min.js"></script>
 <script src="assets/vendors/js/apexcharts.min.js"></script>
@@ -5,8 +7,6 @@
 <script src="assets/js/common-init.min.js"></script>
 <script src="assets/js/dashboard-init.min.js"></script>
 <script src="assets/js/theme-customizer-init.min.js"></script>
-<!-- ✅ jQuery (must come first!) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.21.0/jquery.validate.min.js"></script>
 <!-- ✅ DataTables core -->
 <!-- DataTables JS -->

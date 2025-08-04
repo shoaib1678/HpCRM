@@ -63,6 +63,7 @@ public class WritingService {
 					if(i>0){
 						Payment pay = new Payment();
 						pay.setAd_id(i);
+						pay.setContact_id(writingDetails.getContact_id());
 						pay.setEmployee_id(writingDetails.getEmployee_id());
 						pay.setTotal_amount(writingDetails.getAmount());
 						pay.setRemaining_amount(writingDetails.getAmount());

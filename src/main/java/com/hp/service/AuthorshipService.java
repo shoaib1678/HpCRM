@@ -54,6 +54,7 @@ public class AuthorshipService {
 					commonDao.updateDataToDb(art.get(0));
 					Payment pay = new Payment();
 					pay.setAd_id(aad.get(0).getSno());
+					pay.setContact_id(ad.getContact_id());
 					pay.setEmployee_id(ad.getEmployee_id());
 					pay.setModule("Authorship");
 					pay.setPaid_amount(0);

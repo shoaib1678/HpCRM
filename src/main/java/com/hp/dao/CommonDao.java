@@ -26,9 +26,9 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 
 import javassist.expr.Instanceof;
 
@@ -38,7 +38,7 @@ public class CommonDao {
 
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	public int addDataToDb(Object objectdata) {
 		Integer i = (Integer) sessionFactory.getCurrentSession().save(objectdata);
 		return i;
@@ -52,15 +52,15 @@ public class CommonDao {
 			int start, int length) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
 		for (Entry<String, Object> mapdataex : mapdata.entrySet()) {
-			if(mapdataex.getKey().equals("availablity_date")) {
+			if (mapdataex.getKey().equals("availablity_date")) {
 				SimpleDateFormat forDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String date = (String) mapdataex.getValue();
 				criteria.add(Restrictions.eq("availablity_date", java.sql.Date.valueOf(date)));
-			}else{
+			} else {
 				System.out.println(mapdataex.getKey() + "-" + mapdataex.getValue());
 				criteria.add(Restrictions.eq(mapdataex.getKey(), mapdataex.getValue()));
 			}
-			
+
 		}
 		if (orderby != null) {
 			if (orderby.equalsIgnoreCase("asc")) {
@@ -76,6 +76,7 @@ public class CommonDao {
 		List<Object> list = criteria.list();
 		return list;
 	}
+
 	public Object getDataByMapOr(Map<String, Object> mapdata, Object objectdata, String orderbycolumn, String orderby,
 			int start, int length) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
@@ -99,6 +100,7 @@ public class CommonDao {
 		List<Object> list = criteria.list();
 		return list;
 	}
+
 	public Object getDataByMapLike(Map<String, Object> mapdata, Object objectdata, String orderbycolumn, String orderby,
 			int start, int length) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
@@ -125,106 +127,124 @@ public class CommonDao {
 		List<Object> list = criteria.list();
 		return list;
 	}
-	
+
 	// for and and or serach together
-		public Object getDataByMapSearchAnd(Map<String, Object> anddata, Map<String, Object> mapdata, Object objectdata,
-				String orderbycolumn, String orderby, int start, int length) {
-			Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
-			for (Entry<String, Object> mapdataex : anddata.entrySet()) {
-				if (mapdataex.getValue() instanceof Integer) {
-					criteria.add(Restrictions.eq(mapdataex.getKey(), mapdataex.getValue()));
-				}else if (mapdataex.getKey().equals("createdAt") ){
-					criteria.add(Restrictions.eq(mapdataex.getKey(), java.sql.Date.valueOf(mapdataex.getValue().toString()) ));
-				}else if (mapdataex.getKey().equals("availablity_date") ){
-					criteria.add(Restrictions.eq(mapdataex.getKey(), java.sql.Date.valueOf(mapdataex.getValue().toString()) ));
-				}
-				else {
-					criteria.add(Restrictions.eq(mapdataex.getKey(), (String) mapdataex.getValue()));
-				}
-			}
-			Disjunction data = Restrictions.disjunction();
-			for (Entry<String, Object> mapdataex : mapdata.entrySet()) {
-				if (mapdataex.getValue() instanceof Integer) {
-					data.add(Restrictions.eq(mapdataex.getKey(), mapdataex.getValue()));
-				} else {
-					data.add(Restrictions.ilike(mapdataex.getKey(), (String) mapdataex.getValue(), MatchMode.ANYWHERE));
-				}
-			}
-			criteria.add(data);
-			System.out.println(data);
-			if (orderby != null) {
-				if (!orderby.equalsIgnoreCase("asc")) {
-					criteria.addOrder(Order.desc(orderbycolumn));
-				} else {
-					criteria.addOrder(Order.asc(orderbycolumn));
-				}
-			}
-			criteria.setFirstResult(start);
-			if (length != -1) {
-				criteria.setMaxResults(length);
-			}
-			List<Object> list = criteria.list();
-			return list;
-		}
-	// for and and or serach size together
-			public int getDataByMapSearchAndSize(Map<String, Object> anddata, Map<String, Object> mapdata, Object objectdata,
-					String orderbycolumn, String orderby) {
-				Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
-				for (Entry<String, Object> mapdataex : anddata.entrySet()) {
-					if (mapdataex.getValue() instanceof Integer) {
-						criteria.add(Restrictions.eq(mapdataex.getKey(), mapdataex.getValue()));
-					} else {
-						criteria.add(Restrictions.eq(mapdataex.getKey(), (String) mapdataex.getValue()));
-					}
-
-				}
-				Disjunction data = Restrictions.disjunction();
-				for (Entry<String, Object> mapdataex : mapdata.entrySet()) {
-					if (mapdataex.getValue() instanceof Integer) {
-						data.add(Restrictions.eq(mapdataex.getKey(), mapdataex.getValue()));
-					} else {
-						data.add(Restrictions.ilike(mapdataex.getKey(), (String) mapdataex.getValue(), MatchMode.ANYWHERE));
-					}
-				}
-				criteria.add(data);
-				if (orderby != null) {
-					if (!orderby.equalsIgnoreCase("asc")) {
-						criteria.addOrder(Order.desc(orderbycolumn));
-					} else {
-						criteria.addOrder(Order.asc(orderbycolumn));
-					}
-				}
-
-				List<Object> list = criteria.list();
-				return list.size();
-			}
-	public int getDataByMapSize(Map<String, Object> mapdata, Object objectdata, String orderbycolumn, String orderby,
-			int start, int length) {
+	public Object getDataByMapSearchAnd(Map<String, Object> anddata, Map<String, Object> mapdata, Object objectdata,
+			String orderbycolumn, String orderby, int start, int length) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
-		for (Entry<String, Object> mapdataex : mapdata.entrySet()) {
-			System.out.println(mapdataex.getKey() + "-" + mapdataex.getValue());
-			criteria.add(Restrictions.eq(mapdataex.getKey(), mapdataex.getValue()));
-		}
-		if (orderby != null) {
-			if (orderby.equalsIgnoreCase("asc")) {
-				criteria.addOrder(Order.desc(orderbycolumn));
+
+// Apply AND conditions
+		for (Entry<String, Object> entry : anddata.entrySet()) {
+			String key = entry.getKey();
+			Object value = entry.getValue();
+
+			if ("month".equalsIgnoreCase(key) || "year".equalsIgnoreCase(key)) {
+				continue; // skip for now, handled below
+			}
+
+			if (value instanceof Integer) {
+				criteria.add(Restrictions.eq(key, value));
+			} else if ("createdAt".equalsIgnoreCase(key)) {
+				criteria.add(Restrictions.eq(key, java.sql.Date.valueOf(value.toString())));
 			} else {
-				criteria.addOrder(Order.asc(orderbycolumn));
+				criteria.add(Restrictions.eq(key, value.toString()));
 			}
 		}
+
+// Apply OR search
+		Disjunction disjunction = Restrictions.disjunction();
+		for (Entry<String, Object> entry : mapdata.entrySet()) {
+			if (entry.getValue() instanceof Integer) {
+				disjunction.add(Restrictions.eq(entry.getKey(), entry.getValue()));
+			} else {
+				disjunction.add(Restrictions.ilike(entry.getKey(), entry.getValue().toString(), MatchMode.ANYWHERE));
+			}
+		}
+		criteria.add(disjunction);
+
+// ✅ Month & Year filter on createdAt
+		if (anddata.containsKey("month") && anddata.containsKey("year")) {
+			Integer month = (Integer) anddata.get("month");
+			Integer year = (Integer) anddata.get("year");
+
+			criteria.add(Restrictions.sqlRestriction("MONTH(createdAt) = ?", month, StandardBasicTypes.INTEGER));
+			criteria.add(Restrictions.sqlRestriction("YEAR(createdAt) = ?", year, StandardBasicTypes.INTEGER));
+		}
+
+// Sorting
+		if (orderby != null) {
+			if ("asc".equalsIgnoreCase(orderby)) {
+				criteria.addOrder(Order.asc(orderbycolumn));
+			} else {
+				criteria.addOrder(Order.desc(orderbycolumn));
+			}
+		}
+
+// Pagination
 		criteria.setFirstResult(start);
 		if (length != -1) {
 			criteria.setMaxResults(length);
 		}
-		List<Object> list = criteria.list();
-		return list.size();
+
+		return criteria.list();
 	}
-	
-	public void delete(Object object,String sno) {
+
+	// for and and or serach size together
+	public int getDataByMapSearchAndSize(Map<String, Object> anddata, Map<String, Object> mapdata, Object objectdata,
+			String orderbycolumn, String orderby) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
+
+		for (Entry<String, Object> entry : anddata.entrySet()) {
+			String key = entry.getKey();
+			Object value = entry.getValue();
+
+			if ("month".equalsIgnoreCase(key) || "year".equalsIgnoreCase(key)) {
+				continue;
+			}
+
+			if (value instanceof Integer) {
+				criteria.add(Restrictions.eq(key, value));
+			} else {
+				criteria.add(Restrictions.eq(key, value.toString()));
+			}
+		}
+
+		Disjunction disjunction = Restrictions.disjunction();
+		for (Entry<String, Object> entry : mapdata.entrySet()) {
+			if (entry.getValue() instanceof Integer) {
+				disjunction.add(Restrictions.eq(entry.getKey(), entry.getValue()));
+			} else {
+				disjunction.add(Restrictions.ilike(entry.getKey(), entry.getValue().toString(), MatchMode.ANYWHERE));
+			}
+		}
+		criteria.add(disjunction);
+
+// ✅ Month & Year filter on createdAt
+		if (anddata.containsKey("month") && anddata.containsKey("year")) {
+			Integer month = (Integer) anddata.get("month");
+			Integer year = (Integer) anddata.get("year");
+
+			criteria.add(Restrictions.sqlRestriction("MONTH(createdAt) = ?", month, StandardBasicTypes.INTEGER));
+			criteria.add(Restrictions.sqlRestriction("YEAR(createdAt) = ?", year, StandardBasicTypes.INTEGER));
+		}
+
+// Optional sorting (not required for size, but left in case needed)
+		if (orderby != null) {
+			if ("asc".equalsIgnoreCase(orderby)) {
+				criteria.addOrder(Order.asc(orderbycolumn));
+			} else {
+				criteria.addOrder(Order.desc(orderbycolumn));
+			}
+		}
+
+		return criteria.list().size();
+	}
+
+	public void delete(Object object, String sno) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(object.getClass());
-		Object objectdata = criteria.add(Restrictions.eq("sno",Integer.parseInt(sno))).uniqueResult();
+		Object objectdata = criteria.add(Restrictions.eq("sno", Integer.parseInt(sno))).uniqueResult();
 		sessionFactory.getCurrentSession().delete(objectdata);
-	
+
 	}
 
 	public int updateMethodForAll(Map<String, Object> updatecolumn, String tableName, Map<String, Object> wheredata) {
@@ -232,20 +252,17 @@ public class CommonDao {
 			String query = "";
 			String wherequery = "";
 			for (Map.Entry<String, Object> entry : updatecolumn.entrySet()) {
-				if(entry.getValue() instanceof Integer){
-					if(Integer.parseInt(entry.getValue()+"") > 0){
+				if (entry.getValue() instanceof Integer) {
+					if (Integer.parseInt(entry.getValue() + "") > 0) {
 						if (!query.equalsIgnoreCase("")) {
 							query = query + " ," + entry.getKey().trim() + " = '" + entry.getValue() + "'";
 						} else {
 							query = query + " " + entry.getKey().trim() + " = '" + entry.getValue() + "'";
 						}
-					}					
-				}
-				else if(entry.getValue() instanceof List){
-					
-					
-				}
-				else{
+					}
+				} else if (entry.getValue() instanceof List) {
+
+				} else {
 					if (entry.getValue() != null) {
 						if (!query.equalsIgnoreCase("")) {
 							query = query + " ," + entry.getKey().trim() + " = '" + entry.getValue() + "'";
@@ -253,7 +270,7 @@ public class CommonDao {
 							query = query + " " + entry.getKey().trim() + " = '" + entry.getValue() + "'";
 						}
 					}
-				}				
+				}
 			}
 			for (Map.Entry<String, Object> entry : wheredata.entrySet()) {
 				if (entry.getValue() != null) {
@@ -277,21 +294,23 @@ public class CommonDao {
 
 	public List<String> getDistinctData(String column_name, Object object) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(object.getClass());
-		List<String> distinctDataList = criteria.setProjection(Projections.distinct(Projections.property(column_name))).list();
+		List<String> distinctDataList = criteria.setProjection(Projections.distinct(Projections.property(column_name)))
+				.list();
 		return distinctDataList;
-    }
-	
-	
+	}
+
 	public List<Date> getDistinctDataDate(String column_name, Object object) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(object.getClass());
-		List<Date> distinctDataList = criteria.setProjection(Projections.distinct(Projections.property(column_name))).list();
+		List<Date> distinctDataList = criteria.setProjection(Projections.distinct(Projections.property(column_name)))
+				.list();
 		return distinctDataList;
-    }
+	}
 
 	public int deleteById(Map<String, Object> where) {
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		Query q = session.createQuery("delete from " + where.get("tablename") + "  where " + where.get("column") + " =:"+ where.get("column") + "");
+		Query q = session.createQuery("delete from " + where.get("tablename") + "  where " + where.get("column") + " =:"
+				+ where.get("column") + "");
 		q.setParameter(where.get("column").toString(), where.get("value"));
 		int result = q.executeUpdate();
 		transaction.commit();
@@ -301,33 +320,35 @@ public class CommonDao {
 	}
 
 	public void deleteSafariAvailabilityByDestinationId(int destinationId) {
-	    Session session = null;
-	    Transaction tx = null;
-	    try {
-	        session = sessionFactory.openSession();
-	        tx = session.beginTransaction();
-	        String hqlDelete = "DELETE FROM SafariAvailablity WHERE destination_id = "+destinationId+"";
-	        Query deleteQuery = session.createQuery(hqlDelete);
-	        int rowCount = deleteQuery.executeUpdate();
-	        tx.commit();
-	    } catch (Exception e) {
-	        if (tx != null) {
-	            tx.rollback();
-	        }
-	        e.printStackTrace();
-	    } finally {
-	        if (session != null) {
-	            session.close();
-	        }
-	    }
-	}
-	public void deleteHotelAvailabilityByDestinationId(int  destination_id,int hotel_id) {
 		Session session = null;
 		Transaction tx = null;
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			String hqlDelete = "DELETE FROM HotelAvailability WHERE park_id = "+destination_id+" AND hotel_id = "+hotel_id+"";
+			String hqlDelete = "DELETE FROM SafariAvailablity WHERE destination_id = " + destinationId + "";
+			Query deleteQuery = session.createQuery(hqlDelete);
+			int rowCount = deleteQuery.executeUpdate();
+			tx.commit();
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+	}
+
+	public void deleteHotelAvailabilityByDestinationId(int destination_id, int hotel_id) {
+		Session session = null;
+		Transaction tx = null;
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			String hqlDelete = "DELETE FROM HotelAvailability WHERE park_id = " + destination_id + " AND hotel_id = "
+					+ hotel_id + "";
 			Query deleteQuery = session.createQuery(hqlDelete);
 			int rowCount = deleteQuery.executeUpdate();
 			tx.commit();
@@ -344,24 +365,24 @@ public class CommonDao {
 	}
 
 	public void deleteBookingDate(int sno) {
-	    Session session = null;
-	    Transaction tx = null;
-	    try {
-	        session = sessionFactory.openSession();
-	        tx = session.beginTransaction();
-	        String hqlDelete = "DELETE FROM BookingDate WHERE sno = "+sno+"";
-	        Query deleteQuery = session.createQuery(hqlDelete);
-	        int rowCount = deleteQuery.executeUpdate();
-	        tx.commit();
-	    } catch (Exception e) {
-	        if (tx != null) {
-	            tx.rollback();
-	        }
-	        e.printStackTrace();
-	    } finally {
-	        if (session != null) {
-	            session.close();
-	        }
-	    }
+		Session session = null;
+		Transaction tx = null;
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			String hqlDelete = "DELETE FROM BookingDate WHERE sno = " + sno + "";
+			Query deleteQuery = session.createQuery(hqlDelete);
+			int rowCount = deleteQuery.executeUpdate();
+			tx.commit();
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
 	}
 }

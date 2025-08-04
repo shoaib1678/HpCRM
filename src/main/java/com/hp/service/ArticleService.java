@@ -91,6 +91,7 @@ public class ArticleService {
 						Payment pay = new Payment();
 						pay.setAd_id(i);
 						pay.setEmployee_id(articleDetails.getEmployee_id());
+						pay.setContact_id(articleDetails.getContact_id());
 						pay.setTotal_amount(articleDetails.getDealed_amount());
 						pay.setRemaining_amount(articleDetails.getDealed_amount());
 						pay.setPaid_amount(0);
