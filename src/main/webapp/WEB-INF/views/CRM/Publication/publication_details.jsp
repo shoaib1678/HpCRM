@@ -122,7 +122,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="sbmt">Save</button>
 					</div>
 				</form>
 			</div>
@@ -226,6 +226,8 @@
 									},
 								},
 								submitHandler : function(form) {
+									$("#sbmt").html("Please Wait...");
+									$("#sbmt").prop("disabled", true);
 									var publication_url = $("#publication_url").val();
 									var publication_date = $("#publication_date").val();
 									var publication_pdf = $("#publication_pdf")[0].files[0];
@@ -248,6 +250,8 @@
 											contentType :  false,
 												success : function(data) {
 													if (data['status'] == 'Success') {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														Swal.fire({
 																	icon : 'success',
 																	title : 'successfully!',
@@ -260,6 +264,8 @@
 																.reload(null,
 																		false);
 													} else if (data['status'] == 'Already_Exist') {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal
@@ -269,6 +275,8 @@
 																	text : data['message']
 																})
 													} else {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal

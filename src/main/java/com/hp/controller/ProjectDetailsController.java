@@ -28,9 +28,45 @@ public class ProjectDetailsController {
 		String search = request.getParameter("search[value]");
 		String employee_id =request.getParameter("employee_id");
 		String status =request.getParameter("status");
-		String month =request.getParameter("month");
-		String year =request.getParameter("year");
-		response = projectDetailsService.get_project_data(start,length,search,employee_id,status,month,year);
+		String module =request.getParameter("module");
+		String from_date =request.getParameter("from_date");
+		String to_date =request.getParameter("to_date");
+		response = projectDetailsService.get_project_data(start,length,search,employee_id,status,from_date,to_date,module);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping(value="get_details", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> get_details(HttpServletRequest request){
+		Map<String, Object> response = new HashMap<String,Object>();
+		String employee_id =request.getParameter("employee_id");
+		String from_date =request.getParameter("from_date");
+		String to_date =request.getParameter("to_date");
+		response = projectDetailsService.get_details(employee_id,from_date,to_date);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping(value="get_article_details", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> get_article_details(HttpServletRequest request){
+		Map<String, Object> response = new HashMap<String,Object>();
+		String from_date =request.getParameter("from_date");
+		String to_date =request.getParameter("to_date");
+		response = projectDetailsService.get_article_details(from_date,to_date);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping(value="get_positions_details", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> get_positions_details(HttpServletRequest request){
+		Map<String, Object> response = new HashMap<String,Object>();
+		String journal_name =request.getParameter("journal_name");
+		String from_date =request.getParameter("from_date");
+		String to_date =request.getParameter("to_date");
+		response = projectDetailsService.get_positions_details(journal_name,from_date,to_date);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping(value="get_notifications", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> get_notifications(HttpServletRequest request){
+		Map<String, Object> response = new HashMap<String,Object>();
+		String employee_id =request.getParameter("employee_id");
+		String from_date =request.getParameter("from_date");
+		String to_date =request.getParameter("to_date");
+		response = projectDetailsService.get_notifications(employee_id,from_date,to_date);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 }

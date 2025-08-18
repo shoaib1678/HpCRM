@@ -72,9 +72,10 @@ public class ContactController {
 		String sno = request.getParameter("sno");
 		String status = request.getParameter("status");
 		String remarks = request.getParameter("remarks");
+		String notify_date = request.getParameter("notify_date");
 		String module = request.getParameter("module");
 		String employee_id =request.getParameter("employee_id");
-		response = contactService.update_status(sno,status,remarks,module,employee_id);
+		response = contactService.update_status(sno,status,remarks,module,employee_id,notify_date);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 	@RequestMapping(value="get_remarks", method = RequestMethod.POST)

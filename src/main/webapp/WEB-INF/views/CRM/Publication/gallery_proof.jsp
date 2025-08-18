@@ -110,7 +110,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="sbmt">Save</button>
 					</div>
 				</form>
 			</div>
@@ -202,6 +202,8 @@
 									},
 								},
 								submitHandler : function(form) {
+									$("#sbmt").html("Please Wait...");
+									$("#sbmt").prop("disabled", true);
 									var proof_date = $("#proof_date").val();
 									var sno = $("#sno").val();
 									
@@ -217,6 +219,8 @@
 											contentType : 'application/json',
 												success : function(data) {
 													if (data['status'] == 'Success') {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														Swal.fire({
 																	icon : 'success',
 																	title : 'successfully!',
@@ -238,6 +242,8 @@
 																	text : data['message']
 																})
 													} else {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal

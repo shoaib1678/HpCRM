@@ -66,7 +66,24 @@
                             <i class="feather-sun"></i>
                         </a>
                     </div>
-                    
+                    <div class="dropdown nxl-h-item">
+                        <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="true">
+                            <i class="feather-bell"></i>
+                            <span class="badge bg-danger nxl-h-badge" id="count"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
+                            <div class="d-flex justify-content-between align-items-center notifications-head">
+                                <h6 class="fw-bold text-dark mb-0">Notifications</h6>
+                                <a href="javascript:void(0);" class="fs-11 text-success text-end ms-auto" data-bs-toggle="tooltip" title="" data-bs-original-title="Make as Read">
+                                    <i class="feather-check"></i>
+                                    <span>Make as Read</span>
+                                </a>
+                            </div>
+                            <div id="not" style="overflow: auto; height: 80vh;">
+                            
+                            </div>
+                        </div>
+                    </div>
                     <div class="dropdown nxl-h-item" style="margin-top: -20px;">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
                             <img src="assets/images/logo.avif" alt="user-image" class="img-fluid user-avtar me-0" />
@@ -106,3 +123,41 @@
     <!--! ================================================================ !-->
     
     <input type="hidden" id="employee_id" name="employee_id" value="<%=login.getEmployee_id()%>">
+    <div class="modal fade" id="remarks_modal" data-bs-backdrop="static"
+		data-bs-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="staticBackdropLabel">Add Remarks</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<form id="remarks_form" name="remarks_form">
+					<div class="modal-body">
+						<div class="row px-4 justify-content-between">
+						
+							<div class="col-xl-12 mb-3 mb-sm-0">
+								<div class="form-group mb-3">
+									<label for="rnotify_date" class="col-form-label">Notify Date(Optional)</label>
+									<input type="date" class="form-control" id="rnotify_date" name="rnotify_date">
+								</div>
+							</div>
+							<div class="col-xl-12 mb-3 mb-sm-0">
+								<div class="form-group mb-3">
+									<label for="rremarks" class="col-form-label">Remarks<span style="color: red;">*</span></label>
+										<textarea  class="form-control" id="rremarks" name="rremarks"></textarea>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary btn-sm"
+							data-bs-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>

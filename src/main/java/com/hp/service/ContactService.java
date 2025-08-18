@@ -1,5 +1,6 @@
 package com.hp.service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -49,13 +50,14 @@ public class ContactService {
 				response.put("status", "Success");
 				response.put("message", "Data Updated Successfully");
 			}else {
+				String encon = encriptionData.encrypt(contactDetails.getContact_number());
 				Map<String, Object> map1 = new HashMap<String,Object>();
 				map1.put("employee_id", contactDetails.getEmployee_id());
-				map1.put("contact_number", contactDetails.getContact_number());
+				map1.put("contact_number", encon);
 				List<ContactDetails> data1 = (List<ContactDetails>)commonDao.getDataByMap(map1, new ContactDetails(), null, null, 0, -1);
 				if(data1.size() > 0) {
 					response.put("status", "Already_Exist");
-					response.put("message", "Employee Details Already Exist");
+					response.put("message", "Contact Number Already Exist");
 				}else {
 					String enc = encriptionData.encrypt(contactDetails.getContact_number());
 					String eml = encriptionData.encrypt(contactDetails.getEmail());
@@ -92,10 +94,12 @@ public class ContactService {
 			}
 			map.put("status", status);
 			Map<String, Object> mapor = new HashMap<String,Object>();
-			String encryptedSearch = encriptionData.encrypt(search);
-			mapor.put("contact_number", encryptedSearch);
-			mapor.put("email", encryptedSearch);
-			mapor.put("client_name", search);
+			if(search !=  null && !search.isEmpty()) {
+				String encryptedSearch = encriptionData.encrypt(search);
+				mapor.put("contact_number", encryptedSearch);
+				mapor.put("email", encryptedSearch);
+				mapor.put("client_name", search);
+			}
 			List<ContactDetails> data = (List<ContactDetails>) commonDao.getDataByMapSearchAnd(map,mapor, new ContactDetails(), "sno", "desc", start, length);
 			int count = commonDao.getDataByMapSearchAndSize(map,mapor, new ContactDetails(), "sno", "desc");
 			List<ContactDetails> list = new ArrayList<ContactDetails>();
@@ -151,11 +155,12 @@ public class ContactService {
 		return response;
 	}
 
-	public Map<String, Object> update_status(String sno, String status, String remarks, String module, String employee_id) {
+	public Map<String, Object> update_status(String sno, String status, String remarks, String module, String employee_id, String notify_date) {
 		Map<String, Object> response = new HashMap<String,Object>();
 		try {
 			LocalTime indiaTime = LocalTime.now(ZoneId.of("Asia/Kolkata"));
 	        String currentTime = indiaTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+	       
 			ContactRemarks rem = new ContactRemarks();
 			Map<String, Object> map = new HashMap<String,Object>();
 			if(status.equalsIgnoreCase("Connected")) {
@@ -166,6 +171,7 @@ public class ContactService {
 				rem.setContact_id(Integer.parseInt(sno));
 				rem.setEmployee_id(Integer.parseInt(employee_id));
 				rem.setRemarks(remarks);
+				rem.setNotify_date(notify_date);
 				rem.setConnected_time(currentTime);
 				rem.setRemarksDate(new Date());
 				commonDao.addDataToDb(rem);
@@ -181,6 +187,7 @@ public class ContactService {
 				rem.setContact_id(Integer.parseInt(sno));
 				rem.setEmployee_id(Integer.parseInt(employee_id));
 				rem.setRemarks(remarks);
+				rem.setNotify_date(notify_date);
 				rem.setConnected_time(currentTime);
 				rem.setRemarksDate(new Date());
 				commonDao.addDataToDb(rem);
@@ -198,6 +205,13 @@ public class ContactService {
 		    	response.put("message", "Status Updated Successfully");
 		    	return response;
 			}else {
+				rem.setContact_id(Integer.parseInt(sno));
+				rem.setEmployee_id(Integer.parseInt(employee_id));
+				rem.setRemarks(remarks);
+				rem.setNotify_date(notify_date);
+				rem.setConnected_time(currentTime);
+				rem.setRemarksDate(new Date());
+				commonDao.addDataToDb(rem);
 				InactiveClient cl = new InactiveClient();
 				Map<String,Object> mm = new HashMap<String, Object>();
 				mm.put("contact_id", Integer.parseInt(sno));
@@ -352,27 +366,29 @@ public class ContactService {
 			List<ConvertedModule> conv = (List<ConvertedModule>)commonDao.getDataByMap(map, new ConvertedModule(), null, null, 0, -1);
 			List<ContactDetails> con = new ArrayList<ContactDetails>();
 			int count =0;
+			System.out.println("conv.size()="+conv.size());
 			if(conv.size() > 0) {
 				for(ConvertedModule c: conv) {
 					Map<String, Object> mp = new HashMap<String, Object>();
-					Map<String, Object> mpor = new HashMap<String, Object>();
-					String encryptedSearch = encriptionData.encrypt(search);
-					mpor.put("contact_number", encryptedSearch);
-					mpor.put("email", encryptedSearch);
 					mp.put("sno", c.getContact_id());
+					Map<String, Object> mpor = new HashMap<String, Object>();
+					if(search !=  null && !search.isEmpty()) {
+						String encryptSearch = encriptionData.encrypt(search);
+						mpor.put("contact_number", encryptSearch);
+						mpor.put("email", encryptSearch);
+					}
 					List<ContactDetails> contactDetails = (List<ContactDetails>)commonDao.getDataByMapSearchAnd(mp,mpor, new ContactDetails(), "sno", "desc", start, length);
 					count = commonDao.getDataByMapSearchAndSize(mp,mpor, new ContactDetails(), "sno", "desc");
 					con.addAll(contactDetails);
 				}
 			}
+			System.out.println("size="+con.size());
 			if(con.size() >0) {
 				for(ContactDetails c: con) {
-					String decc = encriptionData.decrypt(c.getContact_number());
-					c.setContact_number(decc);
-					if(c.getEmail() != null && !c.getEmail().isEmpty()) {
+						String decc = encriptionData.decrypt(c.getContact_number());
+						c.setContact_number(decc);
 						String eml = encriptionData.decrypt(c.getEmail());
 						c.setEmail(eml);
-					}
 				}
 				response.put("status", "Success");
 				response.put("message", "Data Fetched Successfully");

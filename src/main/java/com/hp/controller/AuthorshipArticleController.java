@@ -38,6 +38,13 @@ public class AuthorshipArticleController {
 		response = authorshipArticleService.get_aa(start,length,search);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
+	@RequestMapping(value="get_aaById", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> get_aabyId(HttpServletRequest request){
+		Map<String, Object> response = new HashMap<String,Object>();
+		String sno = request.getParameter("sno");
+		response = authorshipArticleService.get_aabyId(sno);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
 	@RequestMapping(value="get_position", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> get_position(HttpServletRequest request){
 		Map<String, Object> response = new HashMap<String,Object>();

@@ -136,7 +136,7 @@ LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="sbmt">Save</button>
 					</div>
 				</form>
 			</div>
@@ -259,6 +259,8 @@ LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
 									},
 								},
 								submitHandler : function(form) {
+									$("#sbmt").html("Please Wait...;");
+									$("#sbmt").prop("disabled", true);
 									var title = $("#title").val();
 									var journal_name = $("#journal_name").val();
 									var total_position = $("#total_position").val();
@@ -294,6 +296,8 @@ LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
 										contentType : 'application/json',
 												success : function(data) {
 													if (data['status'] == 'Success') {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														Swal.fire({
 																	icon : 'success',
 																	title : 'successfully!',
@@ -306,6 +310,8 @@ LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
 																.reload(null,
 																		false);
 													} else if (data['status'] == 'Already_Exist') {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal
@@ -315,6 +321,8 @@ LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
 																	text : data['message']
 																})
 													} else {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal
@@ -396,7 +404,9 @@ LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
 							dataToSet) {
 						var sno = data.sno;
 						var string = "<button class='btn btn-success btn-sm' type='button' onclick='view(" + sno + ")' style='margin-bottom: 3px;'>View Positions</button>";
-						string += "<button class='btn btn-primary btn-sm' type='button' onclick='edit(" + sno + ")'>Edit</button>";
+						if(parseInt(employee_id) == 0){
+							string += "<button class='btn btn-primary btn-sm' type='button' onclick='edit(" + sno + ")'>Edit</button>";
+						}
                     return string;
 					}
 				},
@@ -498,7 +508,50 @@ LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
 				}
 			});
 		}
+		function edit(sno){
+			$("#sno").val(sno);
+			var fd = new FormData();
+			fd.append("sno", sno);
+			$.ajax({
+				url : 'get_aaById',
+				type : 'post',
+				data : fd,
+				contentType : false,
+				processData : false,
+						success : function(data) {
+							if (data['status'] == 'Success') {
+								$('#employee_modal').modal('toggle');
+								$("#title").val(data['data'][0].title);
+								$("#journal_name").val(data['data'][0].journal_name);
+								$("#total_position").val(data['data'][0].total_position);
+								 $('#tbody').find('tr:gt(0)').remove(); 
+								 var ap = data['data'][0].ap; // make sure 'ap' is an array
+								 var html = '';
 
+								 for (var i = 1; i <= ap.length; i++) {
+								     var j = i - 1;
+								     if (ap[j] && ap[j].position_amount !== undefined) {
+								         if (ap[j].position == "Corresponding Author") {
+								             $("#position_amount1").val(ap[j].position_amount);
+								         } else {
+								             html += '<tr id="rowss' + j + '">';
+								             html += '<td><input type="text" name="position' + i + '" class="form-control p-2" value="' + i + '" id="position' + i + '" disabled/></td>';
+								             html += '<td><input type="text" name="position_amount' + i + '" class="form-control p-2" value="' + ap[j].position_amount + '" id="position_amount' + i + '"/></td>';
+								             html += '</tr>';
+								         }
+								     } else {
+								         console.warn("Missing ap[" + j + "] or position_amount");
+								     }
+								 }
+
+								 $('#tbody').append(html);
+							}else {
+								$('#employee_modal').modal('toggle');
+								Swal.fire({icon : 'Sorry',title : 'Invalid!',text : data['message']})
+							}
+						}
+					});
+		}
 	</script>
 </body>
 

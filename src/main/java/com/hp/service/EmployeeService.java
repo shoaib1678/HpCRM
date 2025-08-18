@@ -39,7 +39,7 @@ public class EmployeeService {
 				data.get(0).setEmail(encEmail);
 				commonDao.updateDataToDb(data.get(0));
 				Map<String, Object> map1 = new HashMap<String,Object>();
-				map1.put("sno", employee.getSno());
+				map1.put("employee_id", employee.getSno());
 				List<LoginCredentials> log = (List<LoginCredentials>)commonDao.getDataByMap(map1, new LoginCredentials(), null, null, 0, -1);
 				log.get(0).setAuthentication_id(employee.getAuthentication_id());
 				log.get(0).setEmail(encEmail);
@@ -178,7 +178,15 @@ public class EmployeeService {
 			map.put("sno", Integer.parseInt(sno));
 			List<Employee> data = (List<Employee>)commonDao.getDataByMap(map, new Employee(), null, null, 0, -1);
 			if(data.size() >0) {
+				String deceml = encriptionData.decrypt(data.get(0).getEmail());
+				data.get(0).setEmail(deceml);
+				Map<String, Object> mp = new HashMap<String,Object>();
+				mp.put("employee_id", Integer.parseInt(sno));
+				List<LoginCredentials> log = (List<LoginCredentials>)commonDao.getDataByMap(mp, new LoginCredentials(), null, null, 0, -1);
+				data.get(0).setAuthentication_id(log.get(0).getAuthentication_id());
+				
 				response.put("status", "Success");
+				response.put("data", data);
 				response.put("message", "Data Fetched Successfully");
 			}else {
 				response.put("status", "Failed");

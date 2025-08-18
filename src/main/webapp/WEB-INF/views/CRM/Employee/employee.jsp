@@ -89,7 +89,7 @@
 								<div class="form-group mb-3">
 									<label for="authentication_id" class="col-form-label">Authentication Code<span style="color: red;">*</span></label>
 										<input type="text" class="form-control" id="authentication_id" name="authentication_id"
-											placeholder="Mobile Number">
+											placeholder="Authentication Code">
 								</div>
 							</div>
 						</div>
@@ -97,7 +97,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="sbmt">Save</button>
 					</div>
 				</form>
 			</div>
@@ -110,6 +110,7 @@
 	<!--! Footer Script !-->
 	<!--! ================================================================ !-->
 	<!--! BEGIN: Vendors JS !-->
+	<input type="hidden" id="sno" name="sno">
 	<jsp:include page="../js.jsp"></jsp:include>
 	<script type="text/javascript">
 		//let employee_id = $("#employee_id").val();
@@ -148,16 +149,24 @@
 									},
 								},
 								submitHandler : function(form) {
+									$("#sbmt").html("Please Wait..");
+									$("#sbmt").prop("disabled", true);
 									var authentication_id = $("#authentication_id").val();
 									var employee_name = $("#employee_name").val();
 									var email = $("#email").val();
 									var mobile_number = $("#mobile_number").val();
+									var sno = $("#sno").val();
+									if(sno != null && sno != ""){
+										sno = $("#sno").val();
+									}else{
+										sno=0;
+									}
 									var obj = {
 										"authentication_id" : authentication_id,
 										"employee_name" : employee_name,
 										"mobile_number" : mobile_number,
 										"email" : email,
-										"sno" : 0,
+										"sno" : sno,
 									};
 									$.ajax({
 												url : 'add_employee',
@@ -167,6 +176,9 @@
 												contentType : 'application/json',
 												success : function(data) {
 													if (data['status'] == 'Success') {
+														$("#sno").val(0);
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														Swal.fire({
 																	icon : 'success',
 																	title : 'successfully!',
@@ -179,6 +191,8 @@
 																.reload(null,
 																		false);
 													} else if (data['status'] == 'Already_Exist') {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal
@@ -188,6 +202,8 @@
 																	text : data['message']
 																})
 													} else {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal
@@ -289,6 +305,36 @@
 			});
 		}
 		data();
+		function edit(sno){
+			$("#sno").val(sno);
+			var fd = new FormData();
+			fd.append("sno", sno);
+			$.ajax({
+				url : 'get_empById',
+				type : 'post',
+				data : fd,
+				contentType : false,
+				processData : false,
+						success : function(data) {
+							if (data['status'] == 'Success') {
+								$('#employee_modal').modal('toggle');
+								$("#employee_name").val(data['data'][0].employee_name);
+								$("#authentication_id").val(data['data'][0].authentication_id);
+								$("#mobile_number").val(data['data'][0].mobile_number);
+								$("#email").val(data['data'][0].email);
+							}else {
+								$('#employee_modal').modal(
+										'toggle');
+								Swal
+										.fire({
+											icon : 'Sorry',
+											title : 'Invalid!',
+											text : data['message']
+										})
+							}
+						}
+					});
+		}
 	</script>
 </body>
 

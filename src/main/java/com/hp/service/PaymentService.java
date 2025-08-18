@@ -137,7 +137,7 @@ public class PaymentService {
 		return response;
 	}
 
-	public Map<String, Object> get_payment(int start, int length, String search, String employee_id, String status, String month, String year) {
+	public Map<String, Object> get_payment(int start, int length, String search, String employee_id, String status, String from_date, String to_date) {
 		Map<String, Object> response = new HashMap<String,Object>();
 		try {
 			Map<String, Object> map = new HashMap<String,Object>();
@@ -148,13 +148,11 @@ public class PaymentService {
 			if(status != null && !status.isEmpty()) {
 				map.put("payment_status", status);
 			}
-			map.put("month", Integer.parseInt(month));
-			map.put("year", Integer.parseInt(year));
 			Map<String, Object> mapor = new HashMap<String,Object>();
 			mapor.put("payment_status", search);
 			//mapor.put("title", search);
-			List<Payment> data = (List<Payment>) commonDao.getDataByMapSearchAnd(map,mapor, new Payment(), "sno", "desc", start, length);
-			int count = commonDao.getDataByMapSearchAndSize(map,mapor, new Payment(), "sno", "desc");
+			List<Payment> data = (List<Payment>) commonDao.getDataByMapWithDateRange(map,mapor, new Payment(), "sno", "desc", start, length,from_date,to_date);
+			int count = commonDao.getDataByMapWithDateRangeSize(map,mapor, new Payment(), "sno", "desc",from_date,to_date);
 			if(data.size() >0) {
 				for(Payment p: data) {
 					Map<String, Object> mapr = new HashMap<String,Object>();

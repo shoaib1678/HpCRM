@@ -58,13 +58,19 @@ public class ArticleService {
 				data.get(0).setAffilliation(articleDetails.getAffilliation());
 				commonDao.updateDataToDb(data.get(0));
 				Map<String, Object> map1 = new HashMap<String,Object>();
-				map.put("ad_id", articleDetails.getSno());
-				map.put("module", "Publication");
+				map1.put("ad_id", articleDetails.getSno());
+				map1.put("module", "Publication");
 				List<Payment> p = (List<Payment>)commonDao.getDataByMap(map1, new Payment(), null, null, 0, -1);
 				p.get(0).setTotal_amount(articleDetails.getDealed_amount());
 				p.get(0).setRemaining_amount(articleDetails.getDealed_amount());
 				p.get(0).setModule("Publication");
 				commonDao.updateDataToDb(p.get(0));
+				Map<String, Object> map2 = new HashMap<String,Object>();
+				map2.put("sno", articleDetails.getContact_id());
+				List<ContactDetails> c = (List<ContactDetails>)commonDao.getDataByMap(map2, new ContactDetails(), null, null, 0, -1);
+				c.get(0).setEmail(eml);
+				c.get(0).setContact_number(enc);
+				commonDao.updateDataToDb(c.get(0));
 				response.put("status", "Success");
 				response.put("message", "Data Updated Successfully");
 			}else {
@@ -88,6 +94,12 @@ public class ArticleService {
 					articleDetails.setCreatedAt(new Date());
 					int i = commonDao.addDataToDb(articleDetails);
 					if(i>0){
+						Map<String, Object> map2 = new HashMap<String,Object>();
+						map2.put("sno", articleDetails.getContact_id());
+						List<ContactDetails> c = (List<ContactDetails>)commonDao.getDataByMap(map2, new ContactDetails(), null, null, 0, -1);
+						c.get(0).setEmail(eml);
+						c.get(0).setContact_number(enc);
+						commonDao.updateDataToDb(c.get(0));
 						Payment pay = new Payment();
 						pay.setAd_id(i);
 						pay.setEmployee_id(articleDetails.getEmployee_id());
@@ -95,6 +107,7 @@ public class ArticleService {
 						pay.setTotal_amount(articleDetails.getDealed_amount());
 						pay.setRemaining_amount(articleDetails.getDealed_amount());
 						pay.setPaid_amount(0);
+						pay.setCreatedAt(new Date());
 						pay.setModule("Publication");
 						pay.setPayment_status("Pending");
 						commonDao.addDataToDb(pay);

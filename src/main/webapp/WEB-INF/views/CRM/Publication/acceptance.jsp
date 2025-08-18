@@ -62,7 +62,6 @@
 												<th class="text-white">email</th>
 												<th class="text-white">Total Amount</th>
 												<th class="text-white">Journal Name</th>
-												<th class="text-white">Article Id</th>
 												<th class="text-white">Article Title</th>
 												<th class="text-white">Affiliation</th>
 												<th class="text-white">Acceptance Letter</th>

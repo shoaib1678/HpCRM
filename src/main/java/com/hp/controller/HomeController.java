@@ -27,9 +27,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hp.dao.CommonDao;
+import com.hp.model.ArticleDetails;
+import com.hp.model.AuthorshipDetails;
 import com.hp.model.Authorship_Article;
+import com.hp.model.ContactDetails;
+import com.hp.model.ConvertedModule;
 import com.hp.model.Employee;
 import com.hp.model.LoginCredentials;
+import com.hp.model.WritingDetails;
 import com.hp.utils.EncriptionData;
 import com.hp.utils.Utils;
 
@@ -64,6 +69,10 @@ public class HomeController {
 		LoginCredentials log = (LoginCredentials)session.getAttribute("loginData");
 		if(log != null) {
 			ModelAndView mv = new ModelAndView("CRM/Dashboard/dashboard");
+			Map<String, Object> mp = new HashMap<String, Object>();
+			if(!log.getUser_type().equalsIgnoreCase("Admin")) {
+				mp.put("employee_id", log.getEmployee_id());
+			}
 			return mv;
 		}else {
 			
@@ -80,13 +89,16 @@ public class HomeController {
 			List<LoginCredentials> login = (List<LoginCredentials>)commonDao.getDataByMap(map, new LoginCredentials(), null, null, 0, -1);
 			if(login.size() > 0) {
 				login.get(0).setEmail(demail);
+				Map<String, Object> mp = new HashMap<String, Object>();
 				if(!login.get(0).getUser_type().equalsIgnoreCase("Admin")) {
+					mp.put("employee_id", login.get(0).getEmployee_id());
 					Map<String, Object> map1 = new HashMap<String, Object>();
 					map1.put("email", eml);
 					List<Employee> emp = (List<Employee>)commonDao.getDataByMap(map1, new Employee(), null, null, 0, -1);
 					login.get(0).setEmp_name(emp.get(0).getEmployee_name());
 				}
 				ModelAndView mv = new ModelAndView("CRM/Dashboard/dashboard");
+				
 				session.setAttribute("loginData", login.get(0));
 				return mv;
 			}else {

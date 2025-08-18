@@ -88,7 +88,7 @@
 						<div class="row px-4 justify-content-between">
 							<div class="col-xl-12 mb-3 mb-sm-0">
 								<div class="row">
-								<div class="col-md-12">
+									<div class="col-md-12">
 										<div class="form-group mb-3">
 											<label for="contact_number" class="col-form-label">Upload file</label>
 											<input type="file" class="form-control" id="file" name="file" accept=".pdf,.doc,.docx">
@@ -108,19 +108,19 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="client_name" class="col-form-label">Client Name<span style="color: red;">*</span></label>
+											<label for="client_name" class="col-form-label">Client Name</label>
 											<input type="text" class="form-control" id="client_name" name="client_name" placeholder="Client Name">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="email" class="col-form-label">Email<span style="color: red;">*</span></label>
+											<label for="email" class="col-form-label">Email</label>
 											<input type="text" class="form-control" id="email" name="email" placeholder="Email">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group mb-3">
-											<label for="affiliation" class="col-form-label">Affiliation<span style="color: red;">*</span></label>
+											<label for="affiliation" class="col-form-label">Affiliation</label>
 											<input type="text" class="form-control" id="affiliation" name="affiliation" placeholder="Affiliation">
 										</div>
 									</div>
@@ -133,13 +133,13 @@
 									<div class="col-md-6">
 										<div class="form-group mb-3">
 											<label for="dealed_amount" class="col-form-label">Total Amount<span style="color: red;">*</span></label>
-											<input type="text" class="form-control" id="dealed_amount" name="dealed_amount" placeholder="Dealed Amount">
+											<input type="text" class="form-control" id="dealed_amount" name="dealed_amount" placeholder="Total Amount">
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group mb-3">
 											<label for="article_title" class="col-form-label">Article Title<span style="color: red;">*</span></label>
-											<textarea  class="form-control" id="article_title" name="article_title"></textarea>
+											<input type="text" class="form-control" id="article_title" name="article_title" placeholder="Article Title">
 										</div>
 									</div>
 									
@@ -150,7 +150,7 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary btn-sm"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Update</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="sbmt">Update</button>
 					</div>
 				</form>
 			</div>
@@ -265,21 +265,21 @@
 									journal_name : {
 										required : true,
 									},
-									client_name : {
+									/* client_name : {
 										required : true,
 									},
 									email : {
 										required : true,
-									},
+									}, */
 									article_id : {
 										required : true,
 									},
 									article_title : {
 										required : true,
 									},
-									affiliation : {
+									/* affiliation : {
 										required : true,
-									},
+									}, */
 									dealed_amount : {
 										required : true,
 									},
@@ -288,26 +288,28 @@
 									journal_name : {
 										required : "Please enter journal name.",
 									},
-									client_name : {
+									/* client_name : {
 										required : "Please enter client name.",
 									},
 									email : {
 										required : "Please enter email.",
-									},
+									}, */
 									article_id : {
 										required : "Please enter article id.",
 									},
 									article_title : {
 										required : "Please enter article title.",
 									},
-									affiliation : {
+									/* affiliation : {
 										required : "Please enter affiliation.",
-									},
+									}, */
 									dealed_amount : {
-										required : "Please enter total amount.",
+										required : "Please enter dealed amount.",
 									},
 								},
 								submitHandler : function(form) {
+									$("#sbmt").html("Please Wait..");
+									$("#sbmt").prop("disabled", true);
 									var journal_name = $("#journal_name").val();
 									var client_name = $("#client_name").val();
 									var contact_number = $("#contact_number").val();
@@ -317,8 +319,8 @@
 									var affiliation = $("#affiliation").val();
 									var file = $("#file")[0].files[0];
 									var dealed_amount = $("#dealed_amount").val();
-									var sno = $("#sno").val();
 									var contact_id = $("#contact_id").val();
+									var sno = $("#sno").val();
 									
 									var obj = {
 										"journal_name" : journal_name,
@@ -328,7 +330,7 @@
 										"article_title" : article_title,
 										"contact_number" : contact_number,
 										"dealed_amount" : dealed_amount,
-										"affiliation" : affiliation,
+										"affilliation" : affiliation,
 										"employee_id" : employee_id,
 										"contact_id" : contact_id,
 										"sno" : sno,
@@ -344,6 +346,8 @@
 											contentType :  false,
 												success : function(data) {
 													if (data['status'] == 'Success') {
+														$("#sbmt").html("Please Wait..");
+														$("#sbmt").prop("disabled", true);
 														Swal.fire({
 																	icon : 'success',
 																	title : 'successfully!',
@@ -356,6 +360,8 @@
 																.reload(null,
 																		false);
 													} else if (data['status'] == 'Already_Exist') {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal
@@ -365,6 +371,8 @@
 																	text : data['message']
 																})
 													} else {
+														$("#sbmt").html("Save");
+														$("#sbmt").prop("disabled", false);
 														$('#employee_modal').modal(
 																'toggle');
 														Swal
@@ -653,6 +661,7 @@
 						success : function(data) {
 							if (data['status'] == 'Success') {
 								$("#contact_number").val(data['data'][0].contact_number);
+								$("#contact_id").val(data['data'][0].contact_id);
 								$("#client_name").val(data['data'][0].client_name);
 								$("#journal_name").val(data['data'][0].journal_name);
 								$("#email").val(data['data'][0].email);

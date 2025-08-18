@@ -3,6 +3,7 @@ package com.hp.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,64 @@ public class AuthorshipArticleService {
 				data.get(0).setJournal_name(aa.getJournal_name());
 				data.get(0).setAvailable_position(aa.getAvailable_position());
 				commonDao.updateDataToDb(data.get(0));
-				//List<Authorship_Position> ap = aa.getAp();
+				List<Authorship_Position> ap =  aa.getAp();
+				Map<String, Object> map1 = new HashMap<String,Object>();
+				map1.put("aa_id", aa.getSno());
+				List<Authorship_Position> auth_p = (List<Authorship_Position>)commonDao.getDataByMap(map1, new Authorship_Position(), null, null, 0, -1);
+				if(auth_p.size() == ap.size()) {
+					for(Authorship_Position a : ap) {
+						Map<String, Object> map2 = new HashMap<String,Object>();
+						map2.put("aa_id", aa.getSno());
+						map2.put("position", a.getPosition());
+						List<Authorship_Position> aup = (List<Authorship_Position>)commonDao.getDataByMap(map2, new Authorship_Position(), null, null, 0, -1);
+						aup.get(0).setPosition_amount(a.getPosition_amount());
+						commonDao.updateDataToDb(aup.get(0));
+					}
+				}else {
+					if(auth_p.size() > ap.size()) {
+					    for(Authorship_Position a : ap) {
+					        Map<String, Object> map2 = new HashMap<String,Object>();
+					        map2.put("aa_id", aa.getSno());
+					        map2.put("position", a.getPosition());
+					        List<Authorship_Position> aup = (List<Authorship_Position>)commonDao.getDataByMap(map2, new Authorship_Position(), null, null, 0, -1);
+					        if(aup.size() > 0) {
+					            aup.get(0).setPosition_amount(a.getPosition_amount());
+					            commonDao.updateDataToDb(aup.get(0));
+					        } else {
+					            a.setAa_id(aa.getSno());
+					            commonDao.addDataToDb(a);
+					        }
+					    }
+					    for(Authorship_Position existing : auth_p) {
+					        boolean found = false;
+					        for(Authorship_Position input : ap) {
+					            if(existing.getPosition().equals(input.getPosition())) {
+					                found = true;
+					                break;
+					            }
+					        }
+					        if(!found) {
+					            commonDao.delete(new Authorship_Position(), String.valueOf(existing.getSno()) );
+					        }
+					    }
+
+					} else {
+					    for(Authorship_Position a : ap) {
+					        Map<String, Object> map2 = new HashMap<String,Object>();
+					        map2.put("aa_id", aa.getSno());
+					        map2.put("position", a.getPosition());
+					        List<Authorship_Position> aup = (List<Authorship_Position>)commonDao.getDataByMap(map2, new Authorship_Position(), null, null, 0, -1);
+					        if(aup.size() > 0) {
+					            aup.get(0).setPosition_amount(a.getPosition_amount());
+					            commonDao.updateDataToDb(aup.get(0));
+					        } else {
+					            a.setAa_id(aa.getSno());
+					            commonDao.addDataToDb(a);
+					        }
+					    }
+					}
+
+				}
 				response.put("status", "Success");
 				response.put("message", "Article Details Updated Successfully");
 			}else {
@@ -145,6 +203,32 @@ public class AuthorshipArticleService {
 			map1.put("journal_name", journal_name);
 			List<Authorship_Article> data = (List<Authorship_Article>)commonDao.getDataByMap(map1, new Authorship_Article(), null, null, 0, -1);
 			if(data.size() > 0) {
+				response.put("status", "Success");
+				response.put("message", "Data Fetched Successfully");
+				response.put("data", data);
+			}else {
+				response.put("status", "Failed");
+				response.put("message", "No Data Found");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "Failed");
+			response.put("message", "Something Went Wrong"+e);
+		}
+		return response;
+	}
+
+	public Map<String, Object> get_aabyId(String sno) {
+		Map<String, Object> response = new HashMap<String,Object>();
+		try {
+			Map<String, Object> map1 = new HashMap<String,Object>();
+			map1.put("sno", Integer.parseInt(sno));
+			List<Authorship_Article> data = (List<Authorship_Article>)commonDao.getDataByMap(map1, new Authorship_Article(), null, null, 0, -1);
+			if(data.size() > 0) {
+				Map<String, Object> map = new HashMap<String,Object>();
+				map.put("aa_id", Integer.parseInt(sno));
+				List<Authorship_Position> dd = (List<Authorship_Position>)commonDao.getDataByMap(map, new Authorship_Position(), "position", "desc", 0, -1);
+				data.get(0).setAp(dd);
 				response.put("status", "Success");
 				response.put("message", "Data Fetched Successfully");
 				response.put("data", data);

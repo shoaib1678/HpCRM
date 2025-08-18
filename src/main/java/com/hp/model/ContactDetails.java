@@ -1,11 +1,13 @@
 package com.hp.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class ContactDetails {
@@ -17,6 +19,8 @@ public class ContactDetails {
 	private String contact_number;
 	private String client_name;
 	private String email;
+	@Transient
+	private List<ConvertedModule> cm;
 	private String status;
 	private String module;
 	private Date createdAt;
@@ -49,6 +53,12 @@ public class ContactDetails {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public List<ConvertedModule> getCm() {
+		return cm;
+	}
+	public void setCm(List<ConvertedModule> cm) {
+		this.cm = cm;
 	}
 	public String getStatus() {
 		return status;

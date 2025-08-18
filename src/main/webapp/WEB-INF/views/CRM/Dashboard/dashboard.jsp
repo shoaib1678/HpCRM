@@ -1,12 +1,17 @@
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
+<%@page import="com.hp.model.AuthorshipDetails"%>
+<%@page import="com.hp.model.WritingDetails"%>
+<%@page import="com.hp.model.ArticleDetails"%>
+<%@page import="com.hp.model.ContactDetails"%>
+<%@page import="java.util.List"%>
 <html lang="zxx">
 
 <head>
     <jsp:include page="../css.jsp"></jsp:include>
     <style type="text/css">
     	.paid-row {
-		  background-color: green !important; /* light green */
+		  background-color: #00ff00 !important; /* light green */
 		}
 		
 		.partially-paid-row {
@@ -15,6 +20,9 @@
 		
 	.pending-row {
 		 background-color: red !important; /* light red */
+	}
+	.acceptance-row {
+		 background-color: #ADD8E6 !important; /* light red */
 	}
     .sttus{
 	    border: 1px solid lightgray;
@@ -26,9 +34,22 @@
 	  background-color: #007bff;  /* Bootstrap primary blue */
 	  color: white;
 	}
+    .sttuss{
+	    border: 1px solid lightgray;
+	    padding: 8px;
+	    border-radius: 3px;
+	    cursor: pointer;
+	}
+	.sttuss.active {
+	  background-color: #007bff;  /* Bootstrap primary blue */
+	  color: white;
+	}
+	.price-tag {
+      font-weight: bold;
+      color: #198754;
+    }
     </style>
 </head>
-
 <body>
     <!--! ================================================================ !-->
     <!--! [Start] Navigation Manu !-->
@@ -73,17 +94,13 @@
                             <div id="reportrange" class="reportrange-picker d-flex align-items-center">
                                 <span class="reportrange-picker-field"></span>
                             </div>
-                            <div class="dropdown filter-dropdown">
+                            <div class="dropdown filter-dropdown" style="display: none;">
                                 <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
                                     <i class="feather-filter me-2"></i>
                                     <span>Filter</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <div class="dropdown-item">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" id="Role" checked="checked" />
-                                            <label class="custom-control-label c-pointer" for="Role">Role</label>
-                                        </div>
                                     </div>
                                     <div class="dropdown-item">
                                         <div class="custom-control custom-checkbox">
@@ -143,7 +160,7 @@
                                             <i class="feather-cast"></i>
                                         </div>
                                         <div>
-                                            <div class="fs-4 fw-bold text-dark"><span class="counter">48</span>/<span class="counter">86</span></div>
+                                            <div class="fs-4 fw-bold text-dark"><span class="counter" id="con"></span>/<span class="counter" id="tot"></span></div>
                                             <h3 class="fs-13 fw-semibold text-truncate-1-line">Converted Leads</h3>
                                         </div>
                                     </div>
@@ -155,12 +172,11 @@
                                     <div class="d-flex align-items-center justify-content-between">
                                         <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Converted Leads </a>
                                        <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark">16 converted</span>
-                                            <span class="fs-11 text-muted">(78%)</span>
+                                            <span class="fs-11 text-muted" id="conper"></span>
                                         </div>
                                     </div>
                                     <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 63%"></div>
+                                        <div class="progress-bar bg-warning" role="progressbar" id="conpro"></div>
                                     </div>
                                 </div>
                             </div>
@@ -177,7 +193,7 @@
                                             <i class="feather-dollar-sign"></i>
                                         </div>
                                         <div>
-                                            <div class="fs-4 fw-bold text-dark"><span class="counter">45</span>/<span class="counter">76</span></div>
+                                            <div class="fs-4 fw-bold text-dark"><span class="counter" id="cpcon"></span>/<span class="counter" id="pcon"></span></div>
                                             <h3 class="fs-13 fw-semibold text-truncate-1-line">Publication In Progress</h3>
                                         </div>
                                     </div>
@@ -187,14 +203,13 @@
                                 </div>
                                 <div class="pt-4">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Invoices Awaiting </a>
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Progress... </a>
                                         <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark">16 Completed</span>
-                                            <span class="fs-11 text-muted">(56%)</span>
+                                            <span class="fs-11 text-muted" id="pper"></span>
                                         </div>
                                     </div>
                                     <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 56%"></div>
+                                        <div class="progress-bar bg-primary" role="progressbar" id="ppro"></div>
                                     </div>
                                 </div>
                             </div>
@@ -211,7 +226,7 @@
                                             <i class="feather-briefcase"></i>
                                         </div>
                                         <div>
-                                            <div class="fs-4 fw-bold text-dark"><span class="counter">16</span>/<span class="counter">20</span></div>
+                                            <div class="fs-4 fw-bold text-dark"><span class="counter" id="cwcon"></span>/<span class="counter" id="wcon"></span></div>
                                             <h3 class="fs-13 fw-semibold text-truncate-1-line">Writing Paper In Progress</h3>
                                         </div>
                                     </div>
@@ -223,12 +238,11 @@
                                     <div class="d-flex align-items-center justify-content-between">
                                         <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Progress... </a>
                                         <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark">16 Completed</span>
-                                            <span class="fs-11 text-muted">(78%)</span>
+                                            <span class="fs-11 text-muted" id="wper"></span>
                                         </div>
                                     </div>
                                     <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 78%"></div>
+                                        <div class="progress-bar bg-success" role="progressbar" id="wpro" ></div>
                                     </div>
                                 </div>
                             </div>
@@ -245,7 +259,7 @@
                                             <i class="feather-activity"></i>
                                         </div>
                                         <div>
-                                            <div class="fs-4 fw-bold text-dark"><span class="counter">46.59</span>%</div>
+                                            <div class="fs-4 fw-bold text-dark"><span class="counter" id="cacon"></span>/<span class="counter" id="acon"></span></div>
                                             <h3 class="fs-13 fw-semibold text-truncate-1-line">Authorship In Progress</h3>
                                         </div>
                                     </div>
@@ -257,18 +271,70 @@
                                     <div class="d-flex align-items-center justify-content-between">
                                         <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line"> Progress...</a>
                                        <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark">16 Completed</span>
-                                            <span class="fs-11 text-muted">(78%)</span>
+                                            <span class="fs-11 text-muted" id="aper"></span>
                                         </div>
                                     </div>
                                     <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 46%"></div>
+                                        <div class="progress-bar bg-danger" role="progressbar" id="apro"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- [Conversion Rate] end -->
+                     <!-- [Project Records] start -->
+                    <div class="col-xxl-12">
+                        <div class="card stretch stretch-full">
+                            <div class="card-header">
+                                <h5 class="card-title">Project Progress Report</h5>
+                                <div class="card-header-action">
+                                    <div class="card-header-btn">
+                                        <div data-bs-toggle="tooltip" title="Refresh">
+                                            <a href="javascript:void(0);" class="avatar-text avatar-xs bg-warning" data-bs-toggle="refresh"> </a>
+                                        </div>
+                                        <div data-bs-toggle="tooltip" title="Maximize/Minimize">
+                                            <a href="javascript:void(0);" class="avatar-text avatar-xs bg-success" data-bs-toggle="expand"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown">
+                                        <a href="javascript:void(0);" class="avatar-text avatar-sm" data-bs-toggle="dropdown" data-bs-offset="25, 25">
+                                            <div data-bs-toggle="tooltip" title="Options">
+                                                <i class="feather-more-vertical"></i>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a href="javascript:void(0);" class="dropdown-item sttuss">Publication</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a href="javascript:void(0);" class="dropdown-item sttuss">Writing Paper</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a href="javascript:void(0);" class="dropdown-item sttuss">Authorship</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body custom-card-action p-0">
+                                <div class="table-responsive">
+									<table id="project_table" class="table table-striped nowrap display responsive" style="width:100%">
+										<thead class="bg-primary">
+											<tr>
+												<th class="text-white">Article Id</th>
+												<th class="text-white">Contact Number</th>
+												<th class="text-white">email</th>
+												<th class="text-white">Total Amount</th>
+												<th class="text-white">Journal Name</th>
+												<th class="text-white">Title</th>
+												<th class="text-white">Module</th>
+												<!-- <th class="text-white">Status</th> -->
+											</tr>
+										</thead>
+									</table>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [Project Records] end -->
+                     <input type="hidden" id="from_date" name="from_date">
+    				 <input type="hidden" id="to_date" name="to_date">
                     <!-- [Payment Records] start -->
                     <div class="col-xxl-12">
                         <div class="card stretch stretch-full">
@@ -321,11 +387,11 @@
                         </div>
                     </div>
                     <!-- [Payment Records] end -->
-                    <!-- [Project Records] start -->
+                    <!-- [Article Record] start -->
                     <div class="col-xxl-12">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
-                                <h5 class="card-title">Project Progress Record</h5>
+                                <h5 class="card-title">Authorship Article Details</h5>
                                 <div class="card-header-action">
                                     <div class="card-header-btn">
                                         <div data-bs-toggle="tooltip" title="Refresh">
@@ -341,37 +407,25 @@
                                                 <i class="feather-more-vertical"></i>
                                             </div>
                                         </a>
-                                        <div class="dropdown-menu dropdown-menu-end">
+                                        <!-- <div class="dropdown-menu dropdown-menu-end">
                                             <a href="javascript:void(0);" class="dropdown-item sttus">Paid</a>
                                             <div class="dropdown-divider"></div>
                                             <a href="javascript:void(0);" class="dropdown-item sttus">Partially Paid</a>
                                             <div class="dropdown-divider"></div>
                                             <a href="javascript:void(0);" class="dropdown-item sttus">Pending</a>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body custom-card-action p-0">
-                                <div class="table-responsive">
-									<table id="project_table" class="table table-striped nowrap display responsive" style="width:100%">
-										<thead class="bg-primary">
-											<tr>
-												<th class="text-white">Article Id</th>
-												<th class="text-white">Contact Number</th>
-												<th class="text-white">email</th>
-												<th class="text-white">Total Amount</th>
-												<th class="text-white">Journal Name</th>
-												<th class="text-white">Title</th>
-												<th class="text-white">Module</th>
-												<th class="text-white">Status</th>
-											</tr>
-										</thead>
-									</table>
+                                <div class="accordion" id="accordian_item">
+								 
+								  
 								</div>
                             </div>
                         </div>
                     </div>
-                    <!-- [Project Records] end -->
+                    <!-- [Payment Records] end -->
                 </div>
             </div>
             <!-- [ Main Content ] end -->
@@ -558,12 +612,29 @@
     <!--! Footer Script !-->
     <!--! ================================================================ !-->
     <!--! BEGIN: Vendors JS !-->
+   
    <jsp:include page="../js.jsp"></jsp:include>
    
    <script type="text/javascript">
    let employee_id = $("#employee_id").val();
+   
+   $("#reportrange").on("click", ".ranges ul li", function () {
+	   // Small delay to let daterangepicker update the date range display & hidden inputs
+	   setTimeout(() => {
+	     var fromDate = $("#from_date").val();
+	     var toDate = $("#to_date").val();
+
+	     console.log("Range clicked, from:", fromDate, "to:", toDate);
+
+	     // Call your functions here
+	     pdata();
+	     pdata1();
+	     getDetails();
+	     getNotification();
+	   }, 10);
+	 });
   
-   function data() {
+   function pdata() {
 	   // ✅ Destroy existing DataTable instance if it exists
 	   if ($.fn.DataTable.isDataTable("#payment_table")) {
 	     $('#payment_table').DataTable().clear().destroy();
@@ -586,15 +657,14 @@
 	       url: "get_payment",
 	       type: "POST",
 	       data: function (d) {
-	         const now = new Date();
-	         const currentMonth = now.getMonth() + 1;
-	         const currentYear = now.getFullYear();
+	         const from_date = $("#from_date").val();
+	         const to_date = $("#to_date").val();
 
 	         return {
 	           ...d,
 	           employee_id: employee_id,
-	           month: currentMonth,
-	           year: currentYear
+	           from_date: from_date,
+	           to_date: to_date
 	         };
 	       }
 	     },
@@ -631,8 +701,8 @@
 	   });
 	 }
 
-	 data(); // Call it once initially
-   function data1() {
+	 pdata(); // Call it once initially
+   function pdata1() {
 	   // ✅ Destroy existing DataTable instance if it exists
 	   if ($.fn.DataTable.isDataTable("#project_table")) {
 	     $('#project_table').DataTable().clear().destroy();
@@ -655,15 +725,14 @@
 	       url: "get_project_data",
 	       type: "POST",
 	       data: function (d) {
-	         const now = new Date();
-	         const currentMonth = now.getMonth() + 1;
-	         const currentYear = now.getFullYear();
+	    	   const from_date = $("#from_date").val();
+		         const to_date = $("#to_date").val();
 
 	         return {
 	           ...d,
 	           employee_id: employee_id,
-	           month: currentMonth,
-	           year: currentYear
+	           from_date: from_date,
+	           to_date: to_date
 	         };
 	       }
 	     },
@@ -680,26 +749,42 @@
 	       { data: "journal_name" },
 	       { data: "title" },
 	       { data: "module" },
-	       { data: "status" }
+	      /*  { data: "status" } */
 	     ],
 	     lengthMenu: [[5, 10, 25, 50], [5, 10, 25, 50]],
 	     select: true,
 	     createdRow: function (row, data) {
-	       if (!data.payment_status) return;
-
-	       let status = data.payment_status.toLowerCase().trim();
-	       if (status === 'paid') {
-	         $(row).addClass('paid-row');
-	       } else if (status === 'partially paid') {
-	         $(row).addClass('partially-paid-row');
-	       } else if (status === 'pending') {
-	         $(row).addClass('pending-row');
+	       if (!data.status) return;
+	       let module = data.module.toLowerCase().trim();
+	       let status = data.status.toLowerCase().trim();
+	       if (module === 'publication') {
+	    	   	if(status == "acceptance"){
+	    	   		$(row).addClass('acceptance-row');
+	    	   	}else if(status == "received" || status == "partially paid" || status == "proved" || status == "paid"){
+	    	   		$(row).addClass('partially-paid-row');
+	    	   	}else if(status == "published"){
+	    	   	 $(row).addClass('paid-row');
+	    	   	}
+	       } else if (module === 'writing paper') {
+	    		if(status == "received" || status == "confirmed" || status == "sent confirmation" || status == "paid" || status == "full work confirmation"){
+	    	   		$(row).addClass('partially-paid-row');
+	    	   	}else if(status == "completed"){
+	    	   	 $(row).addClass('paid-row');
+	    	   	}
+	       } else if (module === 'authorship') {
+	    		if(status == "received" || status == "initiated"){
+	    			$(row).addClass('partially-paid-row');
+	    	   	}else if(status == "acceptance" || status == "partially" || status == "proved"){
+	    	   		$(row).addClass('acceptance-row');
+	    	   	}else if(status == "completed"){
+	    	   	 $(row).addClass('paid-row');
+	    	   	}
 	       }
 	     }
 	   });
-	 }
+}
 
-	 data1(); // Call it once initially
+	 pdata1(); // Call it once initially
 
 
 
@@ -723,16 +808,15 @@
 			       url: "get_payment",
 			       type: "POST",
 			       data: function(d) {
-			         const now = new Date();
-			         const currentMonth = now.getMonth() + 1;
-			         const currentYear = now.getFullYear();
+			    	   const from_date = $("#from_date").val();
+				         const to_date = $("#to_date").val();
 
 			         return {
 			           ...d,
 			           employee_id: employee_id,
 			           status: status,
-			           month: currentMonth,
-			           year: currentYear
+			           from_date: from_date,
+			           to_date: to_date
 			         };
 			       }
 			     },
@@ -778,6 +862,198 @@
 		    // Call data with selected status
 		    tabledata(status);
 		});
+
+		function getDetails() {
+			  var from_date = $("#from_date").val();
+			  var to_date = $("#to_date").val();
+			  var fd = new FormData();
+			  fd.append("employee_id", employee_id);
+			  fd.append("from_date", from_date);
+			  fd.append("to_date", to_date);
+			  
+			  $.ajax({
+			    url: 'get_details',
+			    type: 'post',
+			    data: fd,
+			    contentType: false,
+			    processData: false,
+			    success: function(data) {
+			      if (data['status'] == 'Success') {
+			        $("#tot").html(data.total);
+			        $("#con").html(data.converted);
+			        $("#conper").html(data.conv_percent.toFixed(2) + "%");
+			        $("#conpro").css("width", data.conv_percent.toFixed(2) + "%");
+			        $("#pcon").html(data.pub_conv);
+			        $("#wcon").html(data.write_conv);
+			        $("#acon").html(data.auth_conv);
+			        $("#cpcon").html(data.articles);
+			        $("#cwcon").html(data.writings);
+			        $("#cacon").html(data.authorships);
+			        $("#pper").html(data.pub_percent.toFixed(2) + "%");
+			        $("#ppro").css("width", data.pub_percent.toFixed(2) + "%");
+			        $("#wper").html(data.write_percent.toFixed(2) + "%");
+			        $("#wpro").css("width", data.write_percent.toFixed(2) + "%");
+			        $("#aper").html(data.auth_percent.toFixed(2) + "%");
+			        $("#apro").css("width", data.auth_percent.toFixed(2) + "%");
+			      }
+			    }
+			  });
+			}
+
+	
+		getDetails();
+		function getjournalDetails() {
+			  $("#accordian_item").html("");
+			  var from_date = $("#from_date").val();
+			  var to_date = $("#to_date").val();
+			  var fd = new FormData();
+			  fd.append("from_date", from_date);
+			  fd.append("to_date", to_date);
+			  
+			  $.ajax({
+			    url: 'get_article_details',
+			    type: 'post',
+			    data: fd,
+			    contentType: false,
+			    processData: false,
+			    success: function(data) {
+			      if (data['status'] == 'Success') {
+			    	  var html = "";
+			    	 for(var i=0; i < data['journal_name'].length; i++){
+			    		html += '<div class="accordion-item">' +
+			             '<h2 class="accordion-header" id="panelsStayOpen-headingOne'+i+'">' +
+			               '<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne'+i+'" onclick="getaccordiandata(\'' + data["journal_name"][i] + '\',' + i + ')" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne'+i+'" style="background: white;">' +
+			                 ''+data['journal_name'][i]+'' +
+			               '</button>' +
+			             '</h2>' +
+			             '<div id="panelsStayOpen-collapseOne'+i+'" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne'+i+'">' +
+			               '<div class="accordion-body">' +
+			               	'<div class="row" id="position'+i+'">'+
+			               	'</div>'+
+			               '</div>' +
+			             '</div>' +
+			           '</div>';
+			    	 }
+			    	 $("#accordian_item").html(html);
+			      }
+			    }
+			  });
+			}
+
+	
+		getjournalDetails();
+		
+		function getaccordiandata(journal_name,p) {
+		    $('#positionview_modal').modal('toggle');
+		    var from_date = $("#from_date").val();
+		    var to_date = $("#to_date").val();
+		    var fd = new FormData();
+		    fd.append("journal_name", journal_name);
+		    fd.append("from_date", from_date);
+		    fd.append("to_date", to_date);
+
+		    $.ajax({
+		        url: 'get_positions_details',
+		        type: 'post',
+		        data: fd,
+		        contentType: false,
+		        processData: false,
+		        success: function(data) {
+		            if (data['status'] === 'Success') {
+		                var html = '';
+		                $('#position'+p).html("");
+		               
+		                for (var j = 0; j < data['data'].length; j++) {
+		                	 var sum = 0;
+				                var col = 0;
+		                	 var ap = data['data'][j].ap;
+		               	html += '<div class="col-md-6" style="border: 1px solid lightgray;">';
+		                html += '<h6 class="card-title text-primary fw-bold m-3" id="atitle">'+data['data'][j].title+'</h6>';
+		                html += '<p class="text-muted mb-3 mx-3" id="ajournal"><em>Journal Name: '+data['data'][j].journal_name+'</em></p>';
+		                html += '<div class="table-responsive">';
+		                html += '<table class="table table-bordered table-hover align-middle text-center">';
+		                html += '<thead class="table-primary">';
+		                html += '<tr>';
+		                html += '<th>Position</th>';
+		                html += '<th>Price</th>';
+		                html += '<th>Status</th>';
+		                html += '<th>Booking Price</th>';
+		                html += '<th>Booked By</th>';
+		                html += '</tr>';
+		                html += '</thead>';
+		                html += '<tbody>';
+
+		                for (var i = 0; i < ap.length; i++) {
+		                    sum += parseFloat(ap[i].position_amount);
+		                    let badgeClass = '';
+		                    if (ap[i].status === 'Booked') {
+		                        badgeClass = 'danger';
+		                    } else if (ap[i].status === 'Hold') {
+		                        badgeClass = 'warning';
+		                    } else {
+		                        badgeClass = 'success';
+		                    }
+
+		                    let ba = "-";
+		                    let bb = "-";
+		                    if (ap[i].booked_amount != null && ap[i].booked_amount !== "") {
+		                        ba = "₹ " + ap[i].booked_amount;
+		                        col += parseFloat(ap[i].booked_amount);
+		                    }
+		                    if (ap[i].employee_name != null && ap[i].employee_name !== "") {
+		                        bb = ap[i].employee_name;
+		                    }
+
+		                    // Convert numeric position to ordinal
+		                    let positionLabel = ap[i].position;
+		                    if (!isNaN(positionLabel)) {
+		                        let suffix = 'th';
+		                        if (positionLabel % 10 === 1 && positionLabel % 100 !== 11) suffix = 'st';
+		                        else if (positionLabel % 10 === 2 && positionLabel % 100 !== 12) suffix = 'nd';
+		                        else if (positionLabel % 10 === 3 && positionLabel % 100 !== 13) suffix = 'rd';
+		                        positionLabel = positionLabel + suffix;
+		                    }
+
+		                    let boldStart = '';
+		                    let boldEnd = '';
+		                    if (ap[i].position === 'Corresponding Author') {
+		                        boldStart = '<strong>';
+		                        boldEnd = '</strong>';
+		                    }
+
+		                    html += '<tr id="rowss' + (i + 1) + '">';
+		                    html += '<td>' + boldStart + positionLabel + boldEnd + '</td>';
+		                    html += '<td class="price-tag">' + boldStart + '₹' + ap[i].position_amount + boldEnd + '</td>';
+		                    html += '<td>' + boldStart + '<span class="badge bg-' + badgeClass + '">' + ap[i].status + '</span>' + boldEnd + '</td>';
+		                    html += '<td>' + boldStart + ba + boldEnd + '</td>';
+		                    html += '<td>' + boldStart + bb + boldEnd + '</td>';
+		                    html += '</tr>';
+		                }
+
+		                html += '<tr class="table-primary">';
+		                html += '<td><strong>Total:</strong></td>';
+		                html += '<td class="price-tag">₹' + sum + '</td>';
+		                html += '<td><strong>Collected</strong></td>';
+		                html += '<td><strong>₹' + col + '</strong></td>';
+		                html += '<td>-</td>';
+		                html += '</tr>';
+
+		                html += '</tbody>';
+		                html += '</table>';
+		                html += '</div>';
+		                html += '</div>';
+		                }
+		                $('#position'+p).html(html); // Replace previous content
+		            } else {
+		                Swal.fire({
+		                    icon: 'error',
+		                    title: 'Invalid!',
+		                    text: data['message']
+		                });
+		            }
+		        }
+		    });
+		}
 
    </script>
 </body>

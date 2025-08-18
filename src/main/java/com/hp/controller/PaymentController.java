@@ -42,9 +42,9 @@ public class PaymentController {
 		String search = request.getParameter("search[value]");
 		String employee_id =request.getParameter("employee_id");
 		String status =request.getParameter("status");
-		String month =request.getParameter("month");
-		String year =request.getParameter("year");
-		response = paymentService.get_payment(start,length,search,employee_id,status,month,year);
+		String from_date =request.getParameter("from_date");
+		String to_date =request.getParameter("to_date");
+		response = paymentService.get_payment(start,length,search,employee_id,status,from_date,to_date);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 }

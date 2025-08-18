@@ -50,6 +50,9 @@ public class AuthorshipService {
 				List<Authorship_Article> art = (List<Authorship_Article>)commonDao.getDataByMap(map, new Authorship_Article(), null, null, 0, -1);
 				if(ad.getStatus().equalsIgnoreCase("Booked")) {
 					int p = art.get(0).getAvailable_position() -1;
+					if(p == 0) {
+						art.get(0).setStatus("Booked");
+					}
 					art.get(0).setAvailable_position(p);
 					commonDao.updateDataToDb(art.get(0));
 					Payment pay = new Payment();
@@ -67,11 +70,11 @@ public class AuthorshipService {
 				map1.put("sno", ad.getPosition_id());
 				List<Authorship_Position> ap = (List<Authorship_Position>)commonDao.getDataByMap(map1, new Authorship_Position(), null, null, 0, -1);
 				if(ad.getStatus().equalsIgnoreCase("Booked")) {
-					ap.get(0).setContact_id(ad.getContact_id());
-					ap.get(0).setEmployee_id(ad.getEmployee_id());
 					ap.get(0).setBooked_amount(ad.getBooking_amount());
 					ap.get(0).setBooked_date(ad.getBooking_date());
 				}
+				ap.get(0).setContact_id(ad.getContact_id());
+				ap.get(0).setEmployee_id(ad.getEmployee_id());
 				ap.get(0).setStatus(ad.getStatus());
 				commonDao.updateDataToDb(ap.get(0));
 				Map<String, Object> map2 = new HashMap<String,Object>();
@@ -114,7 +117,9 @@ public class AuthorshipService {
 						List<Authorship_Article> art = (List<Authorship_Article>)commonDao.getDataByMap(map, new Authorship_Article(), null, null, 0, -1);
 						if(ad.getStatus().equalsIgnoreCase("Booked")) {
 							int p = art.get(0).getAvailable_position() -1;
-							art.get(0).setAvailable_position(p);
+							if(p == 0) {
+								art.get(0).setStatus("Booked");
+							}
 							art.get(0).setAvailable_position(p);
 							commonDao.updateDataToDb(art.get(0));
 							Payment pay = new Payment();
@@ -131,11 +136,11 @@ public class AuthorshipService {
 						map1.put("sno", ad.getPosition_id());
 						List<Authorship_Position> ap = (List<Authorship_Position>)commonDao.getDataByMap(map1, new Authorship_Position(), null, null, 0, -1);
 						if(ad.getStatus().equalsIgnoreCase("Booked")) {
-							ap.get(0).setContact_id(ad.getContact_id());
-							ap.get(0).setEmployee_id(ad.getEmployee_id());
 							ap.get(0).setBooked_amount(ad.getBooking_amount());
 							ap.get(0).setBooked_date(ad.getBooking_date());
 						}
+						ap.get(0).setContact_id(ad.getContact_id());
+						ap.get(0).setEmployee_id(ad.getEmployee_id());
 						ap.get(0).setStatus(ad.getStatus());
 						commonDao.updateDataToDb(ap.get(0));
 						Map<String, Object> map2 = new HashMap<String,Object>();

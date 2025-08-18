@@ -51,7 +51,7 @@
 				<div class="row">
 					<div class="col-lg-12">
 						<div style="display: flex;">
-							<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#employee_modal">Add New Contact Number</button>
+							<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#employee_modal" id="submitbtn">Add New Contact Number</button>
 							<button class="btn btn-primary btn-sm mx-3" data-bs-toggle="modal" data-bs-target="#contact_modal">Upload Sheet</button>
 							
 						</div>
@@ -184,6 +184,10 @@
 											<option value="Converted">Converted</option>
 										</select>
 								</div>
+								<div class="form-group mb-3">
+									<label for="notify_date" class="col-form-label">Notify Date(Optional)</label>
+									<input type="date" class="form-control" id="notify_date" name="notify_date">
+								</div>
 								<div class="form-group mb-3" id="rem" style="display: none;">
 									<label for="client_name" class="col-form-label">Remarks<span style="color: red;">*</span></label>
 										<textarea  class="form-control" id="remarks" name="remarks"></textarea>
@@ -202,36 +206,6 @@
 									  <input id="authorship" name="module" class="form-check-input" type="checkbox" role="switch" value="Authorship"/>
 									  <label for="authorship" class="form-check-label">Authorship</label>
 									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary btn-sm"
-							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="remarks_modal" data-bs-backdrop="static"
-		data-bs-keyboard="false" tabindex="-1"
-		aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">Add Remarks</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<form id="remarks_form" name="remarks_form">
-					<div class="modal-body">
-						<div class="row px-4 justify-content-between">
-							<div class="col-xl-12 mb-3 mb-sm-0">
-								<div class="form-group mb-3">
-									<label for="rremarks" class="col-form-label">Remarks<span style="color: red;">*</span></label>
-										<textarea  class="form-control" id="rremarks" name="rremarks"></textarea>
 								</div>
 							</div>
 						</div>
@@ -359,6 +333,7 @@ function showinput(){
 												contentType : 'application/json',
 												success : function(data) {
 													if (data['status'] == 'Success') {
+														$("form[name='employee_form']")[0].reset();
 														Swal.fire({
 																	icon : 'success',
 																	title : 'successfully!',
@@ -432,6 +407,7 @@ function showinput(){
 								submitHandler : function(form) {
 									var status = $("#status").val();
 									var remarks = $("#remarks").val();
+									var notify_date = $("#notify_date").val();
 									var checkedValues = $("input[name='module']:checked").map(function() {
 									    return $(this).val();
 									}).get().join(",");
@@ -440,6 +416,7 @@ function showinput(){
 									fd.append("sno", sno);
 									fd.append("status", status);
 									fd.append("remarks", remarks);
+									fd.append("notify_date", notify_date);
 									fd.append("module", checkedValues);
 									fd.append("employee_id", employee_id);
 									$.ajax({
@@ -608,8 +585,10 @@ function showinput(){
 								},
 								submitHandler : function(form) {
 									var rremarks = $("#rremarks").val();
+									var rnotify_date = $("#rnotify_date").val();
 									var sno = $("#sno").val();
 									var obj = {
+										"notify_date" : rnotify_date,
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
 										"contact_id" : sno,
@@ -623,6 +602,7 @@ function showinput(){
 												contentType : 'application/json',
 												success : function(data) {
 													if (data['status'] == 'Success') {
+														$("form[name='remarks_form']")[0].reset();
 														Swal.fire({
 																	icon : 'success',
 																	title : 'successfully!',
@@ -802,6 +782,9 @@ function showinput(){
 						}
 					});
 		}
+		$("#submitbtn").click(function(){
+			$("#sno").val("");
+		})
 	</script>
 </body>
 

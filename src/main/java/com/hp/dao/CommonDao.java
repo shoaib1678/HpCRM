@@ -1,6 +1,12 @@
 package com.hp.dao;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +35,8 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.hp.model.Authorship_Article;
 
 import javassist.expr.Instanceof;
 
@@ -133,7 +141,6 @@ public class CommonDao {
 			String orderbycolumn, String orderby, int start, int length) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
 
-// Apply AND conditions
 		for (Entry<String, Object> entry : anddata.entrySet()) {
 			String key = entry.getKey();
 			Object value = entry.getValue();
@@ -151,7 +158,6 @@ public class CommonDao {
 			}
 		}
 
-// Apply OR search
 		Disjunction disjunction = Restrictions.disjunction();
 		for (Entry<String, Object> entry : mapdata.entrySet()) {
 			if (entry.getValue() instanceof Integer) {
@@ -162,7 +168,6 @@ public class CommonDao {
 		}
 		criteria.add(disjunction);
 
-// ✅ Month & Year filter on createdAt
 		if (anddata.containsKey("month") && anddata.containsKey("year")) {
 			Integer month = (Integer) anddata.get("month");
 			Integer year = (Integer) anddata.get("year");
@@ -171,7 +176,6 @@ public class CommonDao {
 			criteria.add(Restrictions.sqlRestriction("YEAR(createdAt) = ?", year, StandardBasicTypes.INTEGER));
 		}
 
-// Sorting
 		if (orderby != null) {
 			if ("asc".equalsIgnoreCase(orderby)) {
 				criteria.addOrder(Order.asc(orderbycolumn));
@@ -180,7 +184,6 @@ public class CommonDao {
 			}
 		}
 
-// Pagination
 		criteria.setFirstResult(start);
 		if (length != -1) {
 			criteria.setMaxResults(length);
@@ -219,7 +222,6 @@ public class CommonDao {
 		}
 		criteria.add(disjunction);
 
-// ✅ Month & Year filter on createdAt
 		if (anddata.containsKey("month") && anddata.containsKey("year")) {
 			Integer month = (Integer) anddata.get("month");
 			Integer year = (Integer) anddata.get("year");
@@ -228,7 +230,6 @@ public class CommonDao {
 			criteria.add(Restrictions.sqlRestriction("YEAR(createdAt) = ?", year, StandardBasicTypes.INTEGER));
 		}
 
-// Optional sorting (not required for size, but left in case needed)
 		if (orderby != null) {
 			if ("asc".equalsIgnoreCase(orderby)) {
 				criteria.addOrder(Order.asc(orderbycolumn));
@@ -240,6 +241,150 @@ public class CommonDao {
 		return criteria.list().size();
 	}
 
+	// for and and or search size together and filter with date Range
+	public Object getDataByMapWithDateRange(
+	        Map<String, Object> anddata,
+	        Map<String, Object> mapdata,
+	        Object objectdata,
+	        String orderbycolumn,
+	        String orderby,
+	        int start,
+	        int length,
+	        String fromDateStr,
+	        String toDateStr) {
+
+	    Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
+
+	    // 🔹 AND conditions
+	    for (Entry<String, Object> entry : anddata.entrySet()) {
+	        String key = entry.getKey();
+	        Object value = entry.getValue();
+
+	        if (value instanceof Integer) {
+	            criteria.add(Restrictions.eq(key, value));
+	        } else {
+	            criteria.add(Restrictions.eq(key, value.toString()));
+	        }
+	    }
+
+	    // 🔹 OR search (Disjunction)
+	    Disjunction disjunction = Restrictions.disjunction();
+	    for (Entry<String, Object> entry : mapdata.entrySet()) {
+	        if (entry.getValue() instanceof Integer) {
+	            disjunction.add(Restrictions.eq(entry.getKey(), entry.getValue()));
+	        } else {
+	            disjunction.add(Restrictions.ilike(entry.getKey(), entry.getValue().toString(), MatchMode.ANYWHERE));
+	        }
+	    }
+	    criteria.add(disjunction);
+
+	    // 🔹 Filter by createdAt using from and to date
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    try {
+	        if (fromDateStr != null && toDateStr != null &&
+	            !fromDateStr.isEmpty() && !toDateStr.isEmpty()) {
+
+	            LocalDate fromDate = LocalDate.parse(fromDateStr, formatter);
+	            LocalDate toDate = LocalDate.parse(toDateStr, formatter);
+
+	            LocalDateTime fromDateTime = fromDate.atStartOfDay(); // 00:00:00
+	            LocalDateTime toDateTime = toDate.atTime(LocalTime.MAX); // 23:59:59.999
+
+	            Timestamp fromTimestamp = Timestamp.valueOf(fromDateTime);
+	            Timestamp toTimestamp = Timestamp.valueOf(toDateTime);
+
+	            criteria.add(Restrictions.between("createdAt", fromTimestamp, toTimestamp));
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace(); // Consider logging instead
+	    }
+
+	    // 🔹 Ordering
+	    if (orderby != null && !orderby.isEmpty()) {
+	        if ("asc".equalsIgnoreCase(orderby)) {
+	            criteria.addOrder(Order.asc(orderbycolumn));
+	        } else {
+	            criteria.addOrder(Order.desc(orderbycolumn));
+	        }
+	    }
+
+	    // 🔹 Pagination
+	    criteria.setFirstResult(start);
+	    if (length != -1) {
+	        criteria.setMaxResults(length);
+	    }
+
+	    return criteria.list();
+	}
+	
+	//For Count and filter with date Range 
+	public int getDataByMapWithDateRangeSize(
+	        Map<String, Object> anddata,
+	        Map<String, Object> mapdata,
+	        Object objectdata,
+	        String orderbycolumn,
+	        String orderby,
+	        String fromDateStr,
+	        String toDateStr) {
+
+	    Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
+
+	    // 🔹 Apply AND conditions
+	    for (Entry<String, Object> entry : anddata.entrySet()) {
+	        String key = entry.getKey();
+	        Object value = entry.getValue();
+
+	        if (value instanceof Integer) {
+	            criteria.add(Restrictions.eq(key, value));
+	        } else {
+	            criteria.add(Restrictions.eq(key, value.toString()));
+	        }
+	    }
+
+	    // 🔹 Apply OR search (disjunction)
+	    Disjunction disjunction = Restrictions.disjunction();
+	    for (Entry<String, Object> entry : mapdata.entrySet()) {
+	        if (entry.getValue() instanceof Integer) {
+	            disjunction.add(Restrictions.eq(entry.getKey(), entry.getValue()));
+	        } else {
+	            disjunction.add(Restrictions.ilike(entry.getKey(), entry.getValue().toString(), MatchMode.ANYWHERE));
+	        }
+	    }
+	    criteria.add(disjunction);
+
+	    // 🔹 Handle from-to date filtering on createdAt (DATETIME)
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    try {
+	        if (fromDateStr != null && toDateStr != null &&
+	            !fromDateStr.isEmpty() && !toDateStr.isEmpty()) {
+
+	            LocalDate fromDate = LocalDate.parse(fromDateStr, formatter);
+	            LocalDate toDate = LocalDate.parse(toDateStr, formatter);
+
+	            LocalDateTime fromDateTime = fromDate.atStartOfDay(); // 00:00:00
+	            LocalDateTime toDateTime = toDate.atTime(LocalTime.MAX); // 23:59:59.999
+
+	            Timestamp fromTimestamp = Timestamp.valueOf(fromDateTime);
+	            Timestamp toTimestamp = Timestamp.valueOf(toDateTime);
+
+	            criteria.add(Restrictions.between("createdAt", fromTimestamp, toTimestamp));
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace(); // Consider logging this instead of just printing
+	    }
+
+	    // 🔹 Apply ordering if needed
+	    if (orderby != null && !orderby.isEmpty()) {
+	        if ("asc".equalsIgnoreCase(orderby)) {
+	            criteria.addOrder(Order.asc(orderbycolumn));
+	        } else {
+	            criteria.addOrder(Order.desc(orderbycolumn));
+	        }
+	    }
+
+	    // 🔹 Return total count
+	    return criteria.list().size();
+	}
 	public void delete(Object object, String sno) {
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(object.getClass());
 		Object objectdata = criteria.add(Restrictions.eq("sno", Integer.parseInt(sno))).uniqueResult();
@@ -385,4 +530,35 @@ public class CommonDao {
 			}
 		}
 	}
+
+	public List<String> getDistinctDataByDateRange(String columnName, Object object, String from_date, String to_date) {
+	    Criteria criteria = sessionFactory.getCurrentSession().createCriteria(object.getClass());
+
+	    // Apply projection for distinct column
+	    criteria.setProjection(Projections.distinct(Projections.property(columnName)));
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	    try {
+	    	 LocalDate fromDate = LocalDate.parse(from_date, formatter);
+	            LocalDate toDate = LocalDate.parse(to_date, formatter);
+
+	            LocalDateTime fromDateTime = fromDate.atStartOfDay(); // 00:00:00
+	            LocalDateTime toDateTime = toDate.atTime(LocalTime.MAX); // 23:59:59.999
+
+	            Timestamp fromTimestamp = Timestamp.valueOf(fromDateTime);
+	            Timestamp toTimestamp = Timestamp.valueOf(toDateTime);
+
+	            criteria.add(Restrictions.between("createdAt", fromTimestamp, toTimestamp));
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        // Optionally, handle error appropriately
+	        return new ArrayList<>();
+	    }
+
+	    @SuppressWarnings("unchecked")
+	    List<String> distinctDataList = criteria.list();
+
+	    return distinctDataList;
+	}
+
 }

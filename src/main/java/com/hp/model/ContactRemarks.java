@@ -20,11 +20,17 @@ public class ContactRemarks {
 	private int employee_id;
 	@Transient
 	private String employee_name;
+	@Transient
+	private String name;
+	@Transient
+	private String contact_number;
 	private String remarks;
 	private String module;
+	private String notify_satus;
 	private String connected_time;
 	@Temporal(TemporalType.DATE)
 	private Date remarksDate;
+	private String notify_date;
 	public int getSno() {
 		return sno;
 	}
@@ -72,5 +78,29 @@ public class ContactRemarks {
 	}
 	public void setModule(String module) {
 		this.module = module;
+	}
+	public String getNotify_satus() {
+		return notify_satus;
+	}
+	public void setNotify_satus(String notify_satus) {
+		this.notify_satus = notify_satus;
+	}
+	public String getContact_number() {
+		return contact_number;
+	}
+	public void setContact_number(String contact_number) {
+		this.contact_number = contact_number;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getNotify_date() {
+		return notify_date;
+	}
+	public void setNotify_date(String notify_date) {
+		this.notify_date = notify_date;
 	}
 }
