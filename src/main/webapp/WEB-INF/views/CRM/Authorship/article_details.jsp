@@ -142,36 +142,7 @@ LoginCredentials login = (LoginCredentials)session.getAttribute("loginData");
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="remarks_modal" data-bs-backdrop="static"
-		data-bs-keyboard="false" tabindex="-1"
-		aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">Add Remarks</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<form id="remarks_form" name="remarks_form">
-					<div class="modal-body">
-						<div class="row px-4 justify-content-between">
-							<div class="col-xl-12 mb-3 mb-sm-0">
-								<div class="form-group mb-3">
-									<label for="rremarks" class="col-form-label">Remarks<span style="color: red;">*</span></label>
-										<textarea  class="form-control" id="rremarks" name="rremarks"></textarea>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary btn-sm"
-							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+	
 	<div class="modal fade" id="positionview_modal" data-bs-backdrop="static"
 		data-bs-keyboard="false" tabindex="-1"
 		aria-labelledby="staticBackdropLabel" aria-hidden="true">

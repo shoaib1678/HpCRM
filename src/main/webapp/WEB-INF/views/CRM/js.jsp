@@ -96,7 +96,7 @@ function getNotification() {
 	          $("#not").html(html);
 
 	          // Feather icons re-render
-	          feather.replace();
+	          //feather.replace();
 
 	          // Re-init Bootstrap tooltips
 	          const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle=\"tooltip\"]');

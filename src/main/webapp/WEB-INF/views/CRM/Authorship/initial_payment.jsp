@@ -148,64 +148,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal fade" id="remarks_modal" data-bs-backdrop="static"
-		data-bs-keyboard="false" tabindex="-1"
-		aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">Add Remarks</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-				<form id="remarks_form" name="remarks_form">
-					<div class="modal-body">
-						<div class="row px-4 justify-content-between">
-							<div class="col-xl-12 mb-3 mb-sm-0">
-								<div class="form-group mb-3">
-									<label for="rremarks" class="col-form-label">Remarks<span style="color: red;">*</span></label>
-										<textarea  class="form-control" id="rremarks" name="rremarks"></textarea>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary btn-sm"
-							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-primary btn-sm">Save</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="remarksview_modal" data-bs-backdrop="static"
-		data-bs-keyboard="false" tabindex="-1"
-		aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="staticBackdropLabel">All Remarks</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-					<div class="modal-body">
-						<div class="table-responsive">
-						<table class="table table-hover table-striped nowrap" id="remarks_table" style="width: 100%;">
-										<thead class="bg-primary">
-											<tr>
-												<th class="text-white">Sno</th>
-												<th class="text-white">Employee Name</th>
-												<th class="text-white">Remarks</th>
-												<th class="text-white">Connected Date</th>
-												<th class="text-white">Connected Time</th>
-											</tr>
-										</thead>
-									</table>
-								</div>			
-					</div>
-			</div>
-		</div>
-	</div>
+	
 	<!--! ================================================================ !-->
 	<!--! [End] Theme Customizer !-->
 	<!--! ================================================================ !-->
@@ -474,10 +417,12 @@
 								},
 								submitHandler : function(form) {
 									var rremarks = $("#rremarks").val();
+									var rnotify_date = $("#rnotify_date").val();
 									var sno = $("#sno").val();
 									var obj = {
 										"remarks" : rremarks,
 										"employee_id" : employee_id,
+										"notify_date" : rnotify_date,
 										"module" : "Authorship",
 										"contact_id" : sno,
 									};

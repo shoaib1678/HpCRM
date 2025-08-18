@@ -161,3 +161,31 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="remarksview_modal" data-bs-backdrop="static"
+		data-bs-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="staticBackdropLabel">All Remarks</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+					<div class="modal-body">
+						<div class="table-responsive">
+						<table class="table table-hover table-striped nowrap" id="remarks_table" style="width: 100%;">
+										<thead class="bg-primary">
+											<tr>
+												<th class="text-white">Sno</th>
+												<th class="text-white">Employee Name</th>
+												<th class="text-white">Remarks</th>
+												<th class="text-white">Connected Date</th>
+												<th class="text-white">Connected Time</th>
+											</tr>
+										</thead>
+									</table>
+								</div>			
+					</div>
+			</div>
+		</div>
+	</div>
