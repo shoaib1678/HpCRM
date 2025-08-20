@@ -366,6 +366,7 @@
 						var contact_id = data.contact_id;
 						var string = "";
                     	string += '<button type="button" class="btn btn-sm btn-primary" onclick="sendacceptance(' + sno + ')" style="margin-bottom: 3px;">Send Acceptance</button>';
+                    	string += '<button type="button" class="btn btn-sm btn-success" onclick="getReceipt(' + contact_id + ',\'Authorship\')" style="margin-bottom: 3px;">Payment Receipt</button>';
                     	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
 	                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
                     

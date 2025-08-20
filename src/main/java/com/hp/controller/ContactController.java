@@ -1,5 +1,6 @@
 package com.hp.controller;
 
+import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hp.model.ContactDetails;
 import com.hp.model.ContactRemarks;
 import com.hp.service.ContactService;
@@ -97,6 +101,14 @@ public class ContactController {
 		response = contactService.get_inactive(contact_id);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
-	
+	@RequestMapping(value="/upload_contact",method = RequestMethod.POST)
+	public ResponseEntity<Map<String,Object>> upload_contact(@RequestParam("file") MultipartFile file,@RequestParam("employee_id") String employee_id
+			)throws IOException{
+		Map<String, Object> response = new HashMap<String,Object>();
+		String filename = file.getOriginalFilename();
+		System.out.println(filename);
+		response = contactService.upload_contact(file,employee_id);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
 	
 }

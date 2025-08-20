@@ -11,8 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hp.dao.CommonDao;
 import com.hp.model.ContactDetails;
@@ -314,6 +320,7 @@ public class ContactService {
 			if(data.size() >0) {
 				String con = encriptionData.decrypt(data.get(0).getContact_number());
 				String eml = encriptionData.decrypt(data.get(0).getEmail());
+				System.out.println("Email======"+eml);
 				data.get(0).setContact_number(con);
 				data.get(0).setEmail(eml);
 				response.put("status", "Success");
@@ -409,4 +416,73 @@ public class ContactService {
 		}
 		return response;
 	}
+
+	public Map<String, Object> upload_contact(MultipartFile file, String employee_id) {
+	    Map<String, Object> response = new HashMap<>();
+	    try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
+	        Sheet sheet = workbook.getSheetAt(0);
+	        DataFormatter formatter = new DataFormatter();
+
+	        for (int j = 1; j <= sheet.getLastRowNum(); j++) {
+	            Row row = sheet.getRow(j);
+	            if (row != null) {
+	            	String contactNumber = formatter.formatCellValue(row.getCell(0));
+	            	Map<String, Object> map = new HashMap<String, Object>();
+	            	map.put("contact_number", encriptionData.encrypt(contactNumber));
+	            	map.put("employee_id", Integer.parseInt(employee_id));
+	                ContactDetails sm = new ContactDetails();
+	                sm.setEmployee_id(Integer.parseInt(employee_id));
+
+	                // Contact number
+	                
+	                if (!contactNumber.isEmpty()) {
+	                    sm.setContact_number(encriptionData.encrypt(contactNumber));
+	                }
+
+	                // Client name
+	                String clientName = formatter.formatCellValue(row.getCell(1));
+	                if (!clientName.isEmpty()) {
+	                    sm.setClient_name(clientName);
+	                }
+	                
+	                // Email
+	                String email = formatter.formatCellValue(row.getCell(2));
+	                String eml=encriptionData.encrypt(email);
+	                sm.setEmail(eml);
+	                sm.setStatus("Pending");
+	                sm.setCreatedAt(new Date());
+	                List<ContactDetails> cd = (List<ContactDetails>)commonDao.getDataByMap(map, new ContactDetails(), null, null, 0, -1);
+	                if(cd.size() == 0) {
+	                	 int i = commonDao.addDataToDb(sm);
+	 	                if (i > 0) {
+	 	                    String remarks = formatter.formatCellValue(row.getCell(3));
+	 	                    if (!remarks.isEmpty()) {
+	 	                        LocalTime indiaTime = LocalTime.now(ZoneId.of("Asia/Kolkata"));
+	 	                        String currentTime = indiaTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+	 	                        ContactRemarks cr = new ContactRemarks();
+	 	                        cr.setContact_id(i);
+	 	                        cr.setEmployee_id(Integer.parseInt(employee_id));
+	 	                        cr.setRemarks(remarks);
+	 	                        cr.setRemarksDate(new Date());
+	 	                        cr.setConnected_time(currentTime);
+	 	                        commonDao.addDataToDb(cr);
+	 	                    }
+	 	                }
+	                }
+	               
+	            }
+	        }
+
+	        response.put("status", "Success");
+	        response.put("message", "Contact Details Uploaded Successfully");
+
+	    } catch (Exception e) {
+	        e.printStackTrace(); // keep logging
+	        response.put("status", "Failed");
+	        response.put("message", "Something went wrong while uploading contacts.");
+	    }
+	    return response;
+	}
+
 }

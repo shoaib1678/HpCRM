@@ -125,6 +125,7 @@ public class AuthorshipService {
 							Payment pay = new Payment();
 							pay.setAd_id(i);
 							pay.setEmployee_id(ad.getEmployee_id());
+							pay.setContact_id(ad.getContact_id());
 							pay.setModule("Authorship");
 							pay.setPaid_amount(0);
 							pay.setPayment_status("Pending");

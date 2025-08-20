@@ -69,7 +69,6 @@
 												<th class="text-white">Article Title</th>
 												<th class="text-white">Affiliation</th>
 												<th class="text-white">Acceptance File</th>
-												<th class="text-white">Payment Receipt</th>
 												<th class="text-white">Actions</th>
 											</tr>
 										</thead>
@@ -404,17 +403,10 @@
 					"data" : function(data, type,
 							dataToSet) {
 						var sno = data.sno;
-						var string = "<a href='javascript:void(0)' class='fa fa-file' onclick='payment(" + sno + ")' style='font-size: 27px;color: forestgreen;'></a>";
-                    	return string;
-					}
-				},
-				{
-					"data" : function(data, type,
-							dataToSet) {
-						var sno = data.sno;
 						var contact_id = data.contact_id;
 						var string = "<button class='btn btn-success btn-sm' type='button' onclick='payment(" + sno + ")' style='margin-bottom: 3px;'>Add Remaining Payment</button>";
-                    	string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
+						string += '<button type="button" class="btn btn-sm btn-success" onclick="getReceipt(' + contact_id + ',\'Publication\')" style="margin-bottom: 3px;">Payment Receipt</button>';
+						string += '<button type="button" class="btn btn-sm btn-primary" onclick="addremarks(' + contact_id + ')" style="margin-bottom: 3px;">Add Remarks</button>';
 	                    string += '<button type="button" class="btn btn-sm btn-success" onclick="viewremarks(' + contact_id + ')" >View Remarks</button>';
                     
                     return string;

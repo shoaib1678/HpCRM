@@ -201,4 +201,30 @@ public class PaymentService {
 		}
 		return response;
 	}
+
+	public Map<String, Object> get_payment_receipt(String contact_id, String module) {
+		Map<String, Object> response = new HashMap<String,Object>();
+		try {
+			Map<String, Object> map = new HashMap<String,Object>();
+			Map<String, Object> mp = new HashMap<String,Object>();
+			map.put("contact_id", Integer.parseInt(contact_id));
+			map.put("module", module);
+			List<Payment> pay = (List<Payment>)commonDao.getDataByMap(map, new Payment(), null, null, 0, -1);
+			mp.put("payment_id", pay.get(0).getSno());
+			List<PaymentReceipt> pr = (List<PaymentReceipt>)commonDao.getDataByMap(mp, new PaymentReceipt(), null, null, 0, -1);
+			if(pr.size() > 0) {
+				response.put("status", "Success");
+				response.put("data", pr);
+			}else {
+				response.put("status", "Failed");
+				response.put("message", "Internal Server Error");
+			}
+						
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status", "Failed");
+			response.put("message", "Something Went Wrong"+e);
+		}
+		return response;
+	}
 }

@@ -53,6 +53,14 @@
 						<div style="display: flex;">
 							<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#employee_modal" id="submitbtn">Add New Contact Number</button>
 							<button class="btn btn-primary btn-sm mx-3" data-bs-toggle="modal" data-bs-target="#contact_modal">Upload Sheet</button>
+							<!-- <a href="assets/Students-List.xlsx" download>
+						    	<button type="button" class="btn btn-success btn-xs">Download Excel Format</button>
+							</a> -->
+							<a href="assets/images/contact_format.xlsx" 
+							   class="btn btn-primary btn-sm mx-3" 
+							   download="contact_format.xlsx">
+							   Sheet Format
+							</a>
 							
 						</div>
 						
@@ -146,8 +154,7 @@
 							<div class="col-xl-12 mb-3 mb-sm-0">
 								<div class="form-group mb-3">
 									<label for="mobile_number" class="col-form-label">Upload Contact Sheet<span style="color: red;">*</span></label>
-										<input type="file" class="form-control" id="sheet" name="sheet"
-											>
+										<input type="file" class="form-control" id="file" name="file" accept=".xls,.xlsx">
 								</div>
 							</div>
 						</div>
@@ -356,6 +363,69 @@ function showinput(){
 																})
 													} else {
 														$('#employee_modal').modal(
+																'toggle');
+														Swal
+																.fire({
+																	icon : 'Sorry',
+																	title : 'Invalid!',
+																	text : data['message']
+																})
+													}
+												}
+											});
+								}
+							});
+		});
+		$(function() {
+			$("form[name='contact_form']")
+					.validate(
+							{
+								rules : {
+									file : {
+										required : true,
+									},
+								},
+								messages : {
+									file : {
+										required : "Please upload contact sheet.",
+									},
+								},
+								submitHandler : function(form) {
+									var file = $("#file")[0].files[0];
+									var fd = new FormData();
+									fd.append("file", file);
+									fd.append("employee_id", employee_id);
+									$.ajax({
+										url : 'upload_contact',
+										type : 'post',
+										data : fd,
+										contentType : false,
+										processData : false,
+												success : function(data) {
+													if (data['status'] == 'Success') {
+														$("form[name='contact_form']")[0].reset();
+														Swal.fire({
+																	icon : 'success',
+																	title : 'successfully!',
+																	text : data['message']
+																})
+														$('#contact_modal').modal(
+																'toggle');
+														$('#employee_table')
+																.DataTable().ajax
+																.reload(null,
+																		false);
+													} else if (data['status'] == 'Already_Exist') {
+														$('#contact_modal').modal(
+																'toggle');
+														Swal
+																.fire({
+																	icon : 'warning',
+																	title : 'Already!',
+																	text : data['message']
+																})
+													} else {
+														$('#contact_modal').modal(
 																'toggle');
 														Swal
 																.fire({

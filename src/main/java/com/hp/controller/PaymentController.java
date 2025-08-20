@@ -47,4 +47,12 @@ public class PaymentController {
 		response = paymentService.get_payment(start,length,search,employee_id,status,from_date,to_date);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
+	@RequestMapping(value="get_payment_receipt", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> get_payment_receipt(HttpServletRequest request){
+		Map<String, Object> response = new HashMap<String,Object>();
+		String contact_id =request.getParameter("contact_id");
+		String module =request.getParameter("module");
+		response = paymentService.get_payment_receipt(contact_id,module);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
 }

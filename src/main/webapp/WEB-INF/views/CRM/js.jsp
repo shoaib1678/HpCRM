@@ -116,5 +116,45 @@ function getNotification() {
 	}
 
 getNotification();
+
+function getReceipt(sno, module){
+	$('#receipt_modal').modal('toggle');
+	var fd = new FormData();
+	fd.append("contact_id", sno);
+	fd.append("module", module);
+	$.ajax({
+		url : 'get_payment_receipt',
+		type : 'post',
+		data : fd,
+		contentType : false,
+		processData : false,
+		success : function(data) {
+			if (data['status'] == 'Success') {
+			    $("#all_receipt").html("");
+			    var html ="";
+			    for (var i = 0; i < data['data'].length; i++) {
+			        var fileUrl = "displaydocument?url=" + data['data'][i].receipt;
+			        var transactionId = data['data'][i].transaction_id;
+			        html += "<div class='col-md-4'>";
+			        if (data['data'][i].receipt.toLowerCase().endsWith(".pdf")) {
+			            html += "<embed src='" + fileUrl + "' type='application/pdf' width='100%' height='180px' />";
+			        } else {
+			            html += "<img src='" + fileUrl + "' class='img-fluid'  style='height: 180px;width: -webkit-fill-available;object-fit: cover;'/>";
+			        }
+			        html += "<input type='text' class='form-control mb-3' value='" + transactionId + "' disabled>";
+			        html += "</div>";
+			    }
+
+			    $("#all_receipt").html(html);
+			}else {
+			Swal.fire({
+				icon : 'Sorry',
+				title : 'Invalid!',
+				text : data['message']
+			})
+		}
+	}
+});
+}
 </script>
 
